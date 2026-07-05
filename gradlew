@@ -62,6 +62,90 @@ cd "$SAVED" >/dev/null
 
 CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
 
+REQUIRED_JAVA_MAJOR=21
+
+java_major_version() {
+    local java_cmd="$1"
+    local version_line version major
+
+    [ -x "$java_cmd" ] || return 1
+
+    version_line=$("$java_cmd" -version 2>&1 | head -n 1) || return 1
+    version=$(printf '%s\n' "$version_line" | sed -n 's/.*version "\([^"]*\)".*/\1/p')
+
+    if [[ "$version" == 1.* ]]; then
+        major=${version#1.}
+    else
+        major=$version
+    fi
+
+    major=${major%%[^0-9]*}
+    [ -n "$major" ] || return 1
+    printf '%s\n' "$major"
+}
+
+java_home_is_compatible() {
+    local java_home="$1"
+    local major
+
+    [ -n "$java_home" ] || return 1
+    [ -x "$java_home/bin/java" ] || return 1
+
+    major=$(java_major_version "$java_home/bin/java") || return 1
+    [ "$major" -ge "$REQUIRED_JAVA_MAJOR" ]
+}
+
+resolve_java_home_from_command() {
+    local java_cmd="$1"
+    local resolved_java
+
+    [ -n "$java_cmd" ] || return 1
+
+    resolved_java=$(readlink -f "$java_cmd" 2>/dev/null)
+    [ -n "$resolved_java" ] || return 1
+
+    dirname "$(dirname "$resolved_java")"
+}
+
+select_compatible_java_home() {
+    local path_java candidate
+
+    if java_home_is_compatible "$JAVA_HOME"; then
+        return 0
+    fi
+
+    path_java=$(command -v java 2>/dev/null)
+    if [ -n "$path_java" ]; then
+        candidate=$(resolve_java_home_from_command "$path_java")
+        if java_home_is_compatible "$candidate"; then
+            JAVA_HOME="$candidate"
+            export JAVA_HOME
+            return 0
+        fi
+    fi
+
+    for candidate in \
+        "$HOME/.sdkman/candidates/java/current" \
+        "$HOME/.sdkman/candidates/java/"* \
+        /usr/lib/jvm/* \
+        /Library/Java/JavaVirtualMachines/*.jdk/Contents/Home \
+        /opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home \
+        /usr/local/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home
+    do
+        if java_home_is_compatible "$candidate"; then
+            JAVA_HOME="$candidate"
+            export JAVA_HOME
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+select_compatible_java_home || die "ERROR: This project requires Java $REQUIRED_JAVA_MAJOR or newer to run Gradle.
+
+The current environment did not provide a compatible JVM. Install JDK $REQUIRED_JAVA_MAJOR and/or set JAVA_HOME to that installation before running Gradle."
+
 # Determine the Java command to use to start the JVM.
 if [ -n "$JAVA_HOME" ] ; then
     if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
