@@ -27,7 +27,9 @@ kotlin{
             api(libs.androidx.metrics)
             implementation(libs.androidx.compose.runtime)
             implementation(libs.accompanist.pager)
-            implementation(libs.google.oss.licenses)
+            // Only needed for compilation of Android-specific utility code.
+            // App module provides the runtime artifact.
+            compileOnly(libs.google.oss.licenses)
         }
         commonMain.dependencies {
             implementation(projects.core.analytics)

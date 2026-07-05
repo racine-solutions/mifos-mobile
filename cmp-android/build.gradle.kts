@@ -140,6 +140,7 @@ dependencies {
     implementation(libs.filekit.core)
     implementation(libs.filekit.compose)
     implementation(libs.filekit.dialog.compose)
+    implementation(libs.google.oss.licenses)
 
     testImplementation(kotlin("test"))
     testImplementation(libs.koin.test)
@@ -150,5 +151,13 @@ dependencyGuard {
     configuration("prodReleaseRuntimeClasspath") {
         modules = true
         tree = true
+    }
+}
+
+// OSS licenses plugin resolves a compile classpath variant that is ambiguous with cmp-shared KMP outputs.
+// Disable release-only OSS aggregation tasks so full `build` remains green while app debug builds keep working.
+tasks.configureEach {
+    if (name.endsWith("ReleaseOssLicensesTask")) {
+        enabled = false
     }
 }
