@@ -34,8 +34,8 @@ data class AppSettings(
     companion object {
         val DEFAULT = AppSettings(
             userId = "",
-            tenant = "mifos-bank-1",
-            baseUrl = "https://mifos-bank-1.mifos.community/",
+            tenant = "default",
+            baseUrl = "https://dev-lms-backend.surepayltd.com/",
             appTheme = MifosThemeConfig.FOLLOW_SYSTEM,
             sentTokenToServer = false,
             gcmToken = null,
