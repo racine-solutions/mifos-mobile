@@ -19,11 +19,34 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 import co.touchlab.kermit.Logger.Companion as KermitLogger
 
 actual val ktorHttpClient: HttpClient
     get() = HttpClient(OkHttp) {
         expectSuccess = true
+
+        engine {
+            config {
+                if (BuildConfig.DEBUG) {
+                    val trustAllCerts = object : X509TrustManager {
+                        override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+                        override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+                        override fun getAcceptedIssuers(): Array<X509Certificate> = emptyArray()
+                    }
+                    val sslContext = SSLContext.getInstance("TLS").apply {
+                        init(null, arrayOf<TrustManager>(trustAllCerts), SecureRandom())
+                    }
+                    sslSocketFactory(sslContext.socketFactory, trustAllCerts)
+                    hostnameVerifier { _, _ -> true }
+                }
+            }
+        }
+
         install(HttpTimeout) {
             socketTimeoutMillis = 60_000
             requestTimeoutMillis = 60_000
