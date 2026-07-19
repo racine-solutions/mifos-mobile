@@ -21,7 +21,7 @@ class BaseURL {
     }
 
     companion object {
-        const val API_ENDPOINT = "10.0.2.2:8443"
+        const val API_ENDPOINT = "dev-lms-backend.surepayltd.com"
         const val API_PATH = "/fineract-provider/api/v1/self/"
         const val PROTOCOL_HTTPS = "https://"
     }
