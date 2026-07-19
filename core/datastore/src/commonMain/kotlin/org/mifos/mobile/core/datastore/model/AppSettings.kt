@@ -35,7 +35,7 @@ data class AppSettings(
         val DEFAULT = AppSettings(
             userId = "",
             tenant = "default",
-            baseUrl = "https://dev-lms-backend.surepayltd.com/",
+            baseUrl = "https://10.0.2.2:8443/",
             appTheme = MifosThemeConfig.FOLLOW_SYSTEM,
             sentTokenToServer = false,
             gcmToken = null,
