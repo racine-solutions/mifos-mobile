@@ -11,6 +11,7 @@ package org.mifos.mobile.core.network.dto.templates.loan
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 
 @Serializable
 data class LoanOfficerOptionsResponseDto(
@@ -35,6 +36,7 @@ data class LoanOfficerOptionsResponseDto(
     @SerialName("isActive")
     val active: Boolean? = null,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val joiningDate: List<Int>? = null,
 
 )

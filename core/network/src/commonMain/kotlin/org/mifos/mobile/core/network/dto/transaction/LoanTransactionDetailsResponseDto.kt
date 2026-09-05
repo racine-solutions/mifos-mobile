@@ -11,12 +11,14 @@ package org.mifos.mobile.core.network.dto.transaction
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 import org.mifos.mobile.core.network.dto.currency.CurrencyResponseDto
 
 @Serializable
 data class LoanTransactionDetailsResponseDto(
     val id: Long? = null,
     val amount: Double? = null,
+    @Serializable(with = FlexibleDateListSerializer::class)
     val date: List<Int>? = null,
     val manuallyReversed: Boolean? = null,
     val principalPortion: Double? = null,

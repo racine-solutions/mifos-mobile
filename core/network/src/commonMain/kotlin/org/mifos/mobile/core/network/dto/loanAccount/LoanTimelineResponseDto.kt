@@ -10,9 +10,11 @@
 package org.mifos.mobile.core.network.dto.loanAccount
 
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 
 @Serializable
 data class LoanTimelineResponseDto(
+    @Serializable(with = FlexibleDateListSerializer::class)
     val submittedOnDate: List<Int>? = null,
 
     val submittedByUsername: String?,
@@ -21,6 +23,7 @@ data class LoanTimelineResponseDto(
 
     val submittedByLastname: String?,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val approvedOnDate: List<Int>? = null,
 
     val approvedByUsername: String?,
@@ -29,8 +32,10 @@ data class LoanTimelineResponseDto(
 
     val approvedByLastname: String?,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val expectedDisbursementDate: List<Int>? = null,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val actualDisbursementDate: List<Int>? = null,
 
     val disbursedByUsername: String?,
@@ -39,10 +44,13 @@ data class LoanTimelineResponseDto(
 
     val disbursedByLastname: String?,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val closedOnDate: List<Int>? = null,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val expectedMaturityDate: List<Int>? = null,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val withdrawnOnDate: List<Int>? = null,
 
 )

@@ -10,6 +10,7 @@
 package org.mifos.mobile.core.network.dto.savingsAccount
 
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 import org.mifos.mobile.core.network.dto.currency.CurrencyResponseDto
 
 @Serializable
@@ -45,6 +46,7 @@ data class SavingsAccountResponseDto(
 
     val depositType: SavingsDepositTypeResponseDto? = null,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val lastActiveTransactionDate: List<Int>? = null,
 
     val timeLine: SavingsTimeLineResponseDto? = null,

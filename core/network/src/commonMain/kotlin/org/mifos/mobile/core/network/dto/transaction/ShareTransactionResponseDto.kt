@@ -10,6 +10,7 @@
 package org.mifos.mobile.core.network.dto.transaction
 
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 import org.mifos.mobile.core.network.dto.common.TypeResponseDto
 
 @Serializable
@@ -20,6 +21,7 @@ data class ShareTransactionResponseDto(
     val chargeAmount: Double? = null,
     val id: Long? = null,
     val numberOfShares: Int? = null,
+    @Serializable(with = FlexibleDateListSerializer::class)
     val purchasedDate: List<Int> = emptyList(),
     val purchasedPrice: Double? = null,
     val status: TypeResponseDto? = null,
