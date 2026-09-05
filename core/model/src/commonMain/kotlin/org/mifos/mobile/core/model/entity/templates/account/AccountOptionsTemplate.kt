@@ -21,4 +21,8 @@ data class AccountOptionsTemplate(
 
     val toAccountOptions: List<AccountOption> = emptyList(),
 
+    val toAccount: AccountOption? = null,
+
+    val officeId: Int? = null,
+
 ) : Parcelable

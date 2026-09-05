@@ -50,5 +50,11 @@ interface SavingsAccountRepository {
         payload: SavingsAccountWithdrawPayload?,
     ): DataState<String>
 
-    fun accountTransferTemplate(accountId: Long?, accountType: Long?): Flow<DataState<AccountOptionsTemplate>>
+    fun accountTransferTemplate(
+        accountId: Long?,
+        accountType: Long?,
+        fromClientId: Long? = null,
+        toAccountId: Long? = null,
+        toAccountType: Long? = null,
+    ): Flow<DataState<AccountOptionsTemplate>>
 }

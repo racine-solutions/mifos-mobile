@@ -151,8 +151,17 @@ class SavingsAccountRepositoryImp(
     override fun accountTransferTemplate(
         accountId: Long?,
         accountType: Long?,
+        fromClientId: Long?,
+        toAccountId: Long?,
+        toAccountType: Long?,
     ): Flow<DataState<AccountOptionsTemplate>> {
-        return dataManager.savingAccountsListApi.accountTransferTemplate(accountId!!, accountType)
+        return dataManager.savingAccountsListApi.accountTransferTemplate(
+            accountId,
+            accountType,
+            fromClientId,
+            toAccountId,
+            toAccountType,
+        )
             .map { it.toModel() }
             .asDataStateFlow().flowOn(ioDispatcher)
     }
