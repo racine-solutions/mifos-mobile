@@ -1,0 +1,11 @@
+[Unit]
+Description=Auto-apply adb reverse tcp:8443 for Mifos Mobile local Fineract dev
+After=default.target
+
+[Service]
+ExecStart=%h/WorkProject/SurePay/LatestRepo/MobiUserWallet/mifos-mobile/scripts/adb-reverse-watcher.sh
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target

@@ -40,6 +40,7 @@ interface SavingAccountsListService {
         @Query("fromAccountType") accountType: Long?,
         @Query("fromClientId") fromClientId: Long? = null,
         @Query("toAccountId") toAccountId: Long? = null,
+        @Query("toClientId") toClientId: Long? = null,
         @Query("toAccountType") toAccountType: Long? = null,
     ): Flow<AccountOptionsTemplateResponseDto>
 

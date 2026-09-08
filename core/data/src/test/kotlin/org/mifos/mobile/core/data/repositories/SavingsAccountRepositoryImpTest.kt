@@ -263,28 +263,28 @@ class SavingsAccountRepositoryImpTest {
         runTest {
             val responseBody = mock(AccountOptionsTemplate::class.java)
             Mockito.`when`(
-                dataManager.accountTransferTemplate(null, null, null, null, null),
+                dataManager.accountTransferTemplate(null, null, null, null, null, null),
             ).thenReturn(responseBody)
 
-            val result = savingsAccountRepositoryImp.accountTransferTemplate(null, null, null, null, null)
+            val result = savingsAccountRepositoryImp.accountTransferTemplate(null, null, null, null, null, null)
             result.test {
                 assertEquals(responseBody, awaitItem())
                 cancelAndIgnoreRemainingEvents()
             }
-            Mockito.verify(dataManager).accountTransferTemplate(null, null, null, null, null)
+            Mockito.verify(dataManager).accountTransferTemplate(null, null, null, null, null, null)
         }
 
     @Test(expected = Exception::class)
     fun testLoanAccountTransferTemplate_ErrorResponseFromDataManager_ReturnsError() = runTest {
         Mockito.`when`(
-            dataManager.accountTransferTemplate(null, null, null, null, null),
+            dataManager.accountTransferTemplate(null, null, null, null, null, null),
         ).thenThrow(Exception("Error occurred"))
 
-        val result = savingsAccountRepositoryImp.accountTransferTemplate(null, null, null, null, null)
+        val result = savingsAccountRepositoryImp.accountTransferTemplate(null, null, null, null, null, null)
         result.test {
             assertEquals(Throwable("Error occurred"), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
-        Mockito.verify(dataManager).accountTransferTemplate(null, null, null, null, null)
+        Mockito.verify(dataManager).accountTransferTemplate(null, null, null, null, null, null)
     }
 }

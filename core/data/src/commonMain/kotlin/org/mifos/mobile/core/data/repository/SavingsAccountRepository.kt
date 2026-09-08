@@ -55,6 +55,7 @@ interface SavingsAccountRepository {
         accountType: Long?,
         fromClientId: Long? = null,
         toAccountId: Long? = null,
+        toClientId: Long? = null,
         toAccountType: Long? = null,
     ): Flow<DataState<AccountOptionsTemplate>>
 }

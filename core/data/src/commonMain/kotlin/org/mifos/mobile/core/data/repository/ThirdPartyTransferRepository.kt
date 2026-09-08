@@ -15,5 +15,8 @@ import org.mifos.mobile.core.model.entity.templates.account.AccountOptionsTempla
 
 interface ThirdPartyTransferRepository {
 
-    fun thirdPartyTransferTemplate(): Flow<DataState<AccountOptionsTemplate>>
+    fun thirdPartyTransferTemplate(
+        fromClientId: Long? = null,
+        fromAccountType: Long? = null,
+    ): Flow<DataState<AccountOptionsTemplate>>
 }
