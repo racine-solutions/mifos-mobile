@@ -20,6 +20,8 @@ fun AccountOptionsTemplateResponseDto.toModel(): AccountOptionsTemplate =
     AccountOptionsTemplate(
         fromAccountOptions = fromAccountOptions.map { it.toModel() },
         toAccountOptions = toAccountOptions.map { it.toModel() },
+        toAccount = toAccount?.toModel(),
+        officeId = fromOffice?.id,
     )
 
 fun AccountOptionsResponseDto.toModel(): AccountOption =

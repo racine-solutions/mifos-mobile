@@ -10,6 +10,7 @@
 package org.mifos.mobile.core.network.dto.savingsAccount
 
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 import org.mifos.mobile.core.network.dto.common.TypeResponseDto
 import org.mifos.mobile.core.network.dto.currency.CurrencyResponseDto
 import org.mifos.mobile.core.network.dto.transaction.SavingsTransactionResponseDto
@@ -55,6 +56,7 @@ data class SavingsWithAssociationsResponseDto(
 
     val withHoldTax: Boolean? = null,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val lastActiveTransactionDate: List<Int>? = null,
 
     val dormancyTrackingActive: Boolean? = null,

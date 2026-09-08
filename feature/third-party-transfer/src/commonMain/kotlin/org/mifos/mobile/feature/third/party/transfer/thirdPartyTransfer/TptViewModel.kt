@@ -12,6 +12,7 @@ package org.mifos.mobile.feature.third.party.transfer.thirdPartyTransfer
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -24,18 +25,46 @@ import mifos_mobile.feature.third_party_transfer.generated.resources.feature_tpt
 import mifos_mobile.feature.third_party_transfer.generated.resources.feature_tpt_error_server
 import org.jetbrains.compose.resources.StringResource
 import org.mifos.mobile.core.common.DataState
+import org.mifos.mobile.core.data.repository.BeneficiaryRepository
 import org.mifos.mobile.core.data.repository.SavingsAccountRepository
 import org.mifos.mobile.core.data.repository.ThirdPartyTransferRepository
 import org.mifos.mobile.core.data.util.NetworkMonitor
 import org.mifos.mobile.core.datastore.UserPreferencesRepository
 import org.mifos.mobile.core.model.entity.accounts.savings.SavingsWithAssociations
+import org.mifos.mobile.core.model.entity.beneficiary.Beneficiary
 import org.mifos.mobile.core.model.entity.payload.ReviewTransferPayload
 import org.mifos.mobile.core.model.entity.templates.account.AccountOption
 import org.mifos.mobile.core.model.entity.templates.account.AccountOptionsTemplate
-import org.mifos.mobile.core.model.enums.AccountType
+import org.mifos.mobile.core.model.entity.templates.account.AccountType
 import org.mifos.mobile.core.ui.utils.BaseViewModel
 import org.mifos.mobile.core.ui.utils.ScreenUiState
 import org.mifos.mobile.core.ui.utils.ValidationHelper
+
+private const val SAVINGS_ACCOUNT_TYPE = 2L
+
+/**
+ * Fineract's accounttransfers/template endpoint never reports an account's own office or
+ * type on the list items themselves (only the query params used to fetch them imply it),
+ * so those fields have to be attached here from what the caller already knows before the
+ * account can be submitted as part of a transfer payload.
+ */
+private fun AccountOption.withTransferMeta(officeId: Int?, accountType: Long): AccountOption =
+    copy(officeId = officeId, accountType = AccountType(id = accountType.toInt()))
+
+/**
+ * Destination accounts for a third-party transfer come from the user's saved beneficiaries,
+ * not from the generic accounttransfers/template (which can't resolve an arbitrary third
+ * party's office/client without already knowing their numeric IDs).
+ */
+private fun Beneficiary.toAccountOption(): AccountOption = AccountOption(
+    accountId = accountId,
+    accountNo = accountNumber,
+    accountType = accountType,
+    clientId = clientId,
+    clientName = name,
+    officeId = officeId,
+    officeName = officeName,
+)
 
 /**
  * ViewModel for the Make Transfer screen.
@@ -44,6 +73,8 @@ import org.mifos.mobile.core.ui.utils.ValidationHelper
  * account options, validating user input, and initiating the transfer process.
  *
  * @param thirdPartyTransferRepositoryImpl The repository for third-party transfer operations.
+ * @param beneficiaryRepositoryImpl The repository for fetching the user's saved beneficiaries,
+ *   used to populate the destination account options.
  * @param networkMonitor A utility to monitor network connectivity.
  * @param userPreferencesRepositoryImpl The repository for accessing user preferences, like client ID.
  */
@@ -51,6 +82,7 @@ import org.mifos.mobile.core.ui.utils.ValidationHelper
 internal class TptViewModel(
     private val savingsAccountRepositoryImpl: SavingsAccountRepository,
     private val thirdPartyTransferRepositoryImpl: ThirdPartyTransferRepository,
+    private val beneficiaryRepositoryImpl: BeneficiaryRepository,
     private val networkMonitor: NetworkMonitor,
     private val userPreferencesRepositoryImpl: UserPreferencesRepository,
 ) : BaseViewModel<TptState, TptEvent, TptAction>(
@@ -180,8 +212,8 @@ internal class TptViewModel(
     ) {
         val fromAccountSelected =
             state.accountOptionsTemplate.fromAccountOptions
-                .filterSavingsAccounts()
                 .find { it.accountNo == accountNo }
+                ?.withTransferMeta(officeId = state.officeId, accountType = SAVINGS_ACCOUNT_TYPE)
 
         val toAccounts =
             state.accountOptionsTemplate.toAccountOptions
@@ -291,7 +323,6 @@ internal class TptViewModel(
             .find { it.accountNo == toAccount }
 
         val fromAccounts = state.accountOptionsTemplate.fromAccountOptions
-            .filterSavingsAccounts()
             .filter { it.accountNo != toAccount }
 
         updateState {
@@ -507,14 +538,43 @@ internal class TptViewModel(
     private fun fetchAccountOptions() {
         showLoading()
         viewModelScope.launch {
-            thirdPartyTransferRepositoryImpl
-                .thirdPartyTransferTemplate()
-                .collect { result ->
-                    sendAction(
-                        TptAction.Internal.ReceiveTransferTemplateResult(result),
-                    )
-                }
+            combine(
+                thirdPartyTransferRepositoryImpl.thirdPartyTransferTemplate(
+                    fromClientId = state.clientId,
+                    fromAccountType = SAVINGS_ACCOUNT_TYPE,
+                ),
+                beneficiaryRepositoryImpl.beneficiaryList(),
+            ) { templateResult, beneficiaryResult ->
+                mergeWithBeneficiaries(templateResult, beneficiaryResult)
+            }.collect { result ->
+                sendAction(
+                    TptAction.Internal.ReceiveTransferTemplateResult(result),
+                )
+            }
         }
+    }
+
+    /**
+     * Combines the account transfer template (which supplies the "from" savings accounts) with
+     * the user's saved beneficiaries (which supply the "to" destination options) into a single
+     * result the rest of the ViewModel can treat as one [AccountOptionsTemplate] fetch.
+     */
+    private fun mergeWithBeneficiaries(
+        templateResult: DataState<AccountOptionsTemplate>,
+        beneficiaryResult: DataState<List<Beneficiary>>,
+    ): DataState<AccountOptionsTemplate> = when {
+        templateResult is DataState.Loading || beneficiaryResult is DataState.Loading -> DataState.Loading
+        templateResult is DataState.Error -> templateResult
+        beneficiaryResult is DataState.Error -> DataState.Error(beneficiaryResult.exception)
+        templateResult is DataState.Success && beneficiaryResult is DataState.Success -> {
+            DataState.Success(
+                templateResult.data.copy(
+                    toAccountOptions = beneficiaryResult.data.map { it.toAccountOption() },
+                ),
+            )
+        }
+
+        else -> DataState.Loading
     }
 
     /**
@@ -542,13 +602,12 @@ internal class TptViewModel(
             is DataState.Success -> {
                 val template = dataState.data
 
-                val savingsFromAccounts = template.fromAccountOptions.filterSavingsAccounts()
-
                 updateState {
                     it.copy(
                         accountOptionsTemplate = dataState.data,
-                        fromAccountOptions = savingsFromAccounts,
+                        fromAccountOptions = template.fromAccountOptions,
                         toAccountOptions = dataState.data.toAccountOptions,
+                        officeId = template.officeId,
                         uiState = ScreenUiState.Success,
                     )
                 }
@@ -590,6 +649,7 @@ internal class TptViewModel(
 internal data class TptState(
     val accountId: Long = -1L,
     val clientId: Long = -1L,
+    val officeId: Int? = null,
     val outstandingBalance: Double? = null,
     val amount: String = "",
     val amountError: StringResource? = null,
@@ -736,9 +796,3 @@ internal sealed class ValidationResult {
      */
     data class Error(val message: StringResource) : ValidationResult()
 }
-
-/**
- * Extension function to filter a list of AccountOptions to include only SAVINGS accounts.
- */
-private fun List<AccountOption>.filterSavingsAccounts(): List<AccountOption> =
-    filter { it.accountType?.value == AccountType.SAVINGS.value }

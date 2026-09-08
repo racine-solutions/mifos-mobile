@@ -10,8 +10,10 @@
 package org.mifos.mobile.core.network.dto.templates.loan
 
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 
 @Serializable
 data class LoanTimelineResponseDto(
+    @Serializable(with = FlexibleDateListSerializer::class)
     val expectedDisbursementDate: List<Int>,
 )

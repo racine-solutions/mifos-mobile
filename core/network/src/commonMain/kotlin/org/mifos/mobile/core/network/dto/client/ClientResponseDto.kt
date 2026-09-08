@@ -10,6 +10,7 @@
 package org.mifos.mobile.core.network.dto.client
 
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 
 @Serializable
 data class ClientResponseDto(
@@ -21,8 +22,10 @@ data class ClientResponseDto(
 
     val active: Boolean? = null,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val activationDate: List<Int> = emptyList(),
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val dobDate: List<Int> = emptyList(),
 
     val firstname: String? = null,

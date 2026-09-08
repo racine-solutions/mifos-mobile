@@ -27,4 +27,10 @@ data class BeneficiaryListResponseDto(
     val accountNumber: String? = null,
 
     val transferLimit: Double? = null,
+
+    val officeId: Int? = null,
+
+    val clientId: Long? = null,
+
+    val accountId: Int? = null,
 )

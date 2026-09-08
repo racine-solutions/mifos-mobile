@@ -10,6 +10,7 @@
 package org.mifos.mobile.core.network.dto.transaction
 
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 import org.mifos.mobile.core.network.dto.common.TypeResponseDto
 import org.mifos.mobile.core.network.dto.currency.CurrencyResponseDto
 
@@ -24,12 +25,14 @@ data class TransactionResponseDto(
 
     val type: TypeResponseDto,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val date: List<Int> = emptyList(),
 
     val currency: CurrencyResponseDto? = null,
 
     val amount: Double? = null,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val submittedOnDate: List<Int> = emptyList(),
 
     val reversed: Boolean? = null,

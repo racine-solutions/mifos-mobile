@@ -10,10 +10,12 @@
 package org.mifos.mobile.core.network.dto.shareAccount
 
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 
 @Serializable
 data class ShareTimelineResponseDto(
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val submittedOnDate: List<Int>? = null,
 
     val submittedByUsername: String? = null,
@@ -22,6 +24,7 @@ data class ShareTimelineResponseDto(
 
     val submittedByLastname: String? = null,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val approvedDate: List<Int>? = null,
 
     val approvedByUsername: String? = null,
@@ -30,6 +33,7 @@ data class ShareTimelineResponseDto(
 
     val approvedByLastname: String? = null,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val activatedDate: List<Int>? = null,
 
     val activatedByUsername: String? = null,
