@@ -9,7 +9,7 @@
     See https://github.com/openMF/mobile-mobile/blob/master/LICENSE.md
 -->
 <resources>
-    <string name="feature_about_app_name">ميفوس موبايل</string>
+    <string name="feature_about_app_name">SurePay</string>
     <string name="login">تسجيل الدخول</string>
     <string name="toast_welcome">%1$s أهلا بك</string>
     <string name="unable_to_connect">غير متصل بالإنترنت</string>

@@ -99,7 +99,7 @@
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">අප ගැන</string>
     <string name="feature_settings_about_mifos">Mifos</string>
-    <string name="feature_settings_about_logo_content_description">Mifos පින්තූරය</string>
+    <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
     <string name="feature_settings_about_who_are_we">අපි කවුද?</string>
     <string name="feature_settings_about_what_does_mifos_do">Mifos කරන්නේ කුමක්ද?</string>
     <string name="feature_settings_about_who_are_we_desc">Mifos යනු පුද්ගලයන්ට මූලික මූල්‍ය සේවාවන් සඳහා ප්‍රවේශයක් සැලසුම් කරන ලාභය නොමැති සංවිධානයකි. එය එය විවෘත මූලාශ්‍ර වේදිකාවක් හරහා කරයි.</string>
@@ -122,7 +122,7 @@
     <string name="feature_settings_appinfo_topbar_title">යෙදුම් තොරතුරු</string>
     <string name="feature_settings_appinfo_mobile">Mobile</string>
     <string name="feature_settings_appinfo_logo_content_description">Mifos පින්තූරය</string>
-    <string name="feature_settings_appinfo_app_name">Mifos Mobile</string>
+    <string name="feature_settings_appinfo_app_name">SurePay</string>
     <string name="feature_settings_appinfo_mifos_electonic_banking">Mifos විදුලි බැඳියාණුව</string>
     <string name="feature_settings_appinfo_all_rights_reserved">සියලුම හිමිකම් ඇවිරිණි</string>
     <string name="feature_settings_appinfo_version">අනුවාදය</string>

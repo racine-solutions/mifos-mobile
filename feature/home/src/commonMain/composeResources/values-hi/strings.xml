@@ -29,7 +29,7 @@
     <string name="home">होम</string>
     <string name="help_line_number" translatable="false">8000000000</string>
     <string name="contact_email" translatable="false">support@mifos.org</string>
-    <string name="app_name">माइफोस मोबाइल</string>
+    <string name="app_name">SurePay</string>
     <string name="third_party_transfer">तृतीय पक्ष स्थानांतरण</string>
     <string name="manage_beneficiaries">लाभार्थियों का प्रबंधन करें</string>
     <string name="settings">सेटिंग्स</string>

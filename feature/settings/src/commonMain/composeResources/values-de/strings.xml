@@ -99,7 +99,7 @@
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">Über uns</string>
     <string name="feature_settings_about_mifos">Mifos</string>
-    <string name="feature_settings_about_logo_content_description">Mifos-Bild</string>
+    <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
     <string name="feature_settings_about_who_are_we">Wer sind wir?</string>
     <string name="feature_settings_about_what_does_mifos_do">Was macht Mifos?</string>
     <string name="feature_settings_about_who_are_we_desc">Mifos ist eine gemeinnützige Organisation, die Menschen den Zugang zu grundlegenden Finanzdienstleistungen ermöglichen möchte. Dies geschieht über eine Open-Source-Plattform.</string>
@@ -122,7 +122,7 @@
     <string name="feature_settings_appinfo_topbar_title">App-Informationen</string>
     <string name="feature_settings_appinfo_mobile">Mobile</string>
     <string name="feature_settings_appinfo_logo_content_description">Mifos-Bild</string>
-    <string name="feature_settings_appinfo_app_name">Mifos Mobile</string>
+    <string name="feature_settings_appinfo_app_name">SurePay</string>
     <string name="feature_settings_appinfo_mifos_electonic_banking">Mifos Electronic Banking</string>
     <string name="feature_settings_appinfo_all_rights_reserved">Alle Rechte vorbehalten</string>
     <string name="feature_settings_appinfo_version">Version</string>

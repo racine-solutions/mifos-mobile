@@ -9,8 +9,8 @@
     See https://github.com/openMF/mobile-mobile/blob/master/LICENSE.md
 -->
 <resources>
-    <string name="app_name" translatable="false">Mifos Mobile</string>
-    <string name="feature_about_app_name" translatable="false">Mifos Mobile</string>
+    <string name="app_name" translatable="false">SurePay</string>
+    <string name="feature_about_app_name" translatable="false">SurePay</string>
     <string name="login">Login</string>
     <string name="toast_welcome" translatable="false">Welcome %1$s</string>
     <string name="unable_to_connect">Not connected to internet</string>

@@ -99,7 +99,7 @@
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">आमच्याबद्दल</string>
     <string name="feature_settings_about_mifos">Mifos</string>
-    <string name="feature_settings_about_logo_content_description">Mifos प्रतिमा</string>
+    <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
     <string name="feature_settings_about_who_are_we">आम्ही कोण आहोत?</string>
     <string name="feature_settings_about_what_does_mifos_do">Mifos काय करते?</string>
     <string name="feature_settings_about_who_are_we_desc">Mifos ही एक नॉन-प्रॉफिट संस्था आहे जी लोकांना मूलभूत आर्थिक सेवा पुरवण्याचा प्रयत्न करते. ती एका ओपन-सोर्स प्लॅटफॉर्मवर असे करते.</string>
@@ -122,7 +122,7 @@
     <string name="feature_settings_appinfo_topbar_title">ॲप माहिती</string>
     <string name="feature_settings_appinfo_mobile">मोबाईल</string>
     <string name="feature_settings_appinfo_logo_content_description">Mifos प्रतिमा</string>
-    <string name="feature_settings_appinfo_app_name">Mifos मोबाईल</string>
+    <string name="feature_settings_appinfo_app_name">SurePay</string>
     <string name="feature_settings_appinfo_mifos_electonic_banking">Mifos इलेक्ट्रॉनिक बॅंकिंग</string>
     <string name="feature_settings_appinfo_all_rights_reserved">सर्व हक्क राखीव</string>
     <string name="feature_settings_appinfo_version">व्हर्जन</string>

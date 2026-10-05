@@ -78,7 +78,7 @@
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">ഞങ്ങളെക്കുറിച്ച്</string>
     <string name="feature_settings_about_mifos">മിഫോസ്</string>
-    <string name="feature_settings_about_logo_content_description">മിഫോസ് ചിത്രം</string>
+    <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
     <string name="feature_settings_about_who_are_we">ആരാണ് ഞങ്ങൾ?</string>
     <string name="feature_settings_about_what_does_mifos_do">മിഫോസ് എന്താണ് ചെയ്യുന്നത്?</string>
     <string name="feature_settings_about_who_are_we_desc">അടിസ്ഥാന സാമ്പത്തിക സേവനങ്ങൾ ആളുകൾക്ക് ലഭ്യമാക്കാൻ ശ്രമിക്കുന്ന ഒരു ലാഭരഹിത സംഘടനയാണ് മിഫോസ്. ഒരു ഓപ്പൺ സോഴ്‌സ് പ്ലാറ്റ്‌ഫോം വഴിയാണ് ഇത് ചെയ്യുന്നത്.</string>
@@ -101,7 +101,7 @@
     <string name="feature_settings_appinfo_topbar_title">ആപ്പ് വിവരങ്ങൾ</string>
     <string name="feature_settings_appinfo_mobile">മൊബൈൽ</string>
     <string name="feature_settings_appinfo_logo_content_description">മിഫോസ് ചിത്രം</string>
-    <string name="feature_settings_appinfo_app_name">മിഫോസ് മൊബൈൽ</string>
+    <string name="feature_settings_appinfo_app_name">SurePay</string>
     <string name="feature_settings_appinfo_mifos_electonic_banking">മിഫോസ് ഇലക്ട്രോണിക് ബാങ്കിംഗ്</string>
     <string name="feature_settings_appinfo_all_rights_reserved">എല്ലാ അവകാശങ്ങളും നിക്ഷിപ്തം</string>
     <string name="feature_settings_appinfo_version">പതിപ്പ്</string>

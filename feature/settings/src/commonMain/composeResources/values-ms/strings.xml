@@ -99,7 +99,7 @@
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">Tentang Kami</string>
     <string name="feature_settings_about_mifos">Mifos</string>
-    <string name="feature_settings_about_logo_content_description">Imej Mifos</string>
+    <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
     <string name="feature_settings_about_who_are_we">Siapa kami?</string>
     <string name="feature_settings_about_what_does_mifos_do">Apa yang Mifos lakukan?</string>
     <string name="feature_settings_about_who_are_we_desc">Mifos ialah organisasi bukan untung yang berusaha memberikan akses kepada orang ramai kepada perkhidmatan kewangan asas. Ia berbuat demikian melalui platform sumber terbuka.</string>
@@ -121,7 +121,7 @@
     <string name="feature_settings_appinfo_topbar_title">Maklumat Aplikasi</string>
     <string name="feature_settings_appinfo_mobile">Mobile</string>
     <string name="feature_settings_appinfo_logo_content_description">Imej Mifos</string>
-    <string name="feature_settings_appinfo_app_name">Mifos Mobile</string>
+    <string name="feature_settings_appinfo_app_name">SurePay</string>
     <string name="feature_settings_appinfo_mifos_electonic_banking">Perbankan Elektronik Mifos</string>
     <string name="feature_settings_appinfo_all_rights_reserved">Hak cipta terpelihara</string>
     <string name="feature_settings_appinfo_version">Versi</string>

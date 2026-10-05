@@ -75,7 +75,7 @@
 
     <string name="feature_settings_about_topbar_title">మా గురించి</string>
     <string name="feature_settings_about_mifos">మిఫోస్ (Mifos)</string>
-    <string name="feature_settings_about_logo_content_description">మిఫోస్ చిత్రం</string>
+    <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
     <string name="feature_settings_about_who_are_we">మేము ఎవరము?</string>
     <string name="feature_settings_about_what_does_mifos_do">మిఫోస్ ఏం చేస్తుంది?</string>
     <string name="feature_settings_about_who_are_we_desc">మిఫోస్ అనేది ప్రజలకు ప్రాథమిక ఆర్థిక సేవలను అందించే లాభాపేక్షలేని సంస్థ. ఇది ఒక ఓపెన్-సోర్స్ ప్లాట్‌ఫారమ్ ద్వారా ఈ సేవలను అందిస్తుంది.</string>
@@ -97,7 +97,7 @@
     <string name="feature_settings_appinfo_topbar_title">యాప్ సమాచారం</string>
     <string name="feature_settings_appinfo_mobile">మొబైల్</string>
     <string name="feature_settings_appinfo_logo_content_description">మిఫోస్ చిత్రం</string>
-    <string name="feature_settings_appinfo_app_name">మిఫోస్ మొబైల్</string>
+    <string name="feature_settings_appinfo_app_name">SurePay</string>
     <string name="feature_settings_appinfo_mifos_electonic_banking">మిఫోస్ ఎలక్ట్రానిక్ బ్యాంకింగ్</string>
     <string name="feature_settings_appinfo_all_rights_reserved">సర్వ హక్కులు రిజర్వు చేయబడినవి</string>
     <string name="feature_settings_appinfo_version">వెర్షన్</string>

@@ -27,7 +27,7 @@
     <string name="home">Главная</string>
     <string name="help_line_number" translatable="false">8000000000</string>
     <string name="contact_email" translatable="false">support@mifos.org</string>
-    <string name="app_name">Mifos Mobile</string>
+    <string name="app_name">SurePay</string>
     <string name="third_party_transfer">Перевод третьей стороне</string>
     <string name="manage_beneficiaries">Управление бенефициарами</string>
     <string name="settings">Настройки</string>
