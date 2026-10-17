@@ -77,11 +77,11 @@
 
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">ഞങ്ങളെക്കുറിച്ച്</string>
-    <string name="feature_settings_about_mifos">മിഫോസ്</string>
+    <string name="feature_settings_about_mifos">Sure Banker</string>
     <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
     <string name="feature_settings_about_who_are_we">ആരാണ് ഞങ്ങൾ?</string>
-    <string name="feature_settings_about_what_does_mifos_do">മിഫോസ് എന്താണ് ചെയ്യുന്നത്?</string>
-    <string name="feature_settings_about_who_are_we_desc">അടിസ്ഥാന സാമ്പത്തിക സേവനങ്ങൾ ആളുകൾക്ക് ലഭ്യമാക്കാൻ ശ്രമിക്കുന്ന ഒരു ലാഭരഹിത സംഘടനയാണ് മിഫോസ്. ഒരു ഓപ്പൺ സോഴ്‌സ് പ്ലാറ്റ്‌ഫോം വഴിയാണ് ഇത് ചെയ്യുന്നത്.</string>
+    <string name="feature_settings_about_what_does_mifos_do">Sure Banker എന്താണ് ചെയ്യുന്നത്?</string>
+    <string name="feature_settings_about_who_are_we_desc">ഡിജിറ്റൽ, പേയ്‌മെന്റ് പരിഹാരങ്ങളിലൂടെ ചെറുകിട, ഇടത്തരം സംരംഭങ്ങളെ (SMEs) പിന്തുണയ്ക്കുക എന്നതാണ് ഞങ്ങളുടെ ദൗത്യം.</string>
     <string name="feature_settings_about_point_1">ആധുനിക സാമ്പത്തിക സേവനങ്ങൾ നൽകാൻ ധനകാര്യ സ്ഥാപനങ്ങളെ ഇത് സഹായിക്കുന്നു</string>
     <string name="feature_settings_about_point_2">വായ്പകൾ ലഭിക്കാനും, പണം ലാഭിക്കാനും, മറ്റും ആളുകളെ ഇത് പ്രാപ്തരാക്കുന്നു</string>
     <string name="feature_settings_about_point_3">ലോകമെമ്പാടുമുള്ള ദശലക്ഷക്കണക്കിന് ആളുകളെ സേവിക്കുന്ന ധനകാര്യ സ്ഥാപനങ്ങളെ ഇത് പിന്തുണയ്ക്കുന്നു</string>
@@ -100,9 +100,9 @@
     <!--App Info -->
     <string name="feature_settings_appinfo_topbar_title">ആപ്പ് വിവരങ്ങൾ</string>
     <string name="feature_settings_appinfo_mobile">മൊബൈൽ</string>
-    <string name="feature_settings_appinfo_logo_content_description">മിഫോസ് ചിത്രം</string>
+    <string name="feature_settings_appinfo_logo_content_description">Sure Banker ചിത്രം</string>
     <string name="feature_settings_appinfo_app_name">SurePay</string>
-    <string name="feature_settings_appinfo_mifos_electonic_banking">മിഫോസ് ഇലക്ട്രോണിക് ബാങ്കിംഗ്</string>
+    <string name="feature_settings_appinfo_mifos_electonic_banking">Sure Banker ഇലക്ട്രോണിക് ബാങ്കിംഗ്</string>
     <string name="feature_settings_appinfo_all_rights_reserved">എല്ലാ അവകാശങ്ങളും നിക്ഷിപ്തം</string>
     <string name="feature_settings_appinfo_version">പതിപ്പ്</string>
     <string name="feature_settings_appinfo_privacy_policy">സ്വകാര്യതാ നയം</string>

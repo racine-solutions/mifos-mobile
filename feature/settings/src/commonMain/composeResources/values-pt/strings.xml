@@ -98,11 +98,11 @@
 
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">Sobre Nós</string>
-    <string name="feature_settings_about_mifos">Mifos</string>
+    <string name="feature_settings_about_mifos">Sure Banker</string>
     <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
     <string name="feature_settings_about_who_are_we">Quem somos?</string>
-    <string name="feature_settings_about_what_does_mifos_do">O que o Mifos faz?</string>
-    <string name="feature_settings_about_who_are_we_desc">Mifos é uma organização sem fins lucrativos que busca fornecer às pessoas acesso a serviços financeiros básicos. Faz isso através de uma plataforma de código aberto.</string>
+    <string name="feature_settings_about_what_does_mifos_do">O que o Sure Banker faz?</string>
+    <string name="feature_settings_about_who_are_we_desc">Nossa missão é apoiar as PMEs com soluções digitais e de pagamentos.</string>
     <string name="feature_settings_about_point_1">Ajuda instituições financeiras a oferecer serviços financeiros modernos</string>
     <string name="feature_settings_about_point_2">Permite que as pessoas obtenham empréstimos, economizem dinheiro e muito mais</string>
     <string name="feature_settings_about_point_3">Suporta instituições financeiras que atendem milhões de pessoas ao redor do mundo</string>
@@ -121,9 +121,9 @@
     <!--App Info -->
     <string name="feature_settings_appinfo_topbar_title">Informações do Aplicativo</string>
     <string name="feature_settings_appinfo_mobile">Mobile</string>
-    <string name="feature_settings_appinfo_logo_content_description">Imagem do Mifos</string>
+    <string name="feature_settings_appinfo_logo_content_description">Imagem do Sure Banker</string>
     <string name="feature_settings_appinfo_app_name">SurePay</string>
-    <string name="feature_settings_appinfo_mifos_electonic_banking">Banco Eletrônico Mifos</string>
+    <string name="feature_settings_appinfo_mifos_electonic_banking">Banco Eletrônico Sure Banker</string>
     <string name="feature_settings_appinfo_all_rights_reserved">Todos os direitos reservados</string>
     <string name="feature_settings_appinfo_version">Versão</string>
     <string name="feature_settings_appinfo_privacy_policy">Política de Privacidade</string>

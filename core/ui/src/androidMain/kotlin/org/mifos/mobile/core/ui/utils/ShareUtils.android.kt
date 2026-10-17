@@ -164,7 +164,7 @@ actual object ShareUtils {
     actual fun callHelpline() {
         val context = activityProvider.invoke().application.baseContext
         val intent = Intent(Intent.ACTION_DIAL).apply {
-            data = "tel:8000000000".toUri()
+            data = "tel:${SurePayContact.PHONE_PRIMARY}".toUri()
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
@@ -176,7 +176,7 @@ actual object ShareUtils {
 
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = "mailto:".toUri()
-            putExtra(Intent.EXTRA_EMAIL, arrayOf("support@mifos.org"))
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(SurePayContact.EMAIL))
             putExtra(Intent.EXTRA_SUBJECT, "User Query")
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }

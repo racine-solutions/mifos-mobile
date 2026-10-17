@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmp.navigation.rootnav.RootNavScreen
+import cmp.navigation.utils.rememberIdleTimeoutModifier
 import org.koin.compose.viewmodel.koinViewModel
 import org.mifos.mobile.core.designsystem.theme.MifosMobileTheme
 import org.mifos.mobile.core.model.MifosThemeConfig
@@ -47,6 +48,11 @@ fun ComposeApp(
         }
     }
     val isSystemInDarkTheme = isSystemInDarkTheme()
+    val isSessionActive by viewModel.isSessionActive.collectAsStateWithLifecycle()
+    val idleTimeoutModifier = rememberIdleTimeoutModifier(
+        enabled = isSessionActive,
+        onTimeout = viewModel::logoutIdleSession,
+    )
 
     LaunchedEffect(isSystemInDarkTheme, uiState.themeConfig) {
         if (uiState.themeConfig == MifosThemeConfig.FOLLOW_SYSTEM) {
@@ -62,6 +68,7 @@ fun ComposeApp(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .then(idleTimeoutModifier)
                 .background(MaterialTheme.colorScheme.surface),
         ) {
             Column(

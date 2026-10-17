@@ -380,7 +380,7 @@
     <!--Customer care details-->
     <string name="need_help">Contacta con nosotros</string>
     <string name="help_line_number" translatable="false">8000000000</string>
-    <string name="contact_email" translatable="false">support@mifos.org</string>
+    <string name="contact_email" translatable="false">services@surepayltd.com</string>
 
     <string name="transferred_successfully">Transferido exitosamente</string>
 
@@ -475,7 +475,7 @@
     <string name="confirm_password">Confirmar Contraseña</string>
     <string name="error_password_not_match">Contraseña no coincide.</string>
     <string name="app_version">Versión %1$s</string>
-    <string name="feature_about_copyright_mifos">©2016-%1$s Iniciativa Mifos.</string>
+    <string name="feature_about_copyright_mifos">©2016-%1$s Sure Banker.</string>
     <string name="all_rights_reserved">Reservados todos los derechos.</string>
     <string name="feature_about_licenses">Licencias</string>
     <string name="feature_about_privacy_policy">política de privacidad</string>
@@ -524,7 +524,7 @@
     <string name="feature_about_official_website">Sitio web oficial</string>
     <string name="feature_about_app_version">Versión de la aplicación 1.0</string>
     <string name="feature_about_license">Licencia: MPL-2.0</string>
-    <string name="feature_about_description">Una aplicación de Android creada sobre la plataforma de autoservicio MifosX para que los clientes finales puedan ver y realizar transacciones en las cuentas y préstamos que poseen.</string>
+    <string name="feature_about_description">Una aplicación de Android creada sobre la plataforma de autoservicio Sure Banker para que los clientes finales puedan ver y realizar transacciones en las cuentas y préstamos que poseen.</string>
     <string name="or">o</string>
     <string name="no_app_to_support_action">No existe ninguna aplicación que admita esta acción</string>
     <string name="theme">Tema</string>

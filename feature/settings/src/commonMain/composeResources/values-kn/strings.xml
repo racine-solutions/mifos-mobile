@@ -74,11 +74,11 @@
 
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">ನಮ್ಮ ಬಗ್ಗೆ</string>
-    <string name="feature_settings_about_mifos">ಮಿಫೋಸ್</string>
+    <string name="feature_settings_about_mifos">Sure Banker</string>
     <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
     <string name="feature_settings_about_who_are_we">ನಾವು ಯಾರು?</string>
-    <string name="feature_settings_about_what_does_mifos_do">ಮಿಫೋಸ್ ಏನು ಮಾಡುತ್ತದೆ?</string>
-    <string name="feature_settings_about_who_are_we_desc">ಮಿಫೋಸ್ ಒಂದು ಲಾಭಾಸಕ್ತಿ ಸಂಸ್ಥೆಯಾಗಿದ್ದು, ಜನರಿಗೆ ಮೂಲಭೂತ ಹಣಕಾಸು ಸೇವೆಗಳನ್ನು ನೀಡಲು ಪ್ರಯತ್ನಿಸುತ್ತದೆ. ಇದು ಒಂದು ಉಚಿತ ಮೂಲ ವೇದಿಕೆಯನ್ನು ಮೂಲಕ ಅದನ್ನು ಮಾಡುತ್ತದೆ.</string>
+    <string name="feature_settings_about_what_does_mifos_do">Sure Banker ಏನು ಮಾಡುತ್ತದೆ?</string>
+    <string name="feature_settings_about_who_are_we_desc">ಡಿಜಿಟಲ್ ಮತ್ತು ಪಾವತಿ ಪರಿಹಾರಗಳೊಂದಿಗೆ ಸಣ್ಣ ಮತ್ತು ಮಧ್ಯಮ ಉದ್ಯಮಗಳಿಗೆ (SMEs) ಬೆಂಬಲ ನೀಡುವುದು ನಮ್ಮ ಧ್ಯೇಯ.</string>
     <string name="feature_settings_about_point_1">ಅದು ಹಣಕಾಸು ಸಂಸ್ಥೆಗಳು ಆಧುನಿಕ ಹಣಕಾಸು ಸೇವೆಗಳನ್ನು ನೀಡಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ</string>
     <string name="feature_settings_about_point_2">ಅದು ಜನರಿಗೆ ಸಾಲಗಳನ್ನು ಪಡೆಯಲು, ಹಣವನ್ನು ಉಳಿಸಿಕೊಳ್ಳಲು ಮತ್ತು ಇನ್ನಷ್ಟು ಮಾಡಲು ಸಕ್ಷಮಗೊಳಿಸುತ್ತದೆ</string>
     <string name="feature_settings_about_point_3">ಅದು ವಿಶ್ವದಲ್ಲಿ ಮಿಲಿಯನ್ ಜನರನ್ನು ಸೇವೆ ಸಲ್ಲಿಸುವ ಹಣಕಾಸು ಸಂಸ್ಥೆಗಳನ್ನು ಬೆಂಬಲಿಸುತ್ತದೆ</string>
@@ -97,9 +97,9 @@
     <!--App Info -->
     <string name="feature_settings_appinfo_topbar_title">ಆಪ್ ಮಾಹಿತಿ</string>
     <string name="feature_settings_appinfo_mobile">ಮೊಬೈಲ್</string>
-    <string name="feature_settings_appinfo_logo_content_description">ಮಿಫೋಸ್ ಚಿತ್ರ</string>
+    <string name="feature_settings_appinfo_logo_content_description">Sure Banker ಚಿತ್ರ</string>
     <string name="feature_settings_appinfo_app_name">SurePay</string>
-    <string name="feature_settings_appinfo_mifos_electonic_banking">ಮಿಫೋಸ್ ಎಲೆಕ್ಟ್ರಾನಿಕ್ ಬ್ಯಾಂಕಿಂಗ್</string>
+    <string name="feature_settings_appinfo_mifos_electonic_banking">Sure Banker ಎಲೆಕ್ಟ್ರಾನಿಕ್ ಬ್ಯಾಂಕಿಂಗ್</string>
     <string name="feature_settings_appinfo_all_rights_reserved">ಎಲ್ಲಾ ಹಕ್ಕುಗಳು ಮಾರ್ಜಿತವಾಗಿವೆ</string>
     <string name="feature_settings_appinfo_version">ಆವೃತ್ತಿ</string>
     <string name="feature_settings_appinfo_privacy_policy">ಗೌಪ್ಯತಾ ನೀತಿ</string>

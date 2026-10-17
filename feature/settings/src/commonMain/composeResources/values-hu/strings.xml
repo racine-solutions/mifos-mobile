@@ -98,11 +98,11 @@
 
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">Rólunk</string>
-    <string name="feature_settings_about_mifos">Mifos</string>
+    <string name="feature_settings_about_mifos">Sure Banker</string>
     <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
     <string name="feature_settings_about_who_are_we">Kik vagyunk?</string>
-    <string name="feature_settings_about_what_does_mifos_do">Mit csinál a Mifos?</string>
-    <string name="feature_settings_about_who_are_we_desc">A Mifos egy non-profit szervezet, amely az alapvető pénzügyi szolgáltatásokhoz való hozzáférést kívánja biztosítani az emberek számára. Ezt nyílt forráskódú platformon keresztül teszi.</string>
+    <string name="feature_settings_about_what_does_mifos_do">Mit csinál a Sure Banker?</string>
+    <string name="feature_settings_about_who_are_we_desc">Küldetésünk, hogy digitális és fizetési megoldásokkal támogassuk a kkv-kat.</string>
     <string name="feature_settings_about_point_1">Segíti a pénzügyi intézményeket modern pénzügyi szolgáltatások nyújtásában</string>
     <string name="feature_settings_about_point_2">Lehetővé teszi az emberek számára a kölcsönök, megtakarítások és egyebek igénybevételét</string>
     <string name="feature_settings_about_point_3">Támogatja a pénzügyi intézményeket, amelyek millió embereknek nyújtanak szolgáltatást világszerte</string>
@@ -121,9 +121,9 @@
     <!--App Info -->
     <string name="feature_settings_appinfo_topbar_title">Alkalmazás információ</string>
     <string name="feature_settings_appinfo_mobile">Mobil</string>
-    <string name="feature_settings_appinfo_logo_content_description">Mifos kép</string>
+    <string name="feature_settings_appinfo_logo_content_description">Sure Banker kép</string>
     <string name="feature_settings_appinfo_app_name">SurePay</string>
-    <string name="feature_settings_appinfo_mifos_electonic_banking">Mifos Elektronikus Bankolás</string>
+    <string name="feature_settings_appinfo_mifos_electonic_banking">Sure Banker Elektronikus Bankolás</string>
     <string name="feature_settings_appinfo_all_rights_reserved">Minden jog fenntartva</string>
     <string name="feature_settings_appinfo_version">Verzió</string>
     <string name="feature_settings_appinfo_privacy_policy">Adatvédelmi irányelvek</string>

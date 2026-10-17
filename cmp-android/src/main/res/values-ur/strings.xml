@@ -437,7 +437,7 @@
     <string name="confirm_password">پاس ورڈ کی توثیق کریں</string>
     <string name="error_password_not_match">پاس ورڈ میچ نہیں کرتا.</string>
     <string name="app_version">ورژن٪ 1 $ s</string>
-    <string name="feature_about_copyright_mifos">© 2016 - %1$s Mifos نوٹیفیکیشن.</string>
+    <string name="feature_about_copyright_mifos">©2016-%1$s Sure Banker.</string>
     <string name="all_rights_reserved">جملہ حقوق محفوظ ہیں.</string>
     <string name="feature_about_licenses">لائسنس</string>
     <string name="transfer_error">منتقلی مکمل کرنے میں ناکام، براہ کرم بعد میں دوبارہ کوشش کریں</string>

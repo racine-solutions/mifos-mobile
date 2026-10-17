@@ -98,11 +98,11 @@
 
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">අප ගැන</string>
-    <string name="feature_settings_about_mifos">Mifos</string>
+    <string name="feature_settings_about_mifos">Sure Banker</string>
     <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
     <string name="feature_settings_about_who_are_we">අපි කවුද?</string>
-    <string name="feature_settings_about_what_does_mifos_do">Mifos කරන්නේ කුමක්ද?</string>
-    <string name="feature_settings_about_who_are_we_desc">Mifos යනු පුද්ගලයන්ට මූලික මූල්‍ය සේවාවන් සඳහා ප්‍රවේශයක් සැලසුම් කරන ලාභය නොමැති සංවිධානයකි. එය එය විවෘත මූලාශ්‍ර වේදිකාවක් හරහා කරයි.</string>
+    <string name="feature_settings_about_what_does_mifos_do">Sure Banker කරන්නේ කුමක්ද?</string>
+    <string name="feature_settings_about_who_are_we_desc">ඩිජිටල් සහ ගෙවීම් විසඳුම් සමඟ කුඩා සහ මධ්‍යම පරිමාණ ව්‍යාපාර (SMEs) සහාය කිරීම අපගේ මෙහෙවරයි.</string>
     <string name="feature_settings_about_point_1">එය මූලික මූල්‍ය සංස්ථා නවීන මූල්‍ය සේවාවන් පිරිනමීමට උපකාර කරයි</string>
     <string name="feature_settings_about_point_2">එය පුද්ගලයන්ට ණය, බැඳීම සහ තවත් බොහෝ දේවල් සඳහා උපකාර කරයි</string>
     <string name="feature_settings_about_point_3">එය ලෝකය පුරා මිලියන ගණන් පුද්ගලයන්ට සේවාවන් පිරිනමන මූලික මූල්‍ය සංස්ථා සඳහා සහය දක්වයි</string>
@@ -121,9 +121,9 @@
     <!--App Info -->
     <string name="feature_settings_appinfo_topbar_title">යෙදුම් තොරතුරු</string>
     <string name="feature_settings_appinfo_mobile">Mobile</string>
-    <string name="feature_settings_appinfo_logo_content_description">Mifos පින්තූරය</string>
+    <string name="feature_settings_appinfo_logo_content_description">Sure Banker පින්තූරය</string>
     <string name="feature_settings_appinfo_app_name">SurePay</string>
-    <string name="feature_settings_appinfo_mifos_electonic_banking">Mifos විදුලි බැඳියාණුව</string>
+    <string name="feature_settings_appinfo_mifos_electonic_banking">Sure Banker විදුලි බැඳියාණුව</string>
     <string name="feature_settings_appinfo_all_rights_reserved">සියලුම හිමිකම් ඇවිරිණි</string>
     <string name="feature_settings_appinfo_version">අනුවාදය</string>
     <string name="feature_settings_appinfo_privacy_policy">රහස්‍යතා ප්‍රතිපත්තිය</string>

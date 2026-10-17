@@ -28,7 +28,7 @@
     <string name="need_help">Entre em contato</string>
     <string name="home">Início</string>
     <string name="help_line_number" translatable="false">8000000000</string>
-    <string name="contact_email" translatable="false">support@mifos.org</string>
+    <string name="contact_email" translatable="false">services@surepayltd.com</string>
     <string name="app_name">SurePay</string>
     <string name="third_party_transfer">Transferência para Terceiros</string>
     <string name="manage_beneficiaries">Gerenciar Beneficiários</string>

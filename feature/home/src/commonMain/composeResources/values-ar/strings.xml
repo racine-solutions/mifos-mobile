@@ -28,7 +28,7 @@
     <string name="need_help">اتصل بنا</string>
     <string name="home">الرئيسية</string>
     <string name="help_line_number" translatable="false">8000000000</string>
-    <string name="contact_email" translatable="false">support@mifos.org</string>
+    <string name="contact_email" translatable="false">services@surepayltd.com</string>
     <string name="app_name">SurePay</string>
     <string name="third_party_transfer">تحويل طرف ثالث</string>
     <string name="manage_beneficiaries">إدارة المستفيدين</string>

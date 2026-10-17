@@ -436,7 +436,7 @@
     <string name="confirm_password">စကားဝှက်ကိုအတည်ပြုပါ</string>
     <string name="error_password_not_match">Password ကိုမကိုက်ညီပါဘူး။</string>
     <string name="app_version">ဗားရှင်း %1$s ကို</string>
-    <string name="feature_about_copyright_mifos">©2016-%1$s Mifos Initiative.</string>
+    <string name="feature_about_copyright_mifos">©2016-%1$s Sure Banker.</string>
     <string name="all_rights_reserved">မူပိုင်ခွင့်များရယူပြီး။</string>
     <string name="feature_about_licenses">လိုင်စင်</string>
     <string name="transfer_error">လွှဲပြောင်းဖြည့်စွက်ဖို့မအောင်မြင်ဘူး, နောက်မှာထပ်ကြိုးစားကြည့်ပါ</string>

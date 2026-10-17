@@ -36,9 +36,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import mifos_mobile.feature.passcode.generated.resources.Res
+import mifos_mobile.feature.passcode.generated.resources.feature_passcode_authenticate
 import mifos_mobile.feature.passcode.generated.resources.feature_passcode_confirm
 import mifos_mobile.feature.passcode.generated.resources.feature_passcode_setup
 import mifos_mobile.feature.passcode.generated.resources.feature_passcode_tip
+import mifos_mobile.feature.passcode.generated.resources.feature_passcode_unlock_tip
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -119,6 +121,7 @@ private fun PasscodeScreenContent(
 
                 Text(
                     text = when (state.mode) {
+                        PasscodeMode.Verify -> stringResource(Res.string.feature_passcode_authenticate)
                         PasscodeMode.Set -> stringResource(Res.string.feature_passcode_setup)
                         PasscodeMode.Confirm -> stringResource(Res.string.feature_passcode_confirm)
                     },
@@ -129,7 +132,10 @@ private fun PasscodeScreenContent(
                 Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
                 Text(
-                    text = stringResource(Res.string.feature_passcode_tip),
+                    text = when (state.mode) {
+                        PasscodeMode.Verify -> stringResource(Res.string.feature_passcode_unlock_tip)
+                        else -> stringResource(Res.string.feature_passcode_tip)
+                    },
                     style = MifosTypography.bodySmall,
                     color = KptTheme.colorScheme.secondary,
                     textAlign = TextAlign.Center,

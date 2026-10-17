@@ -98,11 +98,11 @@
 
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">અમારા વિશે</string>
-    <string name="feature_settings_about_mifos">Mifos</string>
+    <string name="feature_settings_about_mifos">Sure Banker</string>
     <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
     <string name="feature_settings_about_who_are_we">અમે કોણ છીએ?</string>
-    <string name="feature_settings_about_what_does_mifos_do">Mifos શું કરે છે?</string>
-    <string name="feature_settings_about_who_are_we_desc">Mifos એ એક સંગઠન છે જે લોકોને મૂળભૂત આર્થિક સેવાઓ પ્રદાન કરવાનો પ્રયત્ન કરે છે. તે એક ઓપન-સોર્સ પ્લેટફૉર્મ માધ્યમ આ કરે છે.</string>
+    <string name="feature_settings_about_what_does_mifos_do">Sure Banker શું કરે છે?</string>
+    <string name="feature_settings_about_who_are_we_desc">અમારું મિશન નાના અને મધ્યમ ઉદ્યોગો (SMEs) ને ડિજિટલ અને ચુકવણી ઉકેલો સાથે સહાય કરવાનું છે.</string>
     <string name="feature_settings_about_point_1">તે આર્થિક સંસ્થાઓને આધુનિક આર્થિક સેવાઓ ઓફર કરવામાં મદદ કરે છે</string>
     <string name="feature_settings_about_point_2">તે લોકોને લોન, બચત અને વધુ મેળવવામાં મદદ કરે છે</string>
     <string name="feature_settings_about_point_3">તે આસપાસના લાખો લોકોને સેવા આપતી આર્થિક સંસ્થાઓને આધાર આપે છે</string>
@@ -121,9 +121,9 @@
     <!--App Info -->
     <string name="feature_settings_appinfo_topbar_title">એપ્લિકેશન માહિતી</string>
     <string name="feature_settings_appinfo_mobile">મોબાઇલ</string>
-    <string name="feature_settings_appinfo_logo_content_description">Mifos ઇમેજ</string>
+    <string name="feature_settings_appinfo_logo_content_description">Sure Banker ઇમેજ</string>
     <string name="feature_settings_appinfo_app_name">SurePay</string>
-    <string name="feature_settings_appinfo_mifos_electonic_banking">Mifos ઇલેક્ટ્રૉનિક બેન્કિંગ</string>
+    <string name="feature_settings_appinfo_mifos_electonic_banking">Sure Banker ઇલેક્ટ્રૉનિક બેન્કિંગ</string>
     <string name="feature_settings_appinfo_all_rights_reserved">બધા અધિકાર અનામત</string>
     <string name="feature_settings_appinfo_version">સંસ્કરણ</string>
     <string name="feature_settings_appinfo_privacy_policy">ગોપનીયતા નીતિ</string>

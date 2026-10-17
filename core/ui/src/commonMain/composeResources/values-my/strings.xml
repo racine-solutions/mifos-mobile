@@ -111,7 +111,7 @@
     <string name="pay_from">မှ ပေးချေမည်</string>
     <string name="available_balance_formatted">အသုံးပြုနိုင်သော လက်ကျန်ငွေ - %1$s</string>
 
-    <string name="feature_dashboard_welcome_back">Mifos သို့ ပြန်လည်ကြိုဆိုပါသည်</string>
+    <string name="feature_dashboard_welcome_back">Sure Banker သို့ ပြန်လည်ကြိုဆိုပါသည်</string>
     <string name="feature_dashboard_no_accounts_title">အကောင့်မရှိသေးပါ</string>
     <string name="feature_dashboard_no_accounts_description">ကျွန်ုပ်တို့နှင့်အတူ ပထမဆုံးအကောင့်ဖွင့်ပြီး သင်၏ ငွေရေးကြေးရေးခရီးစဉ်ကို စတင်လိုက်ပါ။</string>
     <string name="feature_dashboard_open_account">အကောင့်ဖွင့်မည်</string>

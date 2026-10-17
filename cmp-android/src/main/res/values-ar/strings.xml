@@ -438,7 +438,7 @@
     <string name="confirm_password">تأكيد كلمة المرور</string>
     <string name="error_password_not_match">كلمة السر غير متطابقة.</string>
     <string name="app_version">%1$s الإصدار</string>
-    <string name="feature_about_copyright_mifos">©2016-%1$s Mifos Initiative.</string>
+    <string name="feature_about_copyright_mifos">©2016-%1$s Sure Banker.</string>
     <string name="all_rights_reserved">كل الحقوق محفوظة.</string>
     <string name="feature_about_licenses">تراخيص</string>
     <string name="transfer_error">يتعذر إكمال النقل ، يرجى المحاولة مرة أخرى في وقت لاحق</string>
