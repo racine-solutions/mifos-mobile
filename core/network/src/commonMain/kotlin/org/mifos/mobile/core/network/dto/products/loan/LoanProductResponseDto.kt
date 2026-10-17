@@ -11,6 +11,7 @@ package org.mifos.mobile.core.network.dto.products.loan
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 import org.mifos.mobile.core.network.dto.common.TypeResponseDto
 import org.mifos.mobile.core.network.dto.currency.CurrencyResponseDto
 import org.mifos.mobile.core.network.dto.intrest.InterestRecalculationDataResponseDto
@@ -33,6 +34,7 @@ data class LoanProductResponseDto(
 
     val useBorrowerCycle: Boolean? = null,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val startDate: List<Int>? = null,
 
     val status: String? = null,

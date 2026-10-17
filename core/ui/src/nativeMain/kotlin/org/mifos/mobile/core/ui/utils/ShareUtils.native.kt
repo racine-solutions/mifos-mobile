@@ -115,14 +115,14 @@ actual object ShareUtils {
     }
 
     actual fun callHelpline() {
-        val url = NSURL.URLWithString("tel://8000000000")
+        val url = NSURL.URLWithString("tel://${SurePayContact.PHONE_PRIMARY}")
         if (url?.let { UIApplication.sharedApplication.canOpenURL(it) } == true) {
             UIApplication.sharedApplication.openURL(url)
         }
     }
 
     actual fun mailHelpline() {
-        val url = "mailto:support@example.com?subject=Help%20Request&body=Hello,%20I%20need%20assistance%20with..."
+        val url = "mailto:${SurePayContact.EMAIL}?subject=Help%20Request&body=Hello,%20I%20need%20assistance%20with..."
         val mailUrl = NSURL.URLWithString(url)
 
         if (mailUrl?.let { UIApplication.sharedApplication.canOpenURL(it) } == true) {

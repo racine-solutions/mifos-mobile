@@ -31,4 +31,10 @@ data class Beneficiary(
 
     val transferLimit: Double? = null,
 
+    val officeId: Int? = null,
+
+    val clientId: Long? = null,
+
+    val accountId: Int? = null,
+
 ) : Parcelable

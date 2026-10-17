@@ -46,11 +46,14 @@ actual object ShareUtils {
         FileKit.download(bytes = file.bytes, fileName = file.fileName)
     }
     actual fun callHelpline() {
-        window.alert("Calling is not supported on Web. Please contact support at 8000000000.")
+        window.alert(
+            "Calling is not supported on Web. " +
+                "Please contact support at ${SurePayContact.PHONE_PRIMARY_DISPLAY}.",
+        )
     }
 
     actual fun mailHelpline() {
-        val url = "mailto:support@example.com?subject=Help%20Request&body=Hello,%20I%20need%20assistance%20with..."
+        val url = "mailto:${SurePayContact.EMAIL}?subject=Help%20Request&body=Hello,%20I%20need%20assistance%20with..."
         window.open(url)
     }
 

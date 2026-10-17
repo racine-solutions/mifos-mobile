@@ -10,6 +10,7 @@
 package org.mifos.mobile.core.network.dto.intrest
 
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 import org.mifos.mobile.core.network.dto.common.TypeResponseDto
 
 @Serializable
@@ -24,8 +25,10 @@ data class CalendarDataResponseDto(
 
     val title: String? = null,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val startDate: List<Int> = emptyList(),
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val endDate: List<Int> = emptyList(),
 
     val duration: Double? = null,

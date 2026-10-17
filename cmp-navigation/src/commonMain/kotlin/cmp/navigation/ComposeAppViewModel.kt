@@ -45,6 +45,27 @@ class ComposeAppViewModel(
             initialValue = true,
         )
 
+    /**
+     * True while the user is signed in and has unlocked the app, i.e. while an idle timeout applies.
+     */
+    val isSessionActive = userPreferencesRepository.settingsInfo
+        .map { it.isAuthenticated && it.isUnlocked }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = false,
+        )
+
+    /**
+     * Logs the user out (back to the login screen) after the user has been idle.
+     */
+    fun logoutIdleSession() {
+        viewModelScope.launch {
+            userPreferencesRepository.setIsUnlocked(false)
+            userPreferencesRepository.logOut()
+        }
+    }
+
     init {
         networkStatus
             .onEach { handleNetworkStatus(it) }

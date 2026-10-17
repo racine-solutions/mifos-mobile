@@ -9,11 +9,13 @@
  */
 package org.mifos.mobile.core.network.dto.templates.accounts
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.mifos.mobile.core.network.dto.common.TypeResponseDto
 
 @Serializable
 data class AccountOptionsResponseDto(
+    @SerialName("id")
     val accountId: Int? = null,
 
     val accountNo: String? = null,

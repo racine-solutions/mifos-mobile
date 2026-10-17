@@ -10,8 +10,10 @@
 package org.mifos.mobile.core.network.dto.templates.savings
 
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 
 @Serializable
 data class SavingsTimelineResponseDto(
+    @Serializable(with = FlexibleDateListSerializer::class)
     val expectedDisbursementDate: List<Int> = emptyList(),
 )

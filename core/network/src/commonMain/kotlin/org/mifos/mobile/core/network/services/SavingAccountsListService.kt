@@ -38,6 +38,10 @@ interface SavingAccountsListService {
     fun accountTransferTemplate(
         @Query("fromAccountId") accountId: Long?,
         @Query("fromAccountType") accountType: Long?,
+        @Query("fromClientId") fromClientId: Long? = null,
+        @Query("toAccountId") toAccountId: Long? = null,
+        @Query("toClientId") toClientId: Long? = null,
+        @Query("toAccountType") toAccountType: Long? = null,
     ): Flow<AccountOptionsTemplateResponseDto>
 
     @POST(ApiEndPoints.ACCOUNT_TRANSFER)

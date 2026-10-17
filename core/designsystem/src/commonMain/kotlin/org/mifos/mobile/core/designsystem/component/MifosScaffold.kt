@@ -379,7 +379,7 @@ private fun MifosElevated_Preview() {
     MifosMobileTheme {
         MifosElevatedScaffold(
             onNavigateBack = { },
-            topBarTitle = "Mifos Mobile",
+            topBarTitle = "SurePay",
         )
     }
 }

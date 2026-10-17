@@ -10,6 +10,7 @@
 package org.mifos.mobile.core.network.dto.savingsAccount
 
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 import org.mifos.mobile.core.network.dto.currency.CurrencyResponseDto
 
 @Serializable
@@ -31,5 +32,6 @@ data class SavingsSummaryResponseDto(
 
     val interestNotPosted: Double? = null,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val lastInterestCalculationDate: List<Int> = emptyList(),
 )

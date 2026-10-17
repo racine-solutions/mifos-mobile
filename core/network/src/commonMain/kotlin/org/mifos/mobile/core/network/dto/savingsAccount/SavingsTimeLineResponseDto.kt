@@ -10,9 +10,11 @@
 package org.mifos.mobile.core.network.dto.savingsAccount
 
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 
 @Serializable
 data class SavingsTimeLineResponseDto(
+    @Serializable(with = FlexibleDateListSerializer::class)
     val submittedOnDate: List<Int> = emptyList(),
 
     val submittedByUsername: String?,
@@ -21,6 +23,7 @@ data class SavingsTimeLineResponseDto(
 
     val submittedByLastname: String?,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val approvedOnDate: List<Int> = emptyList(),
 
     val approvedByUsername: String?,
@@ -29,6 +32,7 @@ data class SavingsTimeLineResponseDto(
 
     val approvedByLastname: String?,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val activatedOnDate: List<Int>? = null,
 
     val activatedByUsername: String?,
@@ -37,6 +41,7 @@ data class SavingsTimeLineResponseDto(
 
     val activatedByLastname: String?,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val closedOnDate: List<Int> = emptyList(),
 
 )

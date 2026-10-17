@@ -99,6 +99,7 @@ internal fun LoanAccountDetailsScreen(
                     event.route == Constants.MAKE_PAYMENT -> {
                         val transferArgs = AccountDetails(
                             accountId = uiState.accountId,
+                            accountNo = uiState.accountNumber ?: "",
                             transferType = TRANSFER_PAY_TO,
                             transferTarget = TransferType.SELF,
                             transferSuccessDestination = StatusNavigationDestination.LOAN_ACCOUNT.name,

@@ -10,6 +10,7 @@
 package org.mifos.mobile.core.network.dto.guarantor
 
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 import org.mifos.mobile.core.network.dto.common.TypeResponseDto
 
 @Serializable
@@ -25,6 +26,7 @@ data class GuarantorListResponseDto(
 
     val firstname: String? = null,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val joinedDate: List<Int>? = null,
 
     val loanId: Long? = null,
