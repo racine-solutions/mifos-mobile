@@ -74,14 +74,10 @@
 
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">معلومات عنا</string>
-    <string name="feature_settings_about_mifos">Sure Banker</string>
-    <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
+    <string name="feature_settings_about_mifos">Racine Solutions Ltd</string>
+    <string name="feature_settings_about_logo_content_description">Racine Solutions Ltd Logo</string>
     <string name="feature_settings_about_who_are_we">من نحن؟</string>
-    <string name="feature_settings_about_what_does_mifos_do">ماذا تفعل Sure Banker؟</string>
-    <string name="feature_settings_about_who_are_we_desc">مهمتنا هي دعم الشركات الصغيرة والمتوسطة بحلول رقمية وحلول مدفوعات.</string>
-    <string name="feature_settings_about_point_1">تساعد المؤسسات المالية على تقديم خدمات مالية حديثة</string>
-    <string name="feature_settings_about_point_2">تمكن الأشخاص من الحصول على قروض، وحفظ المال، والمزيد</string>
-    <string name="feature_settings_about_point_3">تدعم المؤسسات المالية التي تخدم ملايين الأشخاص حول العالم</string>
+    <string name="feature_settings_about_what_does_mifos_do">ماذا تفعل Racine Solutions Ltd؟</string>
 
     <string name="feature_settings_doubt">يتم حل العديد من الشكوك في الأسئلة الشائعة!</string>
     <string name="feature_settings_doubt_message">لا، لم أتحقق منها، خذني إلى هناك!</string>
@@ -97,9 +93,9 @@
     <!--App Info -->
     <string name="feature_settings_appinfo_topbar_title">معلومات التطبيق</string>
     <string name="feature_settings_appinfo_mobile">الجوال</string>
-    <string name="feature_settings_appinfo_logo_content_description">صورة Sure Banker</string>
-    <string name="feature_settings_appinfo_app_name">SurePay</string>
-    <string name="feature_settings_appinfo_mifos_electonic_banking">الخدمات المصرفية الإلكترونية Sure Banker</string>
+    <string name="feature_settings_appinfo_logo_content_description">صورة RacinePay</string>
+    <string name="feature_settings_appinfo_app_name">RacinePay</string>
+    <string name="feature_settings_appinfo_mifos_electonic_banking">الخدمات المصرفية الإلكترونية RacinePay</string>
     <string name="feature_settings_appinfo_all_rights_reserved">جميع الحقوق محفوظة</string>
     <string name="feature_settings_appinfo_version">الإصدار</string>
     <string name="feature_settings_appinfo_privacy_policy">سياسة الخصوصية</string>

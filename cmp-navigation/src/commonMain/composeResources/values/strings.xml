@@ -9,7 +9,7 @@
     See https://github.com/openMF/mobile-mobile/blob/master/LICENSE.md
 -->
 <resources>
-    <string name="app_name">SurePay</string>
+    <string name="app_name">RacinePay</string>
     <string name="home">Home</string>
     <string name="transfer">Transfer</string>
     <string name="profile">Profile</string>

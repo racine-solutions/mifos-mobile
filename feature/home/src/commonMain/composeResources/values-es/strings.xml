@@ -28,8 +28,8 @@
     <string name="need_help">Contáctanos</string>
     <string name="home">Inicio</string>
     <string name="help_line_number" translatable="false">8000000000</string>
-    <string name="contact_email" translatable="false">services@surepayltd.com</string>
-    <string name="app_name">SurePay</string>
+    <string name="contact_email" translatable="false">info@racinesolutions.com</string>
+    <string name="app_name">RacinePay</string>
     <string name="third_party_transfer">Transferencia a Tercero</string>
     <string name="manage_beneficiaries">Administrar Beneficiarios</string>
     <string name="settings">Propiedades</string>

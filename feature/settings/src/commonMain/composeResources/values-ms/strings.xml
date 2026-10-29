@@ -98,14 +98,10 @@
 
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">Tentang Kami</string>
-    <string name="feature_settings_about_mifos">Sure Banker</string>
-    <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
+    <string name="feature_settings_about_mifos">Racine Solutions Ltd</string>
+    <string name="feature_settings_about_logo_content_description">Racine Solutions Ltd Logo</string>
     <string name="feature_settings_about_who_are_we">Siapa kami?</string>
-    <string name="feature_settings_about_what_does_mifos_do">Apa yang Sure Banker lakukan?</string>
-    <string name="feature_settings_about_who_are_we_desc">Misi kami adalah untuk menyokong PKS dengan penyelesaian digital dan pembayaran.</string>
-    <string name="feature_settings_about_point_1">Ia membantu institusi kewangan menawarkan perkhidmatan kewangan moden</string>
-    <string name="feature_settings_about_point_2">Ia membolehkan orang ramai mendapat pinjaman, menyimpan wang, dan banyak lagi</string>
-    <string name="feature_settings_about_point_3">Ia menyokong institusi kewangan yang melayani berjuta-juta orang di seluruh dunia</string>
+    <string name="feature_settings_about_what_does_mifos_do">Apa yang Racine Solutions Ltd lakukan?</string>
 
     <string name="feature_settings_doubt">Banyak Soalan Dijawab dalam FAQ!</string>
     <string name="feature_settings_doubt_message">Tidak, saya belum menyemaknya lagi, bawa saya ke sana!</string>
@@ -120,9 +116,9 @@
     <!--App Info -->
     <string name="feature_settings_appinfo_topbar_title">Maklumat Aplikasi</string>
     <string name="feature_settings_appinfo_mobile">Mobile</string>
-    <string name="feature_settings_appinfo_logo_content_description">Imej Sure Banker</string>
-    <string name="feature_settings_appinfo_app_name">SurePay</string>
-    <string name="feature_settings_appinfo_mifos_electonic_banking">Perbankan Elektronik Sure Banker</string>
+    <string name="feature_settings_appinfo_logo_content_description">Imej RacinePay</string>
+    <string name="feature_settings_appinfo_app_name">RacinePay</string>
+    <string name="feature_settings_appinfo_mifos_electonic_banking">Perbankan Elektronik RacinePay</string>
     <string name="feature_settings_appinfo_all_rights_reserved">Hak cipta terpelihara</string>
     <string name="feature_settings_appinfo_version">Versi</string>
     <string name="feature_settings_appinfo_privacy_policy">Dasar Privasi</string>

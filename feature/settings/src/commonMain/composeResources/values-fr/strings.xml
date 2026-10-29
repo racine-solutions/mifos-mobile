@@ -98,14 +98,10 @@
 
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">À propos de nous</string>
-    <string name="feature_settings_about_mifos">Sure Banker</string>
-    <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
+    <string name="feature_settings_about_mifos">Racine Solutions Ltd</string>
+    <string name="feature_settings_about_logo_content_description">Racine Solutions Ltd Logo</string>
     <string name="feature_settings_about_who_are_we">Qui sommes-nous ?</string>
-    <string name="feature_settings_about_what_does_mifos_do">Que fait Sure Banker ?</string>
-    <string name="feature_settings_about_who_are_we_desc">Notre mission est de soutenir les PME avec des solutions numériques et de paiement.</string>
-    <string name="feature_settings_about_point_1">Aide les institutions financières à fournir des services financiers modernes</string>
-    <string name="feature_settings_about_point_2">Permet aux personnes d\'obtenir des prêts, des économies et plus encore</string>
-    <string name="feature_settings_about_point_3">Soutient les institutions financières qui servent des millions de personnes dans le monde</string>
+    <string name="feature_settings_about_what_does_mifos_do">Que fait Racine Solutions Ltd ?</string>
 
     <string name="feature_settings_doubt">Beaucoup de doutes sont résolus dans les questions fréquemment posées !</string>
     <string name="feature_settings_doubt_message">Non, je ne les ai pas vérifiés, emmenez-moi là-bas !</string>
@@ -121,9 +117,9 @@
     <!--App Info -->
     <string name="feature_settings_appinfo_topbar_title">Infos sur l\'application</string>
     <string name="feature_settings_appinfo_mobile">Mobile</string>
-    <string name="feature_settings_appinfo_logo_content_description">Image Sure Banker</string>
-    <string name="feature_settings_appinfo_app_name">SurePay</string>
-    <string name="feature_settings_appinfo_mifos_electonic_banking">Banque électronique Sure Banker</string>
+    <string name="feature_settings_appinfo_logo_content_description">Image RacinePay</string>
+    <string name="feature_settings_appinfo_app_name">RacinePay</string>
+    <string name="feature_settings_appinfo_mifos_electonic_banking">Banque électronique RacinePay</string>
     <string name="feature_settings_appinfo_all_rights_reserved">Tous droits réservés</string>
     <string name="feature_settings_appinfo_version">Version</string>
     <string name="feature_settings_appinfo_privacy_policy">Politique de confidentialité</string>

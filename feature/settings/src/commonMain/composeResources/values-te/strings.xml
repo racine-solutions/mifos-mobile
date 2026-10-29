@@ -74,14 +74,10 @@
     <string name="feature_settings_customer_account_no">కస్టమర్ ఖాతా: %1$s</string>
 
     <string name="feature_settings_about_topbar_title">మా గురించి</string>
-    <string name="feature_settings_about_mifos">Sure Banker</string>
-    <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
+    <string name="feature_settings_about_mifos">Racine Solutions Ltd</string>
+    <string name="feature_settings_about_logo_content_description">Racine Solutions Ltd Logo</string>
     <string name="feature_settings_about_who_are_we">మేము ఎవరము?</string>
-    <string name="feature_settings_about_what_does_mifos_do">Sure Banker ఏం చేస్తుంది?</string>
-    <string name="feature_settings_about_who_are_we_desc">డిజిటల్ మరియు చెల్లింపు పరిష్కారాలతో చిన్న మరియు మధ్యతరహా వ్యాపారాలకు (SMEs) మద్దతు ఇవ్వడమే మా లక్ష్యం.</string>
-    <string name="feature_settings_about_point_1">ఇది ఆర్థిక సంస్థలకు ఆధునిక ఆర్థిక సేవలను అందించడంలో సహాయపడుతుంది</string>
-    <string name="feature_settings_about_point_2">ఇది ప్రజలకు రుణాలు పొందడానికి, డబ్బు ఆదా చేయడానికి మరియు మరిన్ని చేయడానికి వీలు కల్పిస్తుంది</string>
-    <string name="feature_settings_about_point_3">ఇది ప్రపంచవ్యాప్తంగా మిలియన్ల మంది ప్రజలకు సేవలందించే ఆర్థిక సంస్థలకు మద్దతు ఇస్తుంది</string>
+    <string name="feature_settings_about_what_does_mifos_do">Racine Solutions Ltd ఏం చేస్తుంది?</string>
 
     <string name="feature_settings_doubt">అనేక సందేహాలు తరచుగా అడిగే ప్రశ్నలలో (FAQ) పరిష్కరించబడ్డాయి!</string>
     <string name="feature_settings_doubt_message">లేదు, నేను వాటిని చూడలేదు, నన్ను అక్కడికి తీసుకెళ్ళండి!</string>
@@ -96,9 +92,9 @@
 
     <string name="feature_settings_appinfo_topbar_title">యాప్ సమాచారం</string>
     <string name="feature_settings_appinfo_mobile">మొబైల్</string>
-    <string name="feature_settings_appinfo_logo_content_description">Sure Banker చిత్రం</string>
-    <string name="feature_settings_appinfo_app_name">SurePay</string>
-    <string name="feature_settings_appinfo_mifos_electonic_banking">Sure Banker ఎలక్ట్రానిక్ బ్యాంకింగ్</string>
+    <string name="feature_settings_appinfo_logo_content_description">RacinePay చిత్రం</string>
+    <string name="feature_settings_appinfo_app_name">RacinePay</string>
+    <string name="feature_settings_appinfo_mifos_electonic_banking">RacinePay ఎలక్ట్రానిక్ బ్యాంకింగ్</string>
     <string name="feature_settings_appinfo_all_rights_reserved">సర్వ హక్కులు రిజర్వు చేయబడినవి</string>
     <string name="feature_settings_appinfo_version">వెర్షన్</string>
     <string name="feature_settings_appinfo_privacy_policy">గోప్యతా విధానం</string>

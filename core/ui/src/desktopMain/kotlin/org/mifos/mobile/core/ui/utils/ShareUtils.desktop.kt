@@ -55,7 +55,7 @@ actual object ShareUtils {
 
     actual fun callHelpline() {
         if (Desktop.isDesktopSupported()) {
-            val uri = URI("tel:${SurePayContact.PHONE_PRIMARY}")
+            val uri = URI("tel:${RacineContact.PHONE_PRIMARY}")
             try {
                 Desktop.getDesktop().browse(uri)
             } catch (e: Exception) {
@@ -68,7 +68,7 @@ actual object ShareUtils {
 
     actual fun mailHelpline() {
         val uri = URI(
-            "mailto:${SurePayContact.EMAIL}?subject=Help%20Request" +
+            "mailto:${RacineContact.EMAIL}?subject=Help%20Request" +
                 "&body=Hello,%20I%20need%20assistance%20with...",
         )
         if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.MAIL)) {

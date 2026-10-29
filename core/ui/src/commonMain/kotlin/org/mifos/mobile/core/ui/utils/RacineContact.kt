@@ -9,12 +9,12 @@
  */
 package org.mifos.mobile.core.ui.utils
 
-object SurePayContact {
-    const val PHONE_PRIMARY = "+256770919201"
-    const val PHONE_SECONDARY = "+256756523376"
-    const val EMAIL = "services@surepayltd.com"
-    const val ADDRESS = "Plot 24 Martyrs Garden Ntinda, Kampala, Uganda"
+object RacineContact {
+    const val PHONE_PRIMARY = "+256774067967"
+    const val PHONE_SECONDARY = "+256755895191"
+    const val EMAIL = "info@racinesolutions.com"
+    const val ADDRESS = "Ganesh Plaza\nKampala, Uganda"
 
-    const val PHONE_PRIMARY_DISPLAY = "+256 770 919 201"
-    const val PHONE_SECONDARY_DISPLAY = "+256 756 523 376"
+    const val PHONE_PRIMARY_DISPLAY = "+256 774 067 967"
+    const val PHONE_SECONDARY_DISPLAY = "+256 755 895 191"
 }

@@ -62,8 +62,8 @@ compose.desktop {
             packageName = appName
             packageVersion = appVersion
             description = "Desktop Application"
-            copyright = "© 2024 Sure Banker. All rights reserved."
-            vendor = "Sure Banker"
+            copyright = "© 2024 RacinePay. All rights reserved."
+            vendor = "RacinePay"
             licenseFile.set(project.file("../LICENSE"))
             includeAllModules = true
             outputBaseDir.set(project.layout.buildDirectory.dir("release"))

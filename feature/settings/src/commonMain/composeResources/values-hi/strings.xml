@@ -74,14 +74,10 @@
 
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">हमारे बारे में</string>
-    <string name="feature_settings_about_mifos">Sure Banker</string>
-    <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
+    <string name="feature_settings_about_mifos">Racine Solutions Ltd</string>
+    <string name="feature_settings_about_logo_content_description">Racine Solutions Ltd Logo</string>
     <string name="feature_settings_about_who_are_we">हम कौन हैं?</string>
-    <string name="feature_settings_about_what_does_mifos_do">Sure Banker क्या करता है?</string>
-    <string name="feature_settings_about_who_are_we_desc">हमारा मिशन छोटे और मध्यम उद्यमों (SMEs) को डिजिटल और भुगतान समाधानों के साथ सहयोग देना है।</string>
-    <string name="feature_settings_about_point_1">वित्तीय संस्थानों को आधुनिक वित्तीय सेवाएं प्रदान करने में मदद करता है</string>
-    <string name="feature_settings_about_point_2">लोगों को ऋण, बचत और अधिक प्राप्त करने में सक्षम बनाता है</string>
-    <string name="feature_settings_about_point_3">वित्तीय संस्थानों का समर्थन करता है जो दुनिया भर में लाखों लोगों की सेवा करते हैं</string>
+    <string name="feature_settings_about_what_does_mifos_do">Racine Solutions Ltd क्या करता है?</string>
 
     <string name="feature_settings_doubt">सामान्य प्रश्नों में कई संदेहों का समाधान हो जाता है!</string>
     <string name="feature_settings_doubt_message">नहीं, मैंने उनकी जांच नहीं की, मुझे वहां ले जाएं!</string>
@@ -97,9 +93,9 @@
     <!--App Info -->
     <string name="feature_settings_appinfo_topbar_title">ऐप की जानकारी</string>
     <string name="feature_settings_appinfo_mobile">मोबाइल</string>
-    <string name="feature_settings_appinfo_logo_content_description">Sure Banker चित्र</string>
-    <string name="feature_settings_appinfo_app_name">SurePay</string>
-    <string name="feature_settings_appinfo_mifos_electonic_banking">Sure Banker इलेक्ट्रॉनिक बैंकिंग</string>
+    <string name="feature_settings_appinfo_logo_content_description">RacinePay चित्र</string>
+    <string name="feature_settings_appinfo_app_name">RacinePay</string>
+    <string name="feature_settings_appinfo_mifos_electonic_banking">RacinePay इलेक्ट्रॉनिक बैंकिंग</string>
     <string name="feature_settings_appinfo_all_rights_reserved">सर्वाधिकार सुरक्षित</string>
     <string name="feature_settings_appinfo_version">संस्करण</string>
     <string name="feature_settings_appinfo_privacy_policy">गोपनीयता नीति</string>

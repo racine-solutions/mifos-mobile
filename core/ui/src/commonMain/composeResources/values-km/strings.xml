@@ -124,7 +124,7 @@
     <string name="pay_from">បង់ពី</string>
     <string name="available_balance_formatted">សមតុល្យដែលអាចប្រើបាន - %1$s</string>
 
-    <string name="feature_dashboard_welcome_back">សូមស្វាគមន៍ត្រឡប់មក Sure Banker</string>
+    <string name="feature_dashboard_welcome_back">សូមស្វាគមន៍ត្រឡប់មក RacinePay</string>
     <string name="feature_dashboard_no_accounts_title">មិនទាន់មានគណនី</string>
     <string name="feature_dashboard_no_accounts_description">ចាប់ផ្តើមដំណើរហិរញ្ញវត្ថុរបស់អ្នកដោយបើកគណនីដំបូងជាមួយយើង។</string>
     <string name="feature_dashboard_open_account">បើកគណនី</string>

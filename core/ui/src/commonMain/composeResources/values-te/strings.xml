@@ -95,7 +95,7 @@
     <string name="select_other_payment_account">ఇతర చెల్లింపు ఖాతాను ఎంచుకోండి</string>
     <string name="pay_from">దీని నుండి చెల్లించండి</string>
     <string name="available_balance_formatted">అందుబాటులో ఉన్న బ్యాలెన్స్ - %1$s</string>
-    <string name="feature_dashboard_welcome_back">Sure Banker కి స్వాగతం</string>
+    <string name="feature_dashboard_welcome_back">RacinePay కి స్వాగతం</string>
     <string name="feature_dashboard_no_accounts_title">ఇంకా ఖాతాలు లేవు</string>
     <string name="feature_dashboard_no_accounts_description">మా దగ్గర మొదటి ఖాతా తెరవడం ద్వారా మీ ఆర్థిక ప్రయాణాన్ని ప్రారంభించండి.</string>
     <string name="feature_dashboard_open_account">ఖాతా తెరువు</string>

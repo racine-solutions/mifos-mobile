@@ -98,14 +98,14 @@
 
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">About Us</string>
-    <string name="feature_settings_about_mifos">Sure Banker</string>
-    <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
+    <string name="feature_settings_about_mifos">Racine Solutions Ltd</string>
+    <string name="feature_settings_about_logo_content_description">Racine Solutions Ltd Logo</string>
     <string name="feature_settings_about_who_are_we">Who are we?</string>
-    <string name="feature_settings_about_what_does_mifos_do">What does Sure Banker do?</string>
-    <string name="feature_settings_about_who_are_we_desc">Our Mission is to support SMEs with digital and payments solutions.</string>
-    <string name="feature_settings_about_point_1">It helps financial institutions offer modern financial services</string>
-    <string name="feature_settings_about_point_2">It enables people to get loans, save money, and more</string>
-    <string name="feature_settings_about_point_3">It supports financial institutions that serve millions of people around the world</string>
+    <string name="feature_settings_about_what_does_mifos_do">What does Racine Solutions Ltd do?</string>
+    <string name="feature_settings_about_who_are_we_desc">Racine Solutions Ltd is a financial solution provider for SACCOs and microfinances, based in Kampala, Uganda.</string>
+    <string name="feature_settings_about_point_1">It helps SACCOs and microfinances manage loans, savings, shares, deposits and withdrawals</string>
+    <string name="feature_settings_about_point_2">It provides user, portfolio, client and system reports, with automatic and manual general ledger accounting</string>
+    <string name="feature_settings_about_point_3">It automates repayment reminders, loan approvals and client onboarding, with cash and mobile money repayment options</string>
 
     <string name="feature_settings_doubt">Many Doubts Are Solved In FAQ's !</string>
     <string name="feature_settings_doubt_message">No, I haven't checked them, take me there!</string>
@@ -121,9 +121,9 @@
     <!--App Info -->
     <string name="feature_settings_appinfo_topbar_title">App Info</string>
     <string name="feature_settings_appinfo_mobile">Mobile</string>
-    <string name="feature_settings_appinfo_logo_content_description">Sure Banker Image</string>
-    <string name="feature_settings_appinfo_app_name">SurePay</string>
-    <string name="feature_settings_appinfo_mifos_electonic_banking">Sure Banker Electronic Banking</string>
+    <string name="feature_settings_appinfo_logo_content_description">RacinePay Image</string>
+    <string name="feature_settings_appinfo_app_name">RacinePay</string>
+    <string name="feature_settings_appinfo_mifos_electonic_banking">RacinePay Electronic Banking</string>
     <string name="feature_settings_appinfo_all_rights_reserved">All rights reserved</string>
     <string name="feature_settings_appinfo_version">Version</string>
     <string name="feature_settings_appinfo_privacy_policy">Privacy Policy</string>

@@ -95,7 +95,7 @@
     <string name="select_other_payment_account">انتخاب حساب پرداخت دیگر</string>
     <string name="pay_from">پرداخت از</string>
     <string name="available_balance_formatted">موجودی قابل برداشت - %1$s</string>
-    <string name="feature_dashboard_welcome_back">به Sure Banker خوش آمدید</string>
+    <string name="feature_dashboard_welcome_back">به RacinePay خوش آمدید</string>
     <string name="feature_dashboard_no_accounts_title">هنوز حسابی ندارید</string>
     <string name="feature_dashboard_no_accounts_description">سفر مالی خود را با افتتاح اولین حساب در نزد ما آغاز کنید.</string>
     <string name="feature_dashboard_open_account">افتتاح حساب</string>

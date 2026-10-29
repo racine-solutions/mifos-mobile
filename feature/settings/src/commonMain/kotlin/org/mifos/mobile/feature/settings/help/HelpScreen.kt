@@ -36,7 +36,7 @@ import mifos_mobile.feature.settings.generated.resources.feature_settings_action
 import mifos_mobile.feature.settings.generated.resources.feature_settings_contact_address
 import mifos_mobile.feature.settings.generated.resources.feature_settings_contact_email
 import mifos_mobile.feature.settings.generated.resources.feature_settings_contact_phone
-import mifos_mobile.feature.settings.generated.resources.feature_settings_contact_surepay_title
+import mifos_mobile.feature.settings.generated.resources.feature_settings_contact_racine_title
 import mifos_mobile.feature.settings.generated.resources.feature_settings_doubt
 import mifos_mobile.feature.settings.generated.resources.feature_settings_doubt_message
 import mifos_mobile.feature.settings.generated.resources.feature_settings_still_have_doubt
@@ -60,7 +60,7 @@ import org.mifos.mobile.core.designsystem.theme.DesignToken
 import org.mifos.mobile.core.designsystem.theme.MifosMobileTheme
 import org.mifos.mobile.core.designsystem.theme.MifosTypography
 import org.mifos.mobile.core.ui.utils.ShareUtils
-import org.mifos.mobile.core.ui.utils.SurePayContact
+import org.mifos.mobile.core.ui.utils.RacineContact
 import template.core.base.designsystem.theme.KptTheme
 
 /**
@@ -131,8 +131,8 @@ internal fun HelpScreenContent(
 }
 
 /**
- * Lists SurePay's contact details (phone numbers, email and office address).
- * Phone numbers and the email are tappable.
+ * Lists Racine Solutions' contact details (phone numbers, email and office address).
+ * The phone numbers and the email are tappable.
  *
  * @param onPhoneClick Lambda invoked with the raw phone number when a phone row is clicked.
  * @param onMailClick Lambda invoked when the email row is clicked.
@@ -152,28 +152,28 @@ private fun ContactDetailsCard(
             verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
         ) {
             Text(
-                text = stringResource(Res.string.feature_settings_contact_surepay_title),
+                text = stringResource(Res.string.feature_settings_contact_racine_title),
                 style = MifosTypography.titleSmallEmphasized,
                 color = Color.White,
             )
             ContactRow(
                 label = stringResource(Res.string.feature_settings_contact_phone),
-                value = SurePayContact.PHONE_PRIMARY_DISPLAY,
-                onClick = { onPhoneClick(SurePayContact.PHONE_PRIMARY) },
+                value = RacineContact.PHONE_PRIMARY_DISPLAY,
+                onClick = { onPhoneClick(RacineContact.PHONE_PRIMARY) },
             )
             ContactRow(
                 label = stringResource(Res.string.feature_settings_contact_phone),
-                value = SurePayContact.PHONE_SECONDARY_DISPLAY,
-                onClick = { onPhoneClick(SurePayContact.PHONE_SECONDARY) },
+                value = RacineContact.PHONE_SECONDARY_DISPLAY,
+                onClick = { onPhoneClick(RacineContact.PHONE_SECONDARY) },
             )
             ContactRow(
                 label = stringResource(Res.string.feature_settings_contact_email),
-                value = SurePayContact.EMAIL,
+                value = RacineContact.EMAIL,
                 onClick = onMailClick,
             )
             ContactRow(
                 label = stringResource(Res.string.feature_settings_contact_address),
-                value = SurePayContact.ADDRESS,
+                value = RacineContact.ADDRESS,
             )
         }
     }

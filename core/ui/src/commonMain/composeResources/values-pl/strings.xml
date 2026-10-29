@@ -95,7 +95,7 @@
     <string name="select_other_payment_account">Wybierz inne konto płatnicze</string>
     <string name="pay_from">Zapłać z</string>
     <string name="available_balance_formatted">Dostępne saldo - %1$s</string>
-    <string name="feature_dashboard_welcome_back">Witaj ponownie w Sure Banker</string>
+    <string name="feature_dashboard_welcome_back">Witaj ponownie w RacinePay</string>
     <string name="feature_dashboard_no_accounts_title">Brak kont</string>
     <string name="feature_dashboard_no_accounts_description">Rozpocznij swoją podróż finansową, otwierając u nas swoje pierwsze konto.</string>
     <string name="feature_dashboard_open_account">Otwórz konto</string>

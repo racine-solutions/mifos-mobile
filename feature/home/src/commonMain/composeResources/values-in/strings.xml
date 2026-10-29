@@ -29,8 +29,8 @@
     <string name="need_help">Hubungi Kami</string>
     <string name="home">Beranda</string>
     <string name="help_line_number" translatable="false">8000000000</string>
-    <string name="contact_email" translatable="false">services@surepayltd.com</string>
-    <string name="app_name">SurePay</string>
+    <string name="contact_email" translatable="false">info@racinesolutions.com</string>
+    <string name="app_name">RacinePay</string>
     <string name="third_party_transfer">Transfer ke Pihak Ketiga</string>
     <string name="manage_beneficiaries">Kelola Penerima</string>
     <string name="settings">Pengaturan</string>

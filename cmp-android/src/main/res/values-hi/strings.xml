@@ -9,7 +9,7 @@
     See https://github.com/openMF/mobile-mobile/blob/master/LICENSE.md
 -->
 <resources>
-    <string name="feature_about_app_name">SurePay</string>
+    <string name="feature_about_app_name">RacinePay</string>
     <string name="login">लॉग इन करें</string>
     <string name="toast_welcome">स्वागत हे %1$s</string>
     <string name="unable_to_connect">इंटरनेट से कनेक्ट नहीं है</string>
@@ -469,7 +469,7 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="error_password_not_match">Password doesnot match.</string>
     <string name="app_version">Version %1$s</string>
-    <string name="feature_about_copyright_mifos">©2016-%1$s Sure Banker.</string>
+    <string name="feature_about_copyright_mifos">©2016-%1$s RacinePay.</string>
     <string name="all_rights_reserved">All rights reserved.</string>
     <string name="feature_about_licenses">Licenses</string>
     <string name="feature_about_privacy_policy">गोपनीयता नीति</string>
