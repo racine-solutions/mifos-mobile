@@ -115,7 +115,7 @@ packageVersion = "1.0.0"
 roomCommonVersion = "2.6.1"
 
 # Android Version
-androidPackageNamespace = "org.mifos.mobile"
+androidPackageNamespace = "com.racinesolutions.pay"
 materialVersion = "1.12.0"
 
 fluentui-icons = "1.0.0"

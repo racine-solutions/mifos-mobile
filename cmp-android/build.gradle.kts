@@ -31,15 +31,25 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // Release signing material is never stored in the repository. Provide it through the
+    // environment (CI) or ~/.gradle/gradle.properties (local), see docs/play-store-release.md.
+    val releaseKeystorePath: String? =
+        System.getenv("KEYSTORE_PATH") ?: providers.gradleProperty("RELEASE_KEYSTORE_PATH").orNull
+    val hasReleaseSigning = releaseKeystorePath != null && file(releaseKeystorePath).exists()
+
     signingConfigs {
-        create("release") {
-            storeFile =
-                file(System.getenv("KEYSTORE_PATH") ?: "../keystores/release_keystore.keystore")
-            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "mifos1234"
-            keyAlias = System.getenv("KEYSTORE_ALIAS") ?: "mifos-mobile"
-            keyPassword = System.getenv("KEYSTORE_ALIAS_PASSWORD") ?: "mifos1234"
-            enableV1Signing = true
-            enableV2Signing = true
+        if (hasReleaseSigning) {
+            create("release") {
+                storeFile = file(releaseKeystorePath!!)
+                storePassword = System.getenv("KEYSTORE_PASSWORD")
+                    ?: providers.gradleProperty("RELEASE_KEYSTORE_PASSWORD").orNull
+                keyAlias = System.getenv("KEYSTORE_ALIAS")
+                    ?: providers.gradleProperty("RELEASE_KEY_ALIAS").orNull
+                keyPassword = System.getenv("KEYSTORE_ALIAS_PASSWORD")
+                    ?: providers.gradleProperty("RELEASE_KEY_PASSWORD").orNull
+                enableV1Signing = true
+                enableV2Signing = true
+            }
         }
     }
 
@@ -56,7 +66,9 @@ android {
             isShrinkResources = false
             isDebuggable = false
             isJniDebuggable = false
-            signingConfig = signingConfigs.getByName("release")
+            if (hasReleaseSigning) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",

@@ -11,16 +11,15 @@
 
 package template.core.base.analytics.di
 
-import dev.gitlive.firebase.Firebase
-import dev.gitlive.firebase.analytics.FirebaseAnalytics
-import dev.gitlive.firebase.analytics.analytics
+import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import template.core.base.analytics.AnalyticsHelper
-import template.core.base.analytics.FirebaseAnalyticsHelper
+import template.core.base.analytics.StubAnalyticsHelper
 
-actual val analyticsModule = module {
-    single<FirebaseAnalytics> { Firebase.analytics }
-    singleOf(::FirebaseAnalyticsHelper) bind AnalyticsHelper::class
+// Firebase is intentionally not wired in until this app has its own Firebase project
+// (google-services.json for its application id). Until then no analytics are collected.
+actual val analyticsModule: Module = module {
+    singleOf(::StubAnalyticsHelper) bind AnalyticsHelper::class
 }

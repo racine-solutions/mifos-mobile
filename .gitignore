@@ -61,3 +61,10 @@ cmp-ios/iosApp.xcodeproj/xcuserdata/
 cmp-ios/iosApp.xcworkspace/xcuserdata/
 *.xcuserstate
 *.xcuserdatad/
+
+# Release signing material and secrets must never be committed
+keystores/
+*.keystore
+*.jks
+secrets.env
+cmp-android/google-services.json

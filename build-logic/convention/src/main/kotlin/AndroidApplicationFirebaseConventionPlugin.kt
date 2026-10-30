@@ -12,8 +12,13 @@ import org.mifos.mobile.libs
 class AndroidApplicationFirebaseConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            apply(plugin = "com.google.gms.google-services")
-            apply(plugin = "com.google.firebase.crashlytics")
+            // google-services.json is project specific and is not kept in the repository. Only
+            // apply the Firebase Gradle plugins when the project provides its own config file.
+            val hasGoogleServicesConfig = file("google-services.json").exists()
+            if (hasGoogleServicesConfig) {
+                apply(plugin = "com.google.gms.google-services")
+                apply(plugin = "com.google.firebase.crashlytics")
+            }
 
             dependencies {
                 val bom = libs.findLibrary("firebase-bom").get()
@@ -21,6 +26,8 @@ class AndroidApplicationFirebaseConventionPlugin : Plugin<Project> {
                 "implementation"(libs.findLibrary("firebase.analytics").get())
                 "implementation"(libs.findLibrary("firebase.crashlytics").get())
             }
+
+            if (!hasGoogleServicesConfig) return
 
             extensions.configure<ApplicationExtension> {
                 buildTypes.configureEach {
