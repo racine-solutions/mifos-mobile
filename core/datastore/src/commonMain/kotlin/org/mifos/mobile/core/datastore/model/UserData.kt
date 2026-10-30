@@ -20,6 +20,7 @@ data class UserData(
     val isAuthenticated: Boolean = false,
     val base64EncodedAuthenticationKey: String? = null,
     val officeName: String,
+    val tenantName: String = "",
 ) {
     companion object {
         val DEFAULT = UserData(

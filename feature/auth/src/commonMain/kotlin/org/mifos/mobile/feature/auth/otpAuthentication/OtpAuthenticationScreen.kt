@@ -31,6 +31,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import mifos_mobile.feature.auth.generated.resources.Res
@@ -242,8 +244,13 @@ internal fun OtpInputForm(
             shape = KptTheme.shapes.medium,
             textStyle = MifosTypography.bodyLarge,
             config = MifosTextFieldConfig(
+                // The authorization code can contain letters as well as digits, so a numeric
+                // keyboard would make it impossible to type on real devices.
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
+                    capitalization = KeyboardCapitalization.None,
+                    autoCorrectEnabled = false,
+                    keyboardType = KeyboardType.Ascii,
+                    imeAction = ImeAction.Done,
                 ),
                 isError = state.otpError != null,
                 errorText = state.otpError?.let { stringResource(it) },

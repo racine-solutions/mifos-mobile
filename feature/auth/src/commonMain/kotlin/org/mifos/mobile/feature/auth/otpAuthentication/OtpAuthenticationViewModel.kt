@@ -178,7 +178,7 @@ internal class OtpAuthenticationViewModel(
 //        }
         mutableStateFlow.update { it.copy(showOverlay = true) }
         viewModelScope.launch {
-            val result = userAuthRepositoryImpl.verifyUser(state.otp, state.requestId)
+            val result = userAuthRepositoryImpl.verifyUser(state.otp.trim(), state.requestId.trim())
             sendAction(OtpAuthAction.Internal.ReceiveOtpResult(result))
         }
     }

@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import mifos_mobile.feature.auth.generated.resources.Res
+import mifos_mobile.feature.auth.generated.resources.feature_auth_tenant_code_label
 import mifos_mobile.feature.auth.generated.resources.feature_signup_already_have_an_account
 import mifos_mobile.feature.auth.generated.resources.feature_signup_cell_phone_label
 import mifos_mobile.feature.auth.generated.resources.feature_signup_confirm_password_label
@@ -428,6 +429,13 @@ fun getInputConfigs(
     onAction: (SignUpAction) -> Unit,
 ): List<InputFieldConfig> {
     return listOf(
+        InputFieldConfig(
+            value = state.tenantCode,
+            state = state,
+            errorText = null,
+            labelRes = Res.string.feature_auth_tenant_code_label,
+            onValueChange = { onAction(SignUpAction.OnTenantCodeChange(it)) },
+        ),
         InputFieldConfig(
             value = state.firstName,
             state = state,

@@ -74,6 +74,7 @@ import org.mifos.mobile.core.ui.component.MifosErrorComponent
 import org.mifos.mobile.core.ui.component.MifosProgressIndicator
 import org.mifos.mobile.core.ui.utils.EventsEffect
 import org.mifos.mobile.feature.home.components.BottomSheetContent
+import org.mifos.mobile.feature.home.components.OrganizationCard
 import org.mifos.mobile.feature.home.navigation.HomeNavigationDestination
 import org.mifos.mobile.feature.home.navigation.HomeNavigator
 import template.core.base.designsystem.theme.KptTheme
@@ -195,6 +196,14 @@ internal fun HomeContent(
                         color = KptTheme.colorScheme.onSurface,
                         modifier = Modifier.semantics { heading() },
                     )
+
+                    if (state.tenantName.isNotBlank()) {
+                        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+                        OrganizationCard(
+                            tenantName = state.tenantName,
+                            branchName = state.branchName,
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
@@ -443,6 +452,8 @@ private fun HomeScreenPreview() {
         HomeContent(
             state = HomeState(
                 dialogState = null,
+                tenantName = "Racine Demo SACCO",
+                branchName = "Kampala Main Branch",
                 items = serviceCards,
                 uiState = HomeScreenState.Success,
             ),

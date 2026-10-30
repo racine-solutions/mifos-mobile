@@ -43,6 +43,8 @@
     <string name="no_app_to_support_action">There is no application that support this action</string>
     <string name="cancel">Cancel</string>
     <string name="dialog_logout">Are you sure you want to logout?</string>
+    <string name="feature_home_signed_in_to">Signed in to</string>
+    <string name="feature_home_branch">Branch: %1$s</string>
     <string name="feature_home_greet">Hello %1$s,</string>
     <string name="feature_home_services">Services</string>
     <string name="feature_home_edit_services">Edit services</string>

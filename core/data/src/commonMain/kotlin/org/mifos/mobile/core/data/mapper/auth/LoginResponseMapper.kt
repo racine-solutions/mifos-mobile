@@ -21,6 +21,7 @@ fun UserDto.toModel(): User =
         username = username,
         officeId = officeId,
         officeName = officeName,
+        tenantName = tenantName,
         roles = ArrayList(roles.map { it.toModel() }),
         base64EncodedAuthenticationKey = base64EncodedAuthenticationKey,
         permissions = ArrayList(permissions),

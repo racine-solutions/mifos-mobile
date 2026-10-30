@@ -28,6 +28,7 @@ val NetworkModule = module {
             install(Auth)
             install(KtorInterceptor) {
                 getToken = { preferencesRepository.token.value }
+                getTenant = { preferencesRepository.settingsInfo.value.tenant }
 
                 onUnauthorized = suspend {
                     preferencesRepository.logOut()

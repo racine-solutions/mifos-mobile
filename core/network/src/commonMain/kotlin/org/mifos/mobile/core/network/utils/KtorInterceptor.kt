@@ -20,12 +20,12 @@ import org.mifos.mobile.core.datastore.UserPreferencesRepository
 
 class KtorInterceptor(
     private val getToken: () -> String?,
+    private val getTenant: () -> String,
     private val onUnauthorized: (suspend () -> Unit)?,
 ) {
     companion object Plugin : HttpClientPlugin<Config, KtorInterceptor> {
         private const val HEADER_TENANT = "Fineract-Platform-TenantId"
         private const val HEADER_AUTH = "Authorization"
-        private const val MIFOS_BANK_1 = "default"
         private const val CONTENT_TYPE = "Content-Type"
         override val key: AttributeKey<KtorInterceptor> = AttributeKey("KtorInterceptor")
 
@@ -34,7 +34,9 @@ class KtorInterceptor(
                 context.header(CONTENT_TYPE, "application/json")
                 context.header("Accept", "application/json")
                 context.header("Accept", "*/*")
-                context.header(HEADER_TENANT, MIFOS_BANK_1)
+                plugin.getTenant().takeIf { it.isNotBlank() }?.let { tenant ->
+                    context.header(HEADER_TENANT, tenant)
+                }
 
                 plugin.getToken()?.let { token ->
                     if (token.isNotEmpty()) {
@@ -58,6 +60,7 @@ class KtorInterceptor(
             val config = Config().apply(block)
             return KtorInterceptor(
                 getToken = config.getToken,
+                getTenant = config.getTenant,
                 onUnauthorized = config.onUnauthorized,
             )
         }
@@ -66,6 +69,7 @@ class KtorInterceptor(
 
 class Config {
     lateinit var getToken: () -> String?
+    var getTenant: () -> String = { "" }
     var onUnauthorized: (suspend () -> Unit)? = null
 }
 
@@ -75,7 +79,6 @@ class KtorInterceptorRe(
     companion object Plugin : HttpClientPlugin<ConfigRe, KtorInterceptorRe> {
         private const val HEADER_TENANT = "Fineract-Platform-TenantId"
         private const val HEADER_AUTH = "Authorization"
-        private const val DEFAULT = "venus"
         private const val CONTENT_TYPE = "Content-Type"
         override val key: AttributeKey<KtorInterceptorRe> = AttributeKey("KtorInterceptorRe")
 
@@ -85,7 +88,9 @@ class KtorInterceptorRe(
             scope.requestPipeline.intercept(HttpRequestPipeline.State) {
                 context.header(CONTENT_TYPE, "application/json")
                 context.header("Accept", "application/json")
-                context.header(HEADER_TENANT, DEFAULT)
+                plugin.repository.settingsInfo.value.tenant.takeIf { it.isNotBlank() }?.let { tenant ->
+                    context.header(HEADER_TENANT, tenant)
+                }
 
                 token?.let { token ->
                     if (token.isNotEmpty()) {

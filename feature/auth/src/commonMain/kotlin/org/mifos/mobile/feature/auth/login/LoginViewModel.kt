@@ -14,6 +14,8 @@ import androidx.lifecycle.viewModelScope
 import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mifos_mobile.core.ui.generated.resources.internal_server_error
@@ -37,12 +39,22 @@ class LoginViewModel(
     private val userPreferencesRepositoryImpl: UserPreferencesRepository,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<LoginState, LoginEvent, LoginAction>(
-    initialState = LoginState(uiState = ScreenUiState.Success),
+    initialState = LoginState(
+        uiState = ScreenUiState.Success,
+        showTenantField = userPreferencesRepositoryImpl.settingsInfo.value.tenant.isBlank(),
+    ),
 ) {
 
     private var loginJob: Job? = null
 
     init {
+        // The Sacco/MFI code is only asked for while none is stored in the datastore.
+        userPreferencesRepositoryImpl.settingsInfo
+            .onEach { settings ->
+                updateState { it.copy(showTenantField = settings.tenant.isBlank()) }
+            }
+            .launchIn(viewModelScope)
+
         savedStateHandle.get<String>("username")?.let {
             trySendAction(LoginAction.UsernameChanged(it))
         }
@@ -54,6 +66,15 @@ class LoginViewModel(
 
     override fun handleAction(action: LoginAction) {
         when (action) {
+            is LoginAction.TenantCodeChanged -> {
+                updateState {
+                    it.copy(
+                        isError = false,
+                        tenantCode = action.tenantCode.trim(),
+                    )
+                }
+            }
+
             is LoginAction.UsernameChanged -> {
                 updateState {
                     it.copy(
@@ -144,6 +165,7 @@ class LoginViewModel(
                             isAuthenticated = user.isAuthenticated,
                             base64EncodedAuthenticationKey = user.base64EncodedAuthenticationKey.orEmpty(),
                             officeName = user.officeName.orEmpty(),
+                            tenantName = user.tenantName.orEmpty(),
                             password = state.password,
                         )
                         viewModelScope.launch {
@@ -168,6 +190,12 @@ class LoginViewModel(
         loginJob = viewModelScope.launch {
             delay(300)
 
+            // The tenant header of every API call is read from the datastore, so persist the
+            // Sacco/MFI code before hitting the backend.
+            if (state.showTenantField) {
+                userPreferencesRepositoryImpl.setTenant(state.tenantCode)
+            }
+
             val result = userAuthRepositoryImpl.login(username, password)
             sendAction(LoginAction.Internal.ReceiveLoginResult(result))
         }
@@ -175,6 +203,8 @@ class LoginViewModel(
 }
 
 data class LoginState(
+    val tenantCode: String = "",
+    val showTenantField: Boolean = false,
     val username: String = "",
     val password: String = "",
     val isPasswordVisible: Boolean = false,
@@ -191,7 +221,7 @@ data class LoginState(
     }
 
     val isLoginButtonEnabled: Boolean
-        get() = username.isNotEmpty() && password.length >= 8
+        get() = (!showTenantField || tenantCode.isNotBlank()) && username.isNotEmpty() && password.length >= 8
 }
 
 sealed interface LoginEvent {
@@ -202,6 +232,7 @@ sealed interface LoginEvent {
 }
 
 sealed interface LoginAction {
+    data class TenantCodeChanged(val tenantCode: String) : LoginAction
     data class UsernameChanged(val username: String) : LoginAction
     data class PasswordChanged(val password: String) : LoginAction
     data object TogglePasswordVisibility : LoginAction

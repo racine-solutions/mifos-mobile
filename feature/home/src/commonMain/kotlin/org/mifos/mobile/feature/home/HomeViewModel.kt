@@ -53,6 +53,10 @@ internal class HomeViewModel(
     initialState = HomeState(
         clientId = requireNotNull(userPreferencesRepositoryImpl.clientId.value),
         username = requireNotNull(userPreferencesRepositoryImpl.userInfo.value.userName),
+        // Fall back to the Sacco/MFI code until the backend returns the tenant's display name.
+        tenantName = userPreferencesRepositoryImpl.userInfo.value.tenantName
+            .ifBlank { userPreferencesRepositoryImpl.settingsInfo.value.tenant },
+        branchName = userPreferencesRepositoryImpl.userInfo.value.officeName,
         items = serviceCards,
         uiState = HomeScreenState.Loading,
     ),
@@ -542,6 +546,8 @@ internal data class HomeState(
     val decimals: Int = 2,
     val isAccountsPresent: Boolean = true,
     val username: String = "",
+    val tenantName: String = "",
+    val branchName: String = "",
     val clientAccounts: ClientAccounts? = null,
     val notificationCount: Int = 0,
     val loanAmount: String = "",

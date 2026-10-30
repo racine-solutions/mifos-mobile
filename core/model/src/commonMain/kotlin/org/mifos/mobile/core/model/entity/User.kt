@@ -23,6 +23,7 @@ data class User(
     val username: String? = null,
     val officeId: Long = 0,
     val officeName: String? = null,
+    val tenantName: String? = null,
     val roles: ArrayList<Role> = arrayListOf(),
     val base64EncodedAuthenticationKey: String? = null,
     val permissions: ArrayList<String> = arrayListOf(),

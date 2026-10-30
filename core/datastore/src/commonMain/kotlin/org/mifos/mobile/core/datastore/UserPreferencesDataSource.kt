@@ -229,6 +229,13 @@ class UserPreferencesDataSource(
             _settingsInfo.value = newPreference
         }
 
+    suspend fun setTenant(tenant: String) =
+        withContext(dispatcher) {
+            val newPreference = settings.getSettingsPreference().copy(tenant = tenant)
+            settings.putSettingsPreference(newPreference)
+            _settingsInfo.value = newPreference
+        }
+
     suspend fun setPasscode(passcode: String) =
         withContext(dispatcher) {
             val newPreference = settings.getSettingsPreference().copy(passcode = passcode)

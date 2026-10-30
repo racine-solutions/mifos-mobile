@@ -67,6 +67,8 @@ interface UserPreferencesRepository {
 
     suspend fun setIsUnlocked(isUnlocked: Boolean)
 
+    suspend fun setTenant(tenant: String)
+
     suspend fun setPasscode(passcode: String)
 
     suspend fun setShowOnboarding(showOnboarding: Boolean)

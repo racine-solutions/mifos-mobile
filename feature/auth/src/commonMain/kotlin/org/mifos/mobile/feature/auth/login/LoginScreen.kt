@@ -40,6 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import mifos_mobile.core.ui.generated.resources.ic_icon_logo_1
 import mifos_mobile.feature.auth.generated.resources.Res
+import mifos_mobile.feature.auth.generated.resources.feature_auth_tenant_code_label
 import mifos_mobile.feature.auth.generated.resources.feature_sign_in_Sign_in
 import mifos_mobile.feature.auth.generated.resources.feature_sign_in_dont_have_an_account
 import mifos_mobile.feature.auth.generated.resources.feature_sign_in_forgot_password
@@ -238,6 +239,18 @@ fun InputBox(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.largeIncreased),
     ) {
+        if (state.showTenantField) {
+            MifosOutlinedTextField(
+                value = state.tenantCode,
+                onValueChange = {
+                    onAction(LoginAction.TenantCodeChanged(it))
+                },
+                label = stringResource(Res.string.feature_auth_tenant_code_label),
+                shape = KptTheme.shapes.medium,
+                textStyle = MifosTypography.bodyLarge,
+            )
+        }
+
         MifosOutlinedTextField(
             value = state.username,
             onValueChange = {

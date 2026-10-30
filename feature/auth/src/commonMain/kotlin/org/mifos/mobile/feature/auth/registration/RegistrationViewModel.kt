@@ -31,6 +31,7 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.mifos.mobile.core.common.DataState
 import org.mifos.mobile.core.data.repository.UserAuthRepository
+import org.mifos.mobile.core.datastore.UserPreferencesRepository
 import org.mifos.mobile.core.model.entity.register.RegisterPayload
 import org.mifos.mobile.core.ui.PasswordStrengthState
 import org.mifos.mobile.core.ui.utils.BaseViewModel
@@ -48,12 +49,14 @@ import mifos_mobile.core.ui.generated.resources.Res as UiRes
  * performs validation, and communicates with the [UserAuthRepository] for API calls.
  *
  * @property userAuthRepositoryImpl Repository to handle registration logic.
+ * @property userPreferencesRepository Stores the Sacco/MFI code (tenant) used by every API call.
  */
 @Suppress("TooManyFunctions")
 class RegistrationViewModel(
     private val userAuthRepositoryImpl: UserAuthRepository,
+    private val userPreferencesRepository: UserPreferencesRepository,
 ) : BaseViewModel<SignUpState, SignUpEvent, SignUpAction>(
-    initialState = SignUpState(),
+    initialState = SignUpState(tenantCode = userPreferencesRepository.settingsInfo.value.tenant),
 ) {
 
     private var validationJob: Job? = null
@@ -71,6 +74,10 @@ class RegistrationViewModel(
      */
     override fun handleAction(action: SignUpAction) {
         when (action) {
+            is SignUpAction.OnTenantCodeChange -> {
+                updateState { it.copy(tenantCode = action.tenantCode.trim()) }
+            }
+
             is SignUpAction.OnCustomerAccountChange -> {
                 handleCustomerAccountChange(action.customerAccount.trim())
             }
@@ -517,6 +524,10 @@ class RegistrationViewModel(
 //        }
         updateState { it.copy(showOverlay = true) }
         viewModelScope.launch {
+            // The tenant header of every API call is read from the datastore, so persist the
+            // Sacco/MFI code before hitting the backend.
+            userPreferencesRepository.setTenant(state.tenantCode)
+
             val response = userAuthRepositoryImpl.registerUser(
                 registerPayload = RegisterPayload(
                     accountNumber = state.customerAccount,
@@ -589,6 +600,7 @@ class RegistrationViewModel(
  * Holds the UI state of the registration screen.
  */
 data class SignUpState(
+    val tenantCode: String = "",
     val customerAccount: String = "",
     val firstName: String = "",
     val middleName: String = "",
@@ -629,7 +641,8 @@ data class SignUpState(
      * Whether the submit button should be enabled based on required fields.
      */
     val isSubmitButtonEnabled: Boolean
-        get() = customerAccount.isNotBlank() &&
+        get() = tenantCode.isNotBlank() &&
+            customerAccount.isNotBlank() &&
             firstName.isNotBlank() &&
             lastName.isNotBlank() &&
             email.isNotBlank() &&
@@ -658,6 +671,7 @@ internal sealed class ValidationResult {
  * Defines all user-triggered or internal actions related to the Sign-Up screen.
  */
 sealed interface SignUpAction {
+    data class OnTenantCodeChange(val tenantCode: String) : SignUpAction
     data class OnCustomerAccountChange(val customerAccount: String) : SignUpAction
     data class OnFirstNameChange(val firstName: String) : SignUpAction
     data class OnMiddleNameChange(val middleName: String) : SignUpAction

@@ -34,7 +34,8 @@ data class AppSettings(
     companion object {
         val DEFAULT = AppSettings(
             userId = "",
-            tenant = "default",
+            tenant = "",
+//            baseUrl = "https://lms-backenddev.racinesolutions.com/",
             baseUrl = "https://localhost:8443/",
             appTheme = MifosThemeConfig.FOLLOW_SYSTEM,
             sentTokenToServer = false,

@@ -64,6 +64,7 @@
 
     <string name="feature_sign_in_title">Sign in</string>
     <string name="feature_sign_in_sub_title">Enter your email and password to log in</string>
+    <string name="feature_auth_tenant_code_label">Sacco/MFI Code</string>
     <string name="feature_sign_in_username_label">Username or Email</string>
     <string name="feature_sign_in_password_label">Password</string>
     <string name="feature_sign_in_forgot_password">Forgot Password ?</string>

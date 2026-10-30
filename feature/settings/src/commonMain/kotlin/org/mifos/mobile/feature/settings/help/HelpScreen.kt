@@ -59,8 +59,8 @@ import org.mifos.mobile.core.designsystem.theme.AppColors
 import org.mifos.mobile.core.designsystem.theme.DesignToken
 import org.mifos.mobile.core.designsystem.theme.MifosMobileTheme
 import org.mifos.mobile.core.designsystem.theme.MifosTypography
-import org.mifos.mobile.core.ui.utils.ShareUtils
 import org.mifos.mobile.core.ui.utils.RacineContact
+import org.mifos.mobile.core.ui.utils.ShareUtils
 import template.core.base.designsystem.theme.KptTheme
 
 /**
