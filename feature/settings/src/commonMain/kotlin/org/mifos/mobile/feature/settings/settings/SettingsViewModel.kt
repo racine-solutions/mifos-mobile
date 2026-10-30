@@ -57,6 +57,10 @@ internal class SettingsViewModel(
         SettingsState(
             settingsItems = settingsItems,
             clientId = requireNotNull(userPreferencesRepositoryImpl.clientId.value),
+            // Fall back to the Sacco/MFI code until the backend returns the tenant's display name.
+            tenantName = userPreferencesRepositoryImpl.userInfo.value.tenantName
+                .ifBlank { userPreferencesRepositoryImpl.settingsInfo.value.tenant },
+            branchName = userPreferencesRepositoryImpl.userInfo.value.officeName,
         )
     },
 ) {
@@ -309,6 +313,8 @@ internal data class SettingsState(
     val clientId: Long? = null,
     val client: Client? = null,
     val profileImage: ByteArray? = null,
+    val tenantName: String = "",
+    val branchName: String = "",
 
     val dialogState: DialogState? = null,
     val isUserLoading: Boolean = true,

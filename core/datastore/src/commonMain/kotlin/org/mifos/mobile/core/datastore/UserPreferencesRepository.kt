@@ -69,6 +69,8 @@ interface UserPreferencesRepository {
 
     suspend fun setTenant(tenant: String)
 
+    suspend fun setTenantName(tenantName: String)
+
     suspend fun setPasscode(passcode: String)
 
     suspend fun setShowOnboarding(showOnboarding: Boolean)

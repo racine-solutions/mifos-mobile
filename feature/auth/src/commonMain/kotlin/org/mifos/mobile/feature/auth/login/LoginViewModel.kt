@@ -42,6 +42,9 @@ class LoginViewModel(
     initialState = LoginState(
         uiState = ScreenUiState.Success,
         showTenantField = userPreferencesRepositoryImpl.settingsInfo.value.tenant.isBlank(),
+        tenantDisplayName = userPreferencesRepositoryImpl.settingsInfo.value.let {
+            it.tenantName.ifBlank { it.tenant }
+        },
     ),
 ) {
 
@@ -51,7 +54,12 @@ class LoginViewModel(
         // The Sacco/MFI code is only asked for while none is stored in the datastore.
         userPreferencesRepositoryImpl.settingsInfo
             .onEach { settings ->
-                updateState { it.copy(showTenantField = settings.tenant.isBlank()) }
+                updateState {
+                    it.copy(
+                        showTenantField = settings.tenant.isBlank(),
+                        tenantDisplayName = settings.tenantName.ifBlank { settings.tenant },
+                    )
+                }
             }
             .launchIn(viewModelScope)
 
@@ -73,6 +81,13 @@ class LoginViewModel(
                         tenantCode = action.tenantCode.trim(),
                     )
                 }
+            }
+
+            is LoginAction.ChangeTenantClicked -> {
+                viewModelScope.launch {
+                    userPreferencesRepositoryImpl.setTenant("")
+                }
+                updateState { it.copy(tenantCode = "") }
             }
 
             is LoginAction.UsernameChanged -> {
@@ -169,6 +184,7 @@ class LoginViewModel(
                             password = state.password,
                         )
                         viewModelScope.launch {
+                            userPreferencesRepositoryImpl.setTenantName(user.tenantName.orEmpty())
                             userPreferencesRepositoryImpl.updateUser(userData)
                             userPreferencesRepositoryImpl.setIsAuthenticated(true)
                         }
@@ -205,6 +221,7 @@ class LoginViewModel(
 data class LoginState(
     val tenantCode: String = "",
     val showTenantField: Boolean = false,
+    val tenantDisplayName: String = "",
     val username: String = "",
     val password: String = "",
     val isPasswordVisible: Boolean = false,
@@ -233,6 +250,7 @@ sealed interface LoginEvent {
 
 sealed interface LoginAction {
     data class TenantCodeChanged(val tenantCode: String) : LoginAction
+    data object ChangeTenantClicked : LoginAction
     data class UsernameChanged(val username: String) : LoginAction
     data class PasswordChanged(val password: String) : LoginAction
     data object TogglePasswordVisibility : LoginAction

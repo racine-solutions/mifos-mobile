@@ -111,11 +111,14 @@ fun MifosRoundedTopAppBar(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     brandIcon: DrawableResource? = null,
+    brandContent: (@Composable () -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     TopAppBar(
         title = {
-            if (brandIcon == null) {
+            if (brandContent != null) {
+                brandContent()
+            } else if (brandIcon == null) {
                 Text(
                     text = title,
                     style = MifosTypography.titleMedium,
@@ -125,7 +128,9 @@ fun MifosRoundedTopAppBar(
         },
         actions = actions,
         navigationIcon = {
-            if (brandIcon != null) {
+            if (brandContent != null) {
+                Box(modifier = Modifier.padding(start = DesignToken.padding.medium))
+            } else if (brandIcon != null) {
                 Box(
                     modifier = Modifier.padding(DesignToken.padding.medium),
                 ) {

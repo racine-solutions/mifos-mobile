@@ -35,7 +35,9 @@ import androidx.compose.ui.draw.clip
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import mifos_mobile.feature.settings.generated.resources.Res
+import mifos_mobile.feature.settings.generated.resources.feature_settings_branch
 import mifos_mobile.feature.settings.generated.resources.feature_settings_customer_account_no
+import mifos_mobile.feature.settings.generated.resources.feature_settings_organisation
 import mifos_mobile.feature.settings.generated.resources.feature_settings_logout_action
 import mifos_mobile.feature.settings.generated.resources.feature_settings_logout_message
 import mifos_mobile.feature.settings.generated.resources.feature_settings_top_bar_title
@@ -253,6 +255,22 @@ internal fun SettingsProfileCard(
                 style = MifosTypography.labelMediumEmphasized,
                 color = KptTheme.colorScheme.secondary,
             )
+
+            if (state.tenantName.isNotBlank()) {
+                Text(
+                    text = stringResource(Res.string.feature_settings_organisation, state.tenantName),
+                    style = MifosTypography.labelMediumEmphasized,
+                    color = KptTheme.colorScheme.secondary,
+                )
+            }
+
+            if (state.branchName.isNotBlank()) {
+                Text(
+                    text = stringResource(Res.string.feature_settings_branch, state.branchName),
+                    style = MifosTypography.labelMediumEmphasized,
+                    color = KptTheme.colorScheme.secondary,
+                )
+            }
         }
     }
 }

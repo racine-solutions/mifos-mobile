@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import mifos_mobile.core.ui.generated.resources.ic_icon_logo_1
 import mifos_mobile.feature.third_party_transfer.generated.resources.Res
 import mifos_mobile.feature.third_party_transfer.generated.resources.feature_tpt_error_server
 import mifos_mobile.feature.third_party_transfer.generated.resources.feature_tpt_label_amount
@@ -39,6 +38,7 @@ import mifos_mobile.feature.third_party_transfer.generated.resources.feature_tpt
 import mifos_mobile.feature.third_party_transfer.generated.resources.feature_tpt_label_remarks
 import mifos_mobile.feature.third_party_transfer.generated.resources.feature_tpt_tip
 import mifos_mobile.feature.third_party_transfer.generated.resources.feature_tpt_tip_action
+import mifos_mobile.feature.third_party_transfer.generated.resources.feature_tpt_title
 import mifos_mobile.feature.third_party_transfer.generated.resources.feature_tpt_transfer_button
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -51,10 +51,12 @@ import org.mifos.mobile.core.designsystem.component.MifosOutlinedTextField
 import org.mifos.mobile.core.designsystem.component.MifosTextFieldConfig
 import org.mifos.mobile.core.designsystem.icon.MifosIcons
 import org.mifos.mobile.core.designsystem.theme.DesignToken
+import org.mifos.mobile.core.designsystem.theme.MifosTypography
 import org.mifos.mobile.core.ui.component.MifosDropDownDoubleTextField
 import org.mifos.mobile.core.ui.component.MifosErrorComponent
 import org.mifos.mobile.core.ui.component.MifosPayFromDropdownUI
 import org.mifos.mobile.core.ui.component.MifosProgressIndicator
+import org.mifos.mobile.core.ui.component.TenantTopBarTitle
 import org.mifos.mobile.core.ui.utils.EventsEffect
 import org.mifos.mobile.core.ui.utils.ScreenUiState
 import org.mifos.mobile.feature.third.party.transfer.navigation.TptNavigationDestination
@@ -146,7 +148,20 @@ internal fun TprContent(
 ) {
     MifosElevatedScaffold(
         modifier = modifier,
-        brandIcon = mifos_mobile.core.ui.generated.resources.Res.drawable.ic_icon_logo_1,
+        brandContent = {
+            if (state.tenantName.isNotBlank()) {
+                TenantTopBarTitle(
+                    tenantName = state.tenantName,
+                    branchName = state.branchName,
+                )
+            } else {
+                Text(
+                    text = stringResource(Res.string.feature_tpt_title),
+                    style = MifosTypography.titleMedium,
+                    color = KptTheme.colorScheme.onBackground,
+                )
+            }
+        },
         topBarTitle = "Home",
         onNavigateBack = { },
         actions = {

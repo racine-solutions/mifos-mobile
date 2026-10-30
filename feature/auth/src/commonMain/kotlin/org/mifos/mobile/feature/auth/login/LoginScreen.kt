@@ -9,7 +9,6 @@
  */
 package org.mifos.mobile.feature.auth.login
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -38,7 +37,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
-import mifos_mobile.core.ui.generated.resources.ic_icon_logo_1
 import mifos_mobile.feature.auth.generated.resources.Res
 import mifos_mobile.feature.auth.generated.resources.feature_auth_tenant_code_label
 import mifos_mobile.feature.auth.generated.resources.feature_sign_in_Sign_in
@@ -49,7 +47,6 @@ import mifos_mobile.feature.auth.generated.resources.feature_sign_in_sign_up
 import mifos_mobile.feature.auth.generated.resources.feature_sign_in_sub_title
 import mifos_mobile.feature.auth.generated.resources.feature_sign_in_title
 import mifos_mobile.feature.auth.generated.resources.feature_sign_in_username_label
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -176,7 +173,7 @@ private fun LoginScreenContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(top = DesignToken.padding.dp100)
+            .padding(top = KptTheme.spacing.xl * 2)
             .padding(KptTheme.spacing.md)
             .pointerInput(Unit) {
                 detectTapGestures(
@@ -203,16 +200,6 @@ fun LogoBox(
     Column(
         modifier = modifier,
     ) {
-        Image(
-            modifier = Modifier.height(DesignToken.sizes.imageDp48).width(DesignToken.sizes.imageDp165),
-            painter = painterResource(
-                mifos_mobile.core.ui.generated.resources.Res.drawable.ic_icon_logo_1,
-            ),
-            contentDescription = null,
-        )
-
-        Spacer(modifier = Modifier.height(DesignToken.spacing.dp50))
-
         Text(
             text = stringResource(Res.string.feature_sign_in_title),
             style = MifosTypography.headlineMedium,
@@ -239,6 +226,13 @@ fun InputBox(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.largeIncreased),
     ) {
+        if (!state.showTenantField) {
+            TenantHeaderCard(
+                tenantName = state.tenantDisplayName,
+                onChangeClick = { onAction(LoginAction.ChangeTenantClicked) },
+            )
+        }
+
         if (state.showTenantField) {
             MifosOutlinedTextField(
                 value = state.tenantCode,

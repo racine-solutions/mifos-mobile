@@ -23,6 +23,7 @@
     <string name="feature_tpt_label_destination">Destination Account</string>
     <string name="feature_tpt_label_amount">Amount</string>
     <string name="feature_tpt_label_remarks">Remarks</string>
+    <string name="feature_tpt_title">Transfer</string>
     <string name="feature_tpt_tip">Not finding destination account?</string>
     <string name="feature_tpt_tip_action">Add Beneficiary!</string>
     <!-- Button texts -->

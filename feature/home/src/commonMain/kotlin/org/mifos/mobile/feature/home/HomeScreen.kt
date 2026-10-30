@@ -10,6 +10,7 @@
 package org.mifos.mobile.feature.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,6 +37,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
@@ -72,9 +75,9 @@ import org.mifos.mobile.core.ui.component.MifosAccountApplyDashboard
 import org.mifos.mobile.core.ui.component.MifosDashboardCard
 import org.mifos.mobile.core.ui.component.MifosErrorComponent
 import org.mifos.mobile.core.ui.component.MifosProgressIndicator
+import org.mifos.mobile.core.ui.component.TenantTopBarTitle
 import org.mifos.mobile.core.ui.utils.EventsEffect
 import org.mifos.mobile.feature.home.components.BottomSheetContent
-import org.mifos.mobile.feature.home.components.OrganizationCard
 import org.mifos.mobile.feature.home.navigation.HomeNavigationDestination
 import org.mifos.mobile.feature.home.navigation.HomeNavigator
 import template.core.base.designsystem.theme.KptTheme
@@ -139,6 +142,14 @@ internal fun HomeContent(
     MifosElevatedScaffold(
         modifier = modifier,
         brandIcon = mifos_mobile.core.ui.generated.resources.Res.drawable.ic_icon_logo_1,
+        brandContent = state.tenantName.takeIf { it.isNotBlank() }?.let { tenantName ->
+            {
+                TenantTopBarTitle(
+                    tenantName = tenantName,
+                    branchName = state.branchName,
+                )
+            }
+        },
         topBarTitle = "Home",
         onNavigateBack = {},
         actions = {
@@ -196,14 +207,6 @@ internal fun HomeContent(
                         color = KptTheme.colorScheme.onSurface,
                         modifier = Modifier.semantics { heading() },
                     )
-
-                    if (state.tenantName.isNotBlank()) {
-                        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
-                        OrganizationCard(
-                            tenantName = state.tenantName,
-                            branchName = state.branchName,
-                        )
-                    }
 
                     Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
@@ -318,6 +321,7 @@ internal fun ServiceBox(
                         ServiceItemCard(
                             title = item.title,
                             icon = item.icon,
+                            accent = item.accent,
                             isSelected = isSelected,
                             isEditMode = isEditMode,
                             onClick = { onServiceClick(item.route) },
@@ -336,6 +340,7 @@ internal fun ServiceBox(
 internal fun ServiceItemCard(
     title: StringResource,
     icon: ImageVector,
+    accent: Color,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
@@ -355,12 +360,14 @@ internal fun ServiceItemCard(
         Box {
             Image(
                 modifier = Modifier
+                    .clip(KptTheme.shapes.medium)
+                    .background(accent.copy(alpha = 0.12f))
                     .border(
                         DesignToken.strokes.thin,
                         if (isEditMode && isSelected) {
                             KptTheme.colorScheme.primary
                         } else {
-                            KptTheme.colorScheme.outlineVariant
+                            accent.copy(alpha = 0.35f)
                         },
                         KptTheme.shapes.medium,
                     )
@@ -371,7 +378,7 @@ internal fun ServiceItemCard(
                     if (isEditMode && isSelected) {
                         KptTheme.colorScheme.primary
                     } else {
-                        KptTheme.colorScheme.tertiary
+                        accent
                     },
                 ),
             )

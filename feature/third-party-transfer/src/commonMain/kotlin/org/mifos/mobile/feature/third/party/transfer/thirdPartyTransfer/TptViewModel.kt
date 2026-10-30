@@ -89,6 +89,10 @@ internal class TptViewModel(
     initialState = run {
         TptState(
             clientId = requireNotNull(userPreferencesRepositoryImpl.clientId.value),
+            // Fall back to the Sacco/MFI code until the backend returns the tenant's display name.
+            tenantName = userPreferencesRepositoryImpl.userInfo.value.tenantName
+                .ifBlank { userPreferencesRepositoryImpl.settingsInfo.value.tenant },
+            branchName = userPreferencesRepositoryImpl.userInfo.value.officeName,
         )
     },
 ) {
@@ -647,6 +651,8 @@ internal class TptViewModel(
  * @property uiState The overall screen state (Loading, Success, Error, etc.).
  */
 internal data class TptState(
+    val tenantName: String = "",
+    val branchName: String = "",
     val accountId: Long = -1L,
     val clientId: Long = -1L,
     val officeId: Int? = null,

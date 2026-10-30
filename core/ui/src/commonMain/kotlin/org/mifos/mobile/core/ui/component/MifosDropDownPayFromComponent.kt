@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -57,6 +58,9 @@ import org.mifos.mobile.core.designsystem.theme.AppColors
 import org.mifos.mobile.core.designsystem.theme.DesignToken
 import org.mifos.mobile.core.designsystem.theme.MifosMobileTheme
 import template.core.base.designsystem.theme.KptTheme
+
+// Racine brand blue for the "pay from" selector bar, replacing the default purple.
+private val PayFromBarColor = Color(0xFF2874EC)
 
 @Composable
 fun MifosPayFromDropdownUI(
@@ -348,7 +352,7 @@ fun AccountDropdownList(
         modifier = modifier
             .fillMaxWidth()
             .clip(KptTheme.shapes.medium)
-            .background(KptTheme.colorScheme.tertiary),
+            .background(PayFromBarColor),
     ) {
         Column(
             Modifier.fillMaxWidth(),
@@ -394,7 +398,7 @@ fun AccountDropdownList(
                         modifier = if (selectedAccount == accountNumber) {
                             Modifier.background(KptTheme.colorScheme.onTertiaryContainer)
                         } else {
-                            Modifier.background(KptTheme.colorScheme.tertiary)
+                            Modifier.background(PayFromBarColor)
                         },
                         onClick = {
                             expanded = !expanded

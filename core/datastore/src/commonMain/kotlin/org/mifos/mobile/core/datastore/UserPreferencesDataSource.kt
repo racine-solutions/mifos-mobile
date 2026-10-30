@@ -162,8 +162,10 @@ class UserPreferencesDataSource(
         withContext(dispatcher) {
             settings.putUserPreference(UserData.DEFAULT)
             _userInfo.value = UserData.DEFAULT
+            // Logging out always locks the app, so the next login has to pass the passcode again.
             val cleared = settings.getSettingsPreference().copy(
                 isAuthenticated = false,
+                isUnlocked = false,
             )
             settings.putSettingsPreference(cleared)
             _settingsInfo.value = cleared
@@ -231,7 +233,20 @@ class UserPreferencesDataSource(
 
     suspend fun setTenant(tenant: String) =
         withContext(dispatcher) {
-            val newPreference = settings.getSettingsPreference().copy(tenant = tenant)
+            val current = settings.getSettingsPreference()
+            // A different code means the stored display name belongs to another organisation.
+            val newPreference = if (current.tenant == tenant) {
+                current
+            } else {
+                current.copy(tenant = tenant, tenantName = "")
+            }
+            settings.putSettingsPreference(newPreference)
+            _settingsInfo.value = newPreference
+        }
+
+    suspend fun setTenantName(tenantName: String) =
+        withContext(dispatcher) {
+            val newPreference = settings.getSettingsPreference().copy(tenantName = tenantName)
             settings.putSettingsPreference(newPreference)
             _settingsInfo.value = newPreference
         }

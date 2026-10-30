@@ -213,6 +213,7 @@ fun MifosElevatedScaffold(
     topBarTitle: String,
     modifier: Modifier = Modifier,
     brandIcon: DrawableResource? = null,
+    brandContent: (@Composable () -> Unit)? = null,
     bottomBar: @Composable () -> Unit = {},
     containerColor: Color = KptTheme.colorScheme.surface,
     contentColor: Color = KptTheme.colorScheme.onSurface,
@@ -229,6 +230,7 @@ fun MifosElevatedScaffold(
         topBar = {
             MifosRoundedTopAppBar(
                 brandIcon = brandIcon,
+                brandContent = brandContent,
                 title = topBarTitle,
                 onNavigateBack = onNavigateBack,
                 actions = actions,

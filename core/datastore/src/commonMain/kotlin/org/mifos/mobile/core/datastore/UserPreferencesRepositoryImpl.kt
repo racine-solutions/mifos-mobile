@@ -187,6 +187,10 @@ class UserPreferencesRepositoryImpl(
         preferenceManager.setTenant(tenant)
     }
 
+    override suspend fun setTenantName(tenantName: String) {
+        preferenceManager.setTenantName(tenantName)
+    }
+
     override suspend fun setPasscode(passcode: String) {
         preferenceManager.setPasscode(passcode)
     }

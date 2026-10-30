@@ -17,6 +17,7 @@ import org.mifos.mobile.core.model.MifosThemeConfig
 data class AppSettings(
     val userId: String,
     val tenant: String,
+    val tenantName: String = "",
     val baseUrl: String,
     val passcode: String,
     val appTheme: MifosThemeConfig,

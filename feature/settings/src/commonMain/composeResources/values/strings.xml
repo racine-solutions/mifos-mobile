@@ -99,6 +99,8 @@
     <string name="feature_settings_error_fetching_profile_image">Failed to fetch profile image.</string>
     <string name="feature_settings_internet_not_connected">No internet connection.</string>
     <string name="feature_settings_error_invalid_profile_image">Invalid profile image format.</string>
+    <string name="feature_settings_organisation">Organisation: %1$s</string>
+    <string name="feature_settings_branch">Branch: %1$s</string>
     <string name="feature_settings_customer_account_no">Customer Account: %1$s</string>
 
     <!-- About Screen -->
