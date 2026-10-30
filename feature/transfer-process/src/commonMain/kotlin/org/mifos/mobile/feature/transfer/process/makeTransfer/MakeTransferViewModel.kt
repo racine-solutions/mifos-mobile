@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -34,9 +35,29 @@ import org.mifos.mobile.core.model.entity.client.ClientAccounts
 import org.mifos.mobile.core.model.entity.payload.ReviewTransferPayload
 import org.mifos.mobile.core.model.entity.templates.account.AccountOption
 import org.mifos.mobile.core.model.entity.templates.account.AccountOptionsTemplate
-import org.mifos.mobile.core.model.enums.AccountType
+import org.mifos.mobile.core.model.entity.templates.account.AccountType
 import org.mifos.mobile.core.model.enums.TransferType
 import org.mifos.mobile.core.ui.utils.BaseViewModel
+
+private const val SAVINGS_ACCOUNT_TYPE = 2L
+private const val LOAN_ACCOUNT_TYPE = 1L
+
+/**
+ * Fineract's accounttransfers/template endpoint never reports an account's own office or
+ * type on the list items themselves (only the query params used to fetch them imply it),
+ * so those fields have to be attached here from what the caller already knows before the
+ * account can be submitted as part of a transfer payload.
+ */
+private fun AccountOption.withTransferMeta(officeId: Int?, accountType: Long): AccountOption =
+    copy(officeId = officeId, accountType = AccountType(id = accountType.toInt()))
+
+/**
+ * Fineract's demo account-number generation can assign the same [AccountOption.accountNo] to
+ * accounts of different types (e.g. a loan and a savings account both numbered "000000001"),
+ * so accountNo alone doesn't uniquely identify an account — it must be paired with the type.
+ */
+private fun AccountOption.isSameAccount(other: AccountOption?): Boolean =
+    other != null && accountNo == other.accountNo && accountType?.id == other.accountType?.id
 
 /**
  * ViewModel for the Make Transfer screen.
@@ -62,6 +83,7 @@ internal class MakeTransferViewModel(
         MakeTransferState(
             clientId = requireNotNull(userPreferencesRepositoryImpl.clientId.value),
             accountId = route.accountId,
+            accountNo = route.accountNo,
             outstandingBalance = route.outstandingBalance?.toDouble(),
             transferTarget = if (route.transferTarget != null) {
                 enumValueOf<TransferType>(route.transferTarget)
@@ -180,10 +202,7 @@ internal class MakeTransferViewModel(
             .find { it.accountNo == toAccountNo }
 
         val fromAccounts = state.accountOptionsTemplate.fromAccountOptions
-            .filter {
-                it.accountType?.value == AccountType.SAVINGS.value &&
-                    it.accountNo != toAccountNo
-            }
+            .filter { !it.isSameAccount(toAccountSelected) }
 
         updateState {
             it.copy(
@@ -205,11 +224,11 @@ internal class MakeTransferViewModel(
      */
     private fun handleFromAccountChange(fromAccountNo: String) {
         val fromAccountSelected = state.accountOptionsTemplate.fromAccountOptions
-            .filter { it.accountType?.value == AccountType.SAVINGS.value }
             .find { it.accountNo == fromAccountNo }
+            ?.withTransferMeta(officeId = state.officeId, accountType = SAVINGS_ACCOUNT_TYPE)
 
         val toAccounts = state.accountOptionsTemplate.toAccountOptions
-            .filter { it.accountNo != fromAccountNo }
+            .filter { !it.isSameAccount(fromAccountSelected) }
 
         updateState {
             it.copy(
@@ -368,16 +387,78 @@ internal class MakeTransferViewModel(
         } else {
             updateState { it.copy(uiState = MakeTransferState.MakeTransferScreenState.Loading) }
             viewModelScope.launch {
-                savingsAccountRepositoryImpl
-                    .accountTransferTemplate(accountId = state.accountId, accountType = 2L)
-                    .collect { result ->
+                val isLoanRepayment =
+                    state.transferSuccessDestination == StatusNavigationDestination.LOAN_ACCOUNT.name
+
+                if (isLoanRepayment) {
+                    savingsAccountRepositoryImpl
+                        .accountTransferTemplate(
+                            accountId = null,
+                            accountType = SAVINGS_ACCOUNT_TYPE,
+                            fromClientId = state.clientId,
+                        )
+                        .collect { result ->
+                            sendAction(
+                                MakeTransferAction
+                                    .Internal.ReceiveAccountOptionsTemplateResult(result),
+                            )
+                        }
+                } else {
+                    // A generic self-transfer can pay either into another savings account or
+                    // towards a loan, but Fineract only resolves toAccountOptions for a single
+                    // toAccountType per call — so both are fetched and merged into one list.
+                    combine(
+                        savingsAccountRepositoryImpl.accountTransferTemplate(
+                            accountId = state.accountId,
+                            accountType = SAVINGS_ACCOUNT_TYPE,
+                            toClientId = state.clientId,
+                            toAccountType = SAVINGS_ACCOUNT_TYPE,
+                        ),
+                        savingsAccountRepositoryImpl.accountTransferTemplate(
+                            accountId = state.accountId,
+                            accountType = SAVINGS_ACCOUNT_TYPE,
+                            toClientId = state.clientId,
+                            toAccountType = LOAN_ACCOUNT_TYPE,
+                        ),
+                    ) { savingsDestinations, loanDestinations ->
+                        mergeToAccountOptions(savingsDestinations, loanDestinations)
+                    }.collect { result ->
                         sendAction(
                             MakeTransferAction
                                 .Internal.ReceiveAccountOptionsTemplateResult(result),
                         )
                     }
+                }
             }
         }
+    }
+
+    /**
+     * Combines two [DataState] template fetches (one per destination account type) into a
+     * single template whose `toAccountOptions` covers both, each item stamped with the
+     * type it was actually fetched with (see [withTransferMeta]).
+     */
+    private fun mergeToAccountOptions(
+        savingsDestinations: DataState<AccountOptionsTemplate>,
+        loanDestinations: DataState<AccountOptionsTemplate>,
+    ): DataState<AccountOptionsTemplate> = when {
+        savingsDestinations is DataState.Loading || loanDestinations is DataState.Loading -> DataState.Loading
+        savingsDestinations is DataState.Error -> savingsDestinations
+        loanDestinations is DataState.Error -> loanDestinations
+        savingsDestinations is DataState.Success && loanDestinations is DataState.Success -> {
+            val officeId = savingsDestinations.data.officeId
+            val toSavingsAccounts = savingsDestinations.data.toAccountOptions.map {
+                it.withTransferMeta(officeId, SAVINGS_ACCOUNT_TYPE)
+            }
+            val toLoanAccounts = loanDestinations.data.toAccountOptions.map {
+                it.withTransferMeta(officeId, LOAN_ACCOUNT_TYPE)
+            }
+            DataState.Success(
+                savingsDestinations.data.copy(toAccountOptions = toSavingsAccounts + toLoanAccounts),
+            )
+        }
+
+        else -> DataState.Loading
     }
 
     /**
@@ -414,26 +495,31 @@ internal class MakeTransferViewModel(
                         StatusNavigationDestination.SAVINGS_ACCOUNT.name,
                         StatusNavigationDestination.LOAN_ACCOUNT.name,
                         -> {
-                            val savingsFromAccounts = template.fromAccountOptions.filter {
-                                it.accountType?.value == AccountType.SAVINGS.value
-                            }
-
                             val prepopulatedFromAccount =
                                 when (current.transferSuccessDestination) {
-                                    StatusNavigationDestination.SAVINGS_ACCOUNT.name,
-                                    StatusNavigationDestination.LOAN_ACCOUNT.name,
-                                    -> {
-                                        savingsFromAccounts.firstOrNull { it.accountId?.toLong() == current.accountId }
+                                    StatusNavigationDestination.SAVINGS_ACCOUNT.name -> {
+                                        template.fromAccountOptions
+                                            .firstOrNull { it.accountId?.toLong() == current.accountId }
+                                            ?.withTransferMeta(template.officeId, SAVINGS_ACCOUNT_TYPE)
                                     }
 
                                     else -> current.fromAccount
                                 }
 
+                            // The loan being repaid is already known from navigation (it is the
+                            // account the user is paying, not a savings account the transfer
+                            // template's fromAccountOptions/fromAccount could ever resolve to),
+                            // so it's built directly instead of matched against the template.
                             val prepopulatedToAccount = when (current.transferSuccessDestination) {
                                 StatusNavigationDestination.LOAN_ACCOUNT.name -> {
-                                    template.toAccountOptions.firstOrNull {
-                                        it.accountId?.toLong() == current.accountId
-                                    }
+                                    AccountOption(
+                                        accountId = current.accountId.toInt(),
+                                        accountNo = current.accountNo,
+                                        officeId = template.officeId,
+                                        // Repaying own loan from own savings: same client on both legs.
+                                        clientId = current.clientId,
+                                        accountType = AccountType(id = LOAN_ACCOUNT_TYPE.toInt()),
+                                    )
                                 }
 
                                 else -> current.toAccount
@@ -441,11 +527,11 @@ internal class MakeTransferViewModel(
 
                             val amount = current.outstandingBalance?.toString() ?: current.amount
 
-                            val filteredFromAccounts = savingsFromAccounts.filter {
-                                it.accountNo != prepopulatedToAccount?.accountNo
+                            val filteredFromAccounts = template.fromAccountOptions.filter {
+                                !it.isSameAccount(prepopulatedToAccount)
                             }
                             val filteredToAccounts = template.toAccountOptions.filter {
-                                it.accountNo != prepopulatedFromAccount?.accountNo
+                                !it.isSameAccount(prepopulatedFromAccount)
                             }
 
                             current.copy(
@@ -455,6 +541,7 @@ internal class MakeTransferViewModel(
                                 fromAccount = prepopulatedFromAccount,
                                 toAccount = prepopulatedToAccount,
                                 amount = amount,
+                                officeId = template.officeId,
                                 uiState = MakeTransferState.MakeTransferScreenState.Success,
                             )
                         }
@@ -601,6 +688,7 @@ internal class MakeTransferViewModel(
  */
 internal data class MakeTransferState(
     val accountId: Long = -1L,
+    val accountNo: String? = null,
     val clientId: Long = -1L,
     val outstandingBalance: Double? = null,
     val transferType: String? = null,
@@ -611,6 +699,7 @@ internal data class MakeTransferState(
     val remark: String = "",
     val remarkError: StringResource? = null,
     var accountOptionsTemplate: AccountOptionsTemplate = AccountOptionsTemplate(),
+    val officeId: Int? = null,
     var fromAccountOptions: List<AccountOption> = emptyList(),
     var toAccountOptions: List<AccountOption> = emptyList(),
     val fromAccount: AccountOption? = null,

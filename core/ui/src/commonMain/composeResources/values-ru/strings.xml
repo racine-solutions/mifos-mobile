@@ -95,7 +95,7 @@
     <string name="select_other_payment_account">Выбрать другой счет для оплаты</string>
     <string name="pay_from">Оплатить с</string>
     <string name="available_balance_formatted">Доступный баланс — %1$s</string>
-    <string name="feature_dashboard_welcome_back">Добро пожаловать в Mifos</string>
+    <string name="feature_dashboard_welcome_back">Добро пожаловать в Sure Banker</string>
     <string name="feature_dashboard_no_accounts_title">Счетов пока нет</string>
     <string name="feature_dashboard_no_accounts_description">Начните свой финансовый путь, открыв первый счет у нас.</string>
     <string name="feature_dashboard_open_account">Открыть счет</string>

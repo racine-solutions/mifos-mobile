@@ -25,7 +25,12 @@ import org.mifos.mobile.core.ui.utils.BaseViewModel
 internal class PasscodeViewModel(
     private val userPreferencesRepository: UserPreferencesRepository,
 ) : BaseViewModel<PasscodeState, PasscodeEvent, PasscodeAction>(
-    initialState = PasscodeState(),
+    initialState = userPreferencesRepository.settingsInfo.value.passcode.let { stored ->
+        PasscodeState(
+            storedPasscode = stored,
+            mode = if (stored.isEmpty()) PasscodeMode.Set else PasscodeMode.Verify,
+        )
+    },
 ) {
 
     private var passcodeBuilder: StringBuilder = StringBuilder()
@@ -58,6 +63,25 @@ internal class PasscodeViewModel(
     private fun validateAndUpdate() {
         if (passcodeBuilder.length == stateFlow.value.maxDigits && passcodeBuilder.all { char -> char.isDigit() }) {
             when (state.mode) {
+                PasscodeMode.Verify -> {
+                    val entered = passcodeBuilder.toString()
+                    if (entered == state.storedPasscode) {
+                        // Re-use the existing code: unlock directly, root navigation takes over.
+                        viewModelScope.launch {
+                            userPreferencesRepository.setIsUnlocked(true)
+                        }
+                    } else {
+                        passcodeBuilder.clear()
+                        mutableStateFlow.update {
+                            it.copy(
+                                passcode = "",
+                                filledDots = 0,
+                                passcodeError = true,
+                            )
+                        }
+                    }
+                }
+
                 PasscodeMode.Set -> {
                     val first = passcodeBuilder.toString()
                     passcodeBuilder.clear()
@@ -142,6 +166,7 @@ internal sealed interface PasscodeAction {
 }
 
 enum class PasscodeMode {
+    Verify,
     Set,
     Confirm,
 }

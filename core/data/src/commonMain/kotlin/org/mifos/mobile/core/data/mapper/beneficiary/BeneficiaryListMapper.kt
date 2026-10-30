@@ -23,6 +23,9 @@ fun BeneficiaryListResponseDto.toModel(): Beneficiary =
         accountType = accountType?.toAccountType(),
         accountNumber = accountNumber,
         transferLimit = transferLimit,
+        officeId = officeId,
+        clientId = clientId,
+        accountId = accountId,
     )
 
 fun TypeResponseDto.toAccountType(): AccountType =

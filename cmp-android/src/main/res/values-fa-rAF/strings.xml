@@ -9,7 +9,7 @@
     See https://github.com/openMF/mobile-mobile/blob/master/LICENSE.md
 -->
 <resources>
-    <string name="feature_about_app_name">Mifos Mobile</string>
+    <string name="feature_about_app_name">SurePay</string>
     <string name="feature_about_about_us">درباره ما</string>
     <string name="about_us_under_construction">"درباره ما در  ساخت و ساز "</string>
     <string name="account_balance">موجودی حساب</string>

@@ -10,6 +10,7 @@
 package org.mifos.mobile.core.network.dto.loanAccount
 
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 import org.mifos.mobile.core.network.dto.currency.CurrencyResponseDto
 
 @Serializable
@@ -38,6 +39,7 @@ data class LoanSummaryResponseDto(
 
     val totalOutstanding: Double = 0.0,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     private val overdueSinceDate: List<Int>? = null,
 
     val currency: CurrencyResponseDto? = null,

@@ -101,13 +101,13 @@ fun NavController.navigateToTransferProcessScreen(
 ) {
     this.navigate(
         TransferProcessRoute(
-            fromAccountId = transferPayload.payFromAccount?.accountNo,
+            fromAccountId = transferPayload.payFromAccount?.accountId?.toString(),
             fromClientId = transferPayload.payFromAccount?.clientId,
             fromAccountType = transferPayload.payFromAccount?.accountType?.id,
             fromOfficeId = transferPayload.payFromAccount?.officeId,
             fromClientName = transferPayload.payFromAccount?.clientName,
             toOfficeId = transferPayload.payToAccount?.officeId,
-            toAccountId = transferPayload.payToAccount?.accountNo,
+            toAccountId = transferPayload.payToAccount?.accountId?.toString(),
             toClientId = transferPayload.payToAccount?.clientId,
             toAccountType = transferPayload.payToAccount?.accountType?.id,
             toClientName = transferPayload.payToAccount?.clientName,

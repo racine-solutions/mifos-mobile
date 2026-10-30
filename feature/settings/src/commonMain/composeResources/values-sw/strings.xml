@@ -98,11 +98,11 @@
 
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">Kuhusu Sisi</string>
-    <string name="feature_settings_about_mifos">Mifos</string>
-    <string name="feature_settings_about_logo_content_description">Picha ya Mifos</string>
+    <string name="feature_settings_about_mifos">Sure Banker</string>
+    <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
     <string name="feature_settings_about_who_are_we">Ni nani sisi?</string>
-    <string name="feature_settings_about_what_does_mifos_do">Mifos inafanya nini?</string>
-    <string name="feature_settings_about_who_are_we_desc">Mifos ni shirika lisilo la faida ambalo lina lenga kutoa watu na ufikiaji wa huduma za kifedha msingi. Inafanya hivyo kupitia jukwaa la chanzo huria.</string>
+    <string name="feature_settings_about_what_does_mifos_do">Sure Banker inafanya nini?</string>
+    <string name="feature_settings_about_who_are_we_desc">Dhamira yetu ni kusaidia biashara ndogo na za kati (SMEs) kwa suluhisho za kidijitali na malipo.</string>
     <string name="feature_settings_about_point_1">Inasaidia taasisi za kifedha kutoa huduma za kifedha za kisasa</string>
     <string name="feature_settings_about_point_2">Inawezesha watu kupata mikopo, kuweka akiba pesa, na zaidi</string>
     <string name="feature_settings_about_point_3">Inasaidia taasisi za kifedha ambazo huduma milioni ya watu duniani kote</string>
@@ -121,9 +121,9 @@
     <!--App Info -->
     <string name="feature_settings_appinfo_topbar_title">Maelezo ya Programu</string>
     <string name="feature_settings_appinfo_mobile">Simu</string>
-    <string name="feature_settings_appinfo_logo_content_description">Picha ya Mifos</string>
-    <string name="feature_settings_appinfo_app_name">Mifos Simu</string>
-    <string name="feature_settings_appinfo_mifos_electonic_banking">Benki ya Kielektroniki ya Mifos</string>
+    <string name="feature_settings_appinfo_logo_content_description">Picha ya Sure Banker</string>
+    <string name="feature_settings_appinfo_app_name">SurePay</string>
+    <string name="feature_settings_appinfo_mifos_electonic_banking">Benki ya Kielektroniki ya Sure Banker</string>
     <string name="feature_settings_appinfo_all_rights_reserved">Haki zote zimehifadhiwa</string>
     <string name="feature_settings_appinfo_version">Toleo</string>
     <string name="feature_settings_appinfo_privacy_policy">Sera ya Faragha</string>

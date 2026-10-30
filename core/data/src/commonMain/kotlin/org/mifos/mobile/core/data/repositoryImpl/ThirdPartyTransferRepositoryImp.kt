@@ -24,8 +24,11 @@ class ThirdPartyTransferRepositoryImp(
     private val dataManager: DataManager,
     private val ioDispatcher: CoroutineDispatcher,
 ) : ThirdPartyTransferRepository {
-    override fun thirdPartyTransferTemplate(): Flow<DataState<AccountOptionsTemplate>> {
-        return dataManager.thirdPartyTransferApi.accountTransferTemplate()
+    override fun thirdPartyTransferTemplate(
+        fromClientId: Long?,
+        fromAccountType: Long?,
+    ): Flow<DataState<AccountOptionsTemplate>> {
+        return dataManager.thirdPartyTransferApi.accountTransferTemplate(fromClientId, fromAccountType)
             .map { it.toModel() }
             .asDataStateFlow().flowOn(ioDispatcher)
     }

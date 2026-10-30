@@ -74,11 +74,11 @@
 
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">معلومات عنا</string>
-    <string name="feature_settings_about_mifos">Mifos</string>
-    <string name="feature_settings_about_logo_content_description">صورة Mifos</string>
+    <string name="feature_settings_about_mifos">Sure Banker</string>
+    <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
     <string name="feature_settings_about_who_are_we">من نحن؟</string>
-    <string name="feature_settings_about_what_does_mifos_do">ماذا تفعل Mifos؟</string>
-    <string name="feature_settings_about_who_are_we_desc">Mifos هي منظمة غير ربحية تسعى لتوفير إمكانية الوصول إلى الخدمات المالية الأساسية للأشخاص. تفعل ذلك من خلال منصة مفتوحة المصدر.</string>
+    <string name="feature_settings_about_what_does_mifos_do">ماذا تفعل Sure Banker؟</string>
+    <string name="feature_settings_about_who_are_we_desc">مهمتنا هي دعم الشركات الصغيرة والمتوسطة بحلول رقمية وحلول مدفوعات.</string>
     <string name="feature_settings_about_point_1">تساعد المؤسسات المالية على تقديم خدمات مالية حديثة</string>
     <string name="feature_settings_about_point_2">تمكن الأشخاص من الحصول على قروض، وحفظ المال، والمزيد</string>
     <string name="feature_settings_about_point_3">تدعم المؤسسات المالية التي تخدم ملايين الأشخاص حول العالم</string>
@@ -97,9 +97,9 @@
     <!--App Info -->
     <string name="feature_settings_appinfo_topbar_title">معلومات التطبيق</string>
     <string name="feature_settings_appinfo_mobile">الجوال</string>
-    <string name="feature_settings_appinfo_logo_content_description">صورة Mifos</string>
-    <string name="feature_settings_appinfo_app_name">Mifos Mobile</string>
-    <string name="feature_settings_appinfo_mifos_electonic_banking">الخدمات المصرفية الإلكترونية Mifos</string>
+    <string name="feature_settings_appinfo_logo_content_description">صورة Sure Banker</string>
+    <string name="feature_settings_appinfo_app_name">SurePay</string>
+    <string name="feature_settings_appinfo_mifos_electonic_banking">الخدمات المصرفية الإلكترونية Sure Banker</string>
     <string name="feature_settings_appinfo_all_rights_reserved">جميع الحقوق محفوظة</string>
     <string name="feature_settings_appinfo_version">الإصدار</string>
     <string name="feature_settings_appinfo_privacy_policy">سياسة الخصوصية</string>

@@ -10,15 +10,19 @@
 package org.mifos.mobile.core.network.dto.loanAccount
 
 import kotlinx.serialization.Serializable
+import org.mifos.mobile.core.network.dto.common.FlexibleDateListSerializer
 
 @Serializable
 data class PeriodsResponseDto(
     val period: Int? = null,
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val fromDate: List<Int> = emptyList(),
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val dueDate: List<Int> = emptyList(),
 
+    @Serializable(with = FlexibleDateListSerializer::class)
     val obligationsMetOnDate: List<Int> = emptyList(),
 
     val principalDisbursed: Double? = null,

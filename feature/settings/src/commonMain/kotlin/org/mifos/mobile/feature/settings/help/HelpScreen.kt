@@ -10,6 +10,7 @@
 package org.mifos.mobile.feature.settings.help
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.zIndex
 import mifos_mobile.feature.settings.generated.resources.Res
 import mifos_mobile.feature.settings.generated.resources.feature_settings_action_help
+import mifos_mobile.feature.settings.generated.resources.feature_settings_contact_address
+import mifos_mobile.feature.settings.generated.resources.feature_settings_contact_email
+import mifos_mobile.feature.settings.generated.resources.feature_settings_contact_phone
+import mifos_mobile.feature.settings.generated.resources.feature_settings_contact_surepay_title
 import mifos_mobile.feature.settings.generated.resources.feature_settings_doubt
 import mifos_mobile.feature.settings.generated.resources.feature_settings_doubt_message
 import mifos_mobile.feature.settings.generated.resources.feature_settings_still_have_doubt
@@ -55,6 +60,7 @@ import org.mifos.mobile.core.designsystem.theme.DesignToken
 import org.mifos.mobile.core.designsystem.theme.MifosMobileTheme
 import org.mifos.mobile.core.designsystem.theme.MifosTypography
 import org.mifos.mobile.core.ui.utils.ShareUtils
+import org.mifos.mobile.core.ui.utils.SurePayContact
 import template.core.base.designsystem.theme.KptTheme
 
 /**
@@ -83,6 +89,7 @@ internal fun HelpScreen(
             onMailClick = {
                 ShareUtils.mailHelpline()
             },
+            onPhoneClick = { number -> ShareUtils.openUrl("tel:$number") },
             navigateToFAQ = navigateToFAQ,
         )
     }
@@ -101,6 +108,7 @@ internal fun HelpScreen(
 internal fun HelpScreenContent(
     onCallClick: () -> Unit,
     onMailClick: () -> Unit,
+    onPhoneClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     navigateToFAQ: () -> Unit,
 ) {
@@ -118,6 +126,81 @@ internal fun HelpScreenContent(
         FAQCard(onClick = navigateToFAQ)
         PhoneSupportCard(onCallClick = onCallClick)
         EmailSupportCard(onMailClick = onMailClick)
+        ContactDetailsCard(onPhoneClick = onPhoneClick, onMailClick = onMailClick)
+    }
+}
+
+/**
+ * Lists SurePay's contact details (phone numbers, email and office address).
+ * Phone numbers and the email are tappable.
+ *
+ * @param onPhoneClick Lambda invoked with the raw phone number when a phone row is clicked.
+ * @param onMailClick Lambda invoked when the email row is clicked.
+ */
+@Composable
+private fun ContactDetailsCard(
+    onPhoneClick: (String) -> Unit,
+    onMailClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    HelpCard(
+        backgroundColor = AppColors.lightPurple,
+        modifier = modifier,
+    ) {
+        Column(
+            modifier = Modifier.padding(DesignToken.padding.extraLarge),
+            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+        ) {
+            Text(
+                text = stringResource(Res.string.feature_settings_contact_surepay_title),
+                style = MifosTypography.titleSmallEmphasized,
+                color = Color.White,
+            )
+            ContactRow(
+                label = stringResource(Res.string.feature_settings_contact_phone),
+                value = SurePayContact.PHONE_PRIMARY_DISPLAY,
+                onClick = { onPhoneClick(SurePayContact.PHONE_PRIMARY) },
+            )
+            ContactRow(
+                label = stringResource(Res.string.feature_settings_contact_phone),
+                value = SurePayContact.PHONE_SECONDARY_DISPLAY,
+                onClick = { onPhoneClick(SurePayContact.PHONE_SECONDARY) },
+            )
+            ContactRow(
+                label = stringResource(Res.string.feature_settings_contact_email),
+                value = SurePayContact.EMAIL,
+                onClick = onMailClick,
+            )
+            ContactRow(
+                label = stringResource(Res.string.feature_settings_contact_address),
+                value = SurePayContact.ADDRESS,
+            )
+        }
+    }
+}
+
+@Composable
+private fun ContactRow(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
+    ) {
+        Text(
+            text = label,
+            style = MifosTypography.labelSmall,
+            color = Color.White.copy(alpha = 0.8f),
+        )
+        Text(
+            text = value,
+            style = MifosTypography.labelMedium,
+            color = Color.White,
+        )
     }
 }
 
@@ -374,6 +457,7 @@ private fun HelpScreenContentPreview() {
         HelpScreenContent(
             onCallClick = {},
             onMailClick = {},
+            onPhoneClick = {},
             navigateToFAQ = {},
         )
     }

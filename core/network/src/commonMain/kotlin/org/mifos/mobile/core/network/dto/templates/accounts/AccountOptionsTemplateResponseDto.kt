@@ -18,4 +18,13 @@ data class AccountOptionsTemplateResponseDto(
 
     val toAccountOptions: List<AccountOptionsResponseDto> = emptyList(),
 
+    val toAccount: AccountOptionsResponseDto? = null,
+
+    val fromOffice: OfficeResponseDto? = null,
+
+)
+
+@Serializable
+data class OfficeResponseDto(
+    val id: Int? = null,
 )

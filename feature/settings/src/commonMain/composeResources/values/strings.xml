@@ -103,11 +103,11 @@
 
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">About Us</string>
-    <string name="feature_settings_about_mifos">Mifos</string>
-    <string name="feature_settings_about_logo_content_description">Mifos Image</string>
+    <string name="feature_settings_about_mifos">Sure Banker</string>
+    <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
     <string name="feature_settings_about_who_are_we">Who are we?</string>
-    <string name="feature_settings_about_what_does_mifos_do">What does Mifos do?</string>
-    <string name="feature_settings_about_who_are_we_desc">Mifos is a non-profit organization that seeks to provide people with access to basic financial services. It does so through an open-source platform.</string>
+    <string name="feature_settings_about_what_does_mifos_do">What does Sure Banker do?</string>
+    <string name="feature_settings_about_who_are_we_desc">Our Mission is to support SMEs with digital and payments solutions.</string>
     <string name="feature_settings_about_point_1">It helps financial institutions offer modern financial services</string>
     <string name="feature_settings_about_point_2">It enables people to get loans, save money, and more</string>
     <string name="feature_settings_about_point_3">It supports financial institutions that serve millions of people around the world</string>
@@ -124,12 +124,17 @@
     <string name="feature_settings_still_have_issue_message">Need support but prefer to write?\nSend us an email, day or night.\nOur team will respond with care and speed,\nEnsuring you get the help you need!</string>
     <string name="feature_settings_still_have_issue_action">Mail Us</string>
 
+    <string name="feature_settings_contact_surepay_title">SurePay Contact Details</string>
+    <string name="feature_settings_contact_phone">Phone</string>
+    <string name="feature_settings_contact_email">Email</string>
+    <string name="feature_settings_contact_address">Address</string>
+
     <!--App Info -->
     <string name="feature_settings_appinfo_topbar_title">App Info</string>
     <string name="feature_settings_appinfo_mobile">Mobile</string>
-    <string name="feature_settings_appinfo_logo_content_description">Mifos Image</string>
-    <string name="feature_settings_appinfo_app_name">Mifos Mobile</string>
-    <string name="feature_settings_appinfo_mifos_electonic_banking">Mifos Electronic Banking</string>
+    <string name="feature_settings_appinfo_logo_content_description">Sure Banker Image</string>
+    <string name="feature_settings_appinfo_app_name">SurePay</string>
+    <string name="feature_settings_appinfo_mifos_electonic_banking">Sure Banker Electronic Banking</string>
     <string name="feature_settings_appinfo_all_rights_reserved">All rights reserved</string>
     <string name="feature_settings_appinfo_version">Version</string>
     <string name="feature_settings_appinfo_privacy_policy">Privacy Policy</string>

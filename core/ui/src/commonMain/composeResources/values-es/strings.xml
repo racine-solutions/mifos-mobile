@@ -123,7 +123,7 @@
     <string name="pay_from">Pagar desde</string>
     <string name="available_balance_formatted">Saldo disponible - %1$s</string>
 
-    <string name="feature_dashboard_welcome_back">Bienvenido de nuevo a Mifos</string>
+    <string name="feature_dashboard_welcome_back">Bienvenido de nuevo a Sure Banker</string>
     <string name="feature_dashboard_no_accounts_title">Aún no hay cuentas</string>
     <string name="feature_dashboard_no_accounts_description">Comienza tu viaje financiero abriendo tu primera cuenta con nosotros.</string>
     <string name="feature_dashboard_open_account">Abrir cuenta</string>

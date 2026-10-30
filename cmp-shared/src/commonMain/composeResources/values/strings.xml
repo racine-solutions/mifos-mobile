@@ -9,5 +9,5 @@
     See https://github.com/openMF/mobile-mobile/blob/master/LICENSE.md
 -->
 <resources>
-    <string name="application_title">Mifos Mobile</string>
+    <string name="application_title">SurePay</string>
 </resources>

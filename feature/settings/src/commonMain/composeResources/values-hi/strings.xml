@@ -74,11 +74,11 @@
 
     <!-- About Screen -->
     <string name="feature_settings_about_topbar_title">हमारे बारे में</string>
-    <string name="feature_settings_about_mifos">Mifos</string>
-    <string name="feature_settings_about_logo_content_description">Mifos चित्र</string>
+    <string name="feature_settings_about_mifos">Sure Banker</string>
+    <string name="feature_settings_about_logo_content_description">SurePay Logo</string>
     <string name="feature_settings_about_who_are_we">हम कौन हैं?</string>
-    <string name="feature_settings_about_what_does_mifos_do">Mifos क्या करता है?</string>
-    <string name="feature_settings_about_who_are_we_desc">Mifos एक गैर-लाभकारी संगठन है जो लोगों के लिए मौलिक वित्तीय सेवाओं तक पहुंच प्रदान करने का प्रयास करता है। यह एक ओपन सोर्स प्लेटफ़ॉर्म के माध्यम से ऐसा करता है।</string>
+    <string name="feature_settings_about_what_does_mifos_do">Sure Banker क्या करता है?</string>
+    <string name="feature_settings_about_who_are_we_desc">हमारा मिशन छोटे और मध्यम उद्यमों (SMEs) को डिजिटल और भुगतान समाधानों के साथ सहयोग देना है।</string>
     <string name="feature_settings_about_point_1">वित्तीय संस्थानों को आधुनिक वित्तीय सेवाएं प्रदान करने में मदद करता है</string>
     <string name="feature_settings_about_point_2">लोगों को ऋण, बचत और अधिक प्राप्त करने में सक्षम बनाता है</string>
     <string name="feature_settings_about_point_3">वित्तीय संस्थानों का समर्थन करता है जो दुनिया भर में लाखों लोगों की सेवा करते हैं</string>
@@ -97,9 +97,9 @@
     <!--App Info -->
     <string name="feature_settings_appinfo_topbar_title">ऐप की जानकारी</string>
     <string name="feature_settings_appinfo_mobile">मोबाइल</string>
-    <string name="feature_settings_appinfo_logo_content_description">Mifos चित्र</string>
-    <string name="feature_settings_appinfo_app_name">Mifos Mobile</string>
-    <string name="feature_settings_appinfo_mifos_electonic_banking">Mifos इलेक्ट्रॉनिक बैंकिंग</string>
+    <string name="feature_settings_appinfo_logo_content_description">Sure Banker चित्र</string>
+    <string name="feature_settings_appinfo_app_name">SurePay</string>
+    <string name="feature_settings_appinfo_mifos_electonic_banking">Sure Banker इलेक्ट्रॉनिक बैंकिंग</string>
     <string name="feature_settings_appinfo_all_rights_reserved">सर्वाधिकार सुरक्षित</string>
     <string name="feature_settings_appinfo_version">संस्करण</string>
     <string name="feature_settings_appinfo_privacy_policy">गोपनीयता नीति</string>

@@ -29,7 +29,7 @@ class MifosIssueRegistry : IssueRegistry() {
     override val minApi: Int = 12
 
     override val vendor: Vendor = Vendor(
-        vendorName = "Mifos Mobile",
+        vendorName = "SurePay",
         feedbackUrl = "https://github.com/openMF/mobile-mobile/issues",
         contact = "https://github.com/openMF/mobile-mobile",
     )

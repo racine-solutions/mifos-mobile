@@ -95,7 +95,7 @@
     <string name="select_other_payment_account">دوسرا ادائیگی کا اکاؤنٹ منتخب کریں</string>
     <string name="pay_from">یہاں سے ادائیگی کریں</string>
     <string name="available_balance_formatted">دستیاب بیلنس - %1$s</string>
-    <string name="feature_dashboard_welcome_back">Mifos میں خوش آمدید</string>
+    <string name="feature_dashboard_welcome_back">Sure Banker میں خوش آمدید</string>
     <string name="feature_dashboard_no_accounts_title">ابھی تک کوئی اکاؤنٹ نہیں ہے</string>
     <string name="feature_dashboard_no_accounts_description">ہمارے ساتھ اپنا پہلا اکاؤنٹ کھول کر اپنے مالی سفر کا آغاز کریں۔</string>
     <string name="feature_dashboard_open_account">اکاؤنٹ کھولیں</string>
