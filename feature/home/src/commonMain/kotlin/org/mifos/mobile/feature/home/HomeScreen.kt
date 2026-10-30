@@ -55,6 +55,7 @@ import mifos_mobile.feature.home.generated.resources.feature_home_greet
 import mifos_mobile.feature.home.generated.resources.feature_home_no_active_accounts
 import mifos_mobile.feature.home.generated.resources.feature_home_no_services_hint
 import mifos_mobile.feature.home.generated.resources.feature_home_selected
+import mifos_mobile.feature.home.generated.resources.feature_home_shares_count
 import mifos_mobile.feature.home.generated.resources.feature_home_services
 import mifos_mobile.feature.home.generated.resources.feature_home_total_available_loan
 import mifos_mobile.feature.home.generated.resources.feature_home_total_available_savings
@@ -65,6 +66,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.mifos.mobile.core.common.Constants
+import org.mifos.mobile.core.common.CurrencyFormatter
 import org.mifos.mobile.core.designsystem.component.MifosElevatedScaffold
 import org.mifos.mobile.core.designsystem.icon.MifosIcons
 import org.mifos.mobile.core.designsystem.theme.DesignToken
@@ -77,7 +79,9 @@ import org.mifos.mobile.core.ui.component.MifosErrorComponent
 import org.mifos.mobile.core.ui.component.MifosProgressIndicator
 import org.mifos.mobile.core.ui.component.TenantTopBarTitle
 import org.mifos.mobile.core.ui.utils.EventsEffect
+import org.mifos.mobile.feature.home.components.AccountWallet
 import org.mifos.mobile.feature.home.components.BottomSheetContent
+import org.mifos.mobile.feature.home.components.WalletEntity
 import org.mifos.mobile.feature.home.navigation.HomeNavigationDestination
 import org.mifos.mobile.feature.home.navigation.HomeNavigator
 import template.core.base.designsystem.theme.KptTheme
@@ -211,14 +215,11 @@ internal fun HomeContent(
                     Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
                     if (state.isAccountsPresent) {
-                        MifosDashboardCard(
-                            savingsAccount = Res.string.feature_home_total_available_savings,
-                            loanAccount = Res.string.feature_home_total_available_loan,
-                            loanAmount = state.loanAmount,
-                            savingsAmount = state.savingsAmount,
-                            isVisible = state.isAmountVisible,
-                            onVisibilityToggle = { onAction(HomeAction.ToggleAmountVisible) },
-                            currency = state.currency,
+                        AccountWallet(
+                            entities = walletEntities(state),
+                            isAmountVisible = state.isAmountVisible,
+                            onToggleAmountVisible = { onAction(HomeAction.ToggleAmountVisible) },
+                            onEntityClick = { type -> onAction(HomeAction.OnNavigate(type)) },
                         )
                     } else {
                         Column(
@@ -467,5 +468,59 @@ private fun HomeScreenPreview() {
             onAction = {},
             modifier = Modifier,
         )
+    }
+}
+
+/** Builds one wallet card per entity from the accounts the Home screen already loaded. */
+@Composable
+private fun walletEntities(state: HomeState): List<WalletEntity> {
+    val accounts = state.clientAccounts ?: return emptyList()
+    val savings = accounts.savingsAccounts.orEmpty()
+    val loans = accounts.loanAccounts
+    val shares = accounts.shareAccounts
+    val totalShares = shares.sumOf { it.totalApprovedShares ?: 0 }
+    val sharesTotal = stringResource(Res.string.feature_home_shares_count, totalShares)
+    return buildList {
+        if (savings.isNotEmpty()) {
+            add(
+                WalletEntity(
+                    type = Constants.SAVINGS_ACCOUNT,
+                    count = savings.size,
+                    total = state.savingsAmount,
+                    active = savings.count { it.status?.active == true },
+                    closed = savings.count { it.status?.closed == true || it.status?.prematureClosed == true },
+                    pending = savings.count { it.status?.submittedAndPendingApproval == true },
+                ),
+            )
+        }
+        if (loans.isNotEmpty()) {
+            add(
+                WalletEntity(
+                    type = Constants.LOAN_ACCOUNT,
+                    count = loans.size,
+                    total = state.loanAmount,
+                    active = loans.count { it.status?.active == true },
+                    closed = loans.count {
+                        it.status?.closed == true ||
+                            it.status?.closedObligationsMet == true ||
+                            it.status?.closedWrittenOff == true ||
+                            it.status?.closedRescheduled == true
+                    },
+                    pending = loans.count { it.status?.pendingApproval == true },
+                ),
+            )
+        }
+        if (shares.isNotEmpty()) {
+            add(
+                WalletEntity(
+                    type = Constants.SHARE_ACCOUNTS,
+                    count = shares.size,
+                    total = sharesTotal,
+                    active = shares.count { it.status?.active == true },
+                    closed = shares.count { it.status?.closed == true },
+                    pending = shares.count { it.status?.submittedAndPendingApproval == true },
+                ),
+            )
+        }
     }
 }

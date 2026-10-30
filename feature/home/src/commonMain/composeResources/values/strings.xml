@@ -43,6 +43,17 @@
     <string name="no_app_to_support_action">There is no application that support this action</string>
     <string name="cancel">Cancel</string>
     <string name="dialog_logout">Are you sure you want to logout?</string>
+    <string name="feature_home_my_accounts">My accounts</string>
+    <string name="feature_home_accounts_total">%1$d total</string>
+    <string name="feature_home_filter_all">All</string>
+    <string name="feature_home_filter_savings">Savings</string>
+    <string name="feature_home_filter_loans">Loans</string>
+    <string name="feature_home_filter_shares">Shares</string>
+    <string name="feature_home_accounts_count">Accounts: %1$d</string>
+    <string name="feature_home_status_active">Active %1$d</string>
+    <string name="feature_home_status_closed">Closed %1$d</string>
+    <string name="feature_home_status_pending">Pending %1$d</string>
+    <string name="feature_home_shares_count">%1$d shares</string>
     <string name="feature_home_greet">Hello %1$s,</string>
     <string name="feature_home_services">Services</string>
     <string name="feature_home_edit_services">Edit services</string>

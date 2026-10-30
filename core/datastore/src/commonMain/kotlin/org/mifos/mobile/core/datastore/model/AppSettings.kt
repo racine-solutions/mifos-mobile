@@ -36,8 +36,8 @@ data class AppSettings(
         val DEFAULT = AppSettings(
             userId = "",
             tenant = "",
-//            baseUrl = "https://lms-backenddev.racinesolutions.com/",
-            baseUrl = "https://localhost:8443/",
+            baseUrl = "https://lms-backenddev.racinesolutions.com/",
+//            baseUrl = "https://localhost:8443/",
             appTheme = MifosThemeConfig.FOLLOW_SYSTEM,
             sentTokenToServer = false,
             gcmToken = null,
