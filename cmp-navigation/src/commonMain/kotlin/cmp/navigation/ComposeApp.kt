@@ -49,8 +49,10 @@ fun ComposeApp(
     }
     val isSystemInDarkTheme = isSystemInDarkTheme()
     val isSessionActive by viewModel.isSessionActive.collectAsStateWithLifecycle()
+    val sessionTimeoutMinutes by viewModel.sessionTimeoutMinutes.collectAsStateWithLifecycle()
     val idleTimeoutModifier = rememberIdleTimeoutModifier(
         enabled = isSessionActive,
+        timeoutMillis = sessionTimeoutMinutes * MILLIS_PER_MINUTE,
         onTimeout = viewModel::logoutIdleSession,
     )
 
@@ -89,3 +91,5 @@ fun ComposeApp(
         }
     }
 }
+
+private const val MILLIS_PER_MINUTE = 60_000L

@@ -10,22 +10,10 @@
 package org.mifos.mobile.core.data.util
 
 import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.bodyAsText
-import kotlinx.serialization.json.Json
-import org.mifos.mobile.core.model.entity.mifoserror.MifosError
+import org.mifos.mobile.core.network.utils.toApiError
 
 /**
- * Generic function to extract error messages from API responses
+ * Generic function to extract error messages from API responses. Unexpected server errors (5xx)
+ * and unreadable bodies return a generic message instead of raw server text.
  */
-suspend fun extractErrorMessage(response: HttpResponse): String {
-    val responseText = response.bodyAsText()
-    return try {
-        val json = Json { ignoreUnknownKeys = true }
-        val errorResponse = json.decodeFromString<MifosError>(responseText)
-        errorResponse.errors.firstOrNull()?.defaultUserMessage
-            ?: errorResponse.defaultUserMessage
-            ?: "Unknown error"
-    } catch (e: Exception) {
-        "Failed to parse error response"
-    }
-}
+suspend fun extractErrorMessage(response: HttpResponse): String = response.toApiError().userMessage

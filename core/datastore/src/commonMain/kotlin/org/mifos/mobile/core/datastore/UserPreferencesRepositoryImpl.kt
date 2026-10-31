@@ -206,6 +206,18 @@ class UserPreferencesRepositoryImpl(
         preferenceManager.saveSelectedServicesDirectly(services)
     }
 
+    override suspend fun endSession(reason: String) {
+        preferenceManager.endSession(reason)
+    }
+
+    override suspend fun setSessionTimeoutMinutes(minutes: Int) {
+        if (minutes > 0) preferenceManager.setSessionTimeoutMinutes(minutes)
+    }
+
+    override suspend fun clearSessionEndedReason() {
+        preferenceManager.clearSessionEndedReason()
+    }
+
     override suspend fun logOut() {
         preferenceManager.clearInfo()
     }

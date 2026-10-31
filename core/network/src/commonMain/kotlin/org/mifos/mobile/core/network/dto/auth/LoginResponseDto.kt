@@ -21,6 +21,7 @@ data class UserDto(
     val officeId: Long = 0,
     val officeName: String? = null,
     val tenantName: String? = null,
+    val sessionTimeoutMinutes: Int? = null,
     val roles: ArrayList<RoleDto> = arrayListOf(),
     val base64EncodedAuthenticationKey: String? = null,
     val permissions: ArrayList<String> = arrayListOf(),

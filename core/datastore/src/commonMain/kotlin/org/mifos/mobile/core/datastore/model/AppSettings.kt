@@ -18,6 +18,9 @@ data class AppSettings(
     val userId: String,
     val tenant: String,
     val tenantName: String = "",
+    val sessionEndedReason: String = "",
+    /** Idle timeout sent by the server; [DEFAULT_SESSION_TIMEOUT_MINUTES] until the first value arrives. */
+    val sessionTimeoutMinutes: Int = DEFAULT_SESSION_TIMEOUT_MINUTES,
     val baseUrl: String,
     val passcode: String,
     val appTheme: MifosThemeConfig,
@@ -33,6 +36,8 @@ data class AppSettings(
     val selectedServices: Set<String> = emptySet(),
 ) {
     companion object {
+        const val DEFAULT_SESSION_TIMEOUT_MINUTES = 15
+
         val DEFAULT = AppSettings(
             userId = "",
             tenant = "",

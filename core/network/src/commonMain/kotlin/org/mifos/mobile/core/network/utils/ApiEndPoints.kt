@@ -12,6 +12,7 @@ package org.mifos.mobile.core.network.utils
 object ApiEndPoints {
     // This class contains all the Constants for API End Points
     const val AUTHENTICATION = "authentication"
+    const val LOGOUT = "authentication/logout"
     const val CLIENTS = "clients"
     const val SAVINGS_ACCOUNTS = "savingsaccounts"
     const val SHARE_ACCOUNTS = "shareaccounts"

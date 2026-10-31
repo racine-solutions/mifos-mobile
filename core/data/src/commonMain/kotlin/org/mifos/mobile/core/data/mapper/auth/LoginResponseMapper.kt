@@ -22,6 +22,7 @@ fun UserDto.toModel(): User =
         officeId = officeId,
         officeName = officeName,
         tenantName = tenantName,
+        sessionTimeoutMinutes = sessionTimeoutMinutes,
         roles = ArrayList(roles.map { it.toModel() }),
         base64EncodedAuthenticationKey = base64EncodedAuthenticationKey,
         permissions = ArrayList(permissions),

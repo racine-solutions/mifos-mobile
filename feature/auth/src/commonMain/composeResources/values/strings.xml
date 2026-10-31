@@ -66,6 +66,9 @@
     <string name="feature_sign_in_sub_title">Enter your email and password to log in</string>
     <string name="feature_auth_signing_in_to">Signing in to</string>
     <string name="feature_auth_change_tenant">Not your Sacco/MFI? Change</string>
+    <string name="feature_auth_signed_out_title">Signed out</string>
+    <string name="feature_auth_session_idle">For your security you were logged out after %1$d minutes of inactivity.</string>
+    <string name="feature_auth_session_ended">Your session has ended. Please log in again.</string>
     <string name="feature_auth_tenant_code_label">Sacco/MFI Code</string>
     <string name="feature_sign_in_username_label">Username or Email</string>
     <string name="feature_sign_in_password_label">Password</string>

@@ -172,6 +172,37 @@ class UserPreferencesDataSource(
         }
     }
 
+    /** Ends the session like [clearInfo] and remembers [reason] so the login screen can explain it. */
+    suspend fun endSession(reason: String) {
+        withContext(dispatcher) {
+            settings.putUserPreference(UserData.DEFAULT)
+            _userInfo.value = UserData.DEFAULT
+            val cleared = settings.getSettingsPreference().copy(
+                isAuthenticated = false,
+                isUnlocked = false,
+                sessionEndedReason = reason,
+            )
+            settings.putSettingsPreference(cleared)
+            _settingsInfo.value = cleared
+        }
+    }
+
+    suspend fun setSessionTimeoutMinutes(minutes: Int) {
+        withContext(dispatcher) {
+            val updated = settings.getSettingsPreference().copy(sessionTimeoutMinutes = minutes)
+            settings.putSettingsPreference(updated)
+            _settingsInfo.value = updated
+        }
+    }
+
+    suspend fun clearSessionEndedReason() {
+        withContext(dispatcher) {
+            val updated = settings.getSettingsPreference().copy(sessionEndedReason = "")
+            settings.putSettingsPreference(updated)
+            _settingsInfo.value = updated
+        }
+    }
+
     suspend fun setSentTokenToServer(sent: Boolean) {
         withContext(dispatcher) {
             val updatedSettings = _settingsInfo.value.copy(sentTokenToServer = sent)

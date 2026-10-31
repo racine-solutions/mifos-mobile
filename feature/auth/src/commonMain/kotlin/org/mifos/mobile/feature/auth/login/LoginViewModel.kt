@@ -20,6 +20,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mifos_mobile.core.ui.generated.resources.internal_server_error
 import mifos_mobile.feature.auth.generated.resources.Res
+import mifos_mobile.feature.auth.generated.resources.feature_auth_session_ended
+import mifos_mobile.feature.auth.generated.resources.feature_auth_signed_out_title
+import mifos_mobile.feature.auth.generated.resources.feature_auth_session_idle
 import mifos_mobile.feature.auth.generated.resources.feature_sign_in_password_error
 import mifos_mobile.feature.auth.generated.resources.feature_sign_in_username_error
 import mifos_mobile.feature.auth.generated.resources.no_client_assigned
@@ -28,6 +31,7 @@ import org.jetbrains.compose.resources.getString
 import org.mifos.mobile.core.common.DataState
 import org.mifos.mobile.core.data.repository.UserAuthRepository
 import org.mifos.mobile.core.datastore.UserPreferencesRepository
+import org.mifos.mobile.core.datastore.model.SessionEndReason
 import org.mifos.mobile.core.datastore.model.UserData
 import org.mifos.mobile.core.model.entity.User
 import org.mifos.mobile.core.ui.utils.BaseViewModel
@@ -54,6 +58,7 @@ class LoginViewModel(
         // The Sacco/MFI code is only asked for while none is stored in the datastore.
         userPreferencesRepositoryImpl.settingsInfo
             .onEach { settings ->
+                showSessionEndedMessage(settings.sessionEndedReason, settings.sessionTimeoutMinutes)
                 updateState {
                     it.copy(
                         showTenantField = settings.tenant.isBlank(),
@@ -65,6 +70,20 @@ class LoginViewModel(
 
         savedStateHandle.get<String>("username")?.let {
             trySendAction(LoginAction.UsernameChanged(it))
+        }
+    }
+
+    /** Tells the user once why they are back on the login screen, then forgets the reason. */
+    private fun showSessionEndedMessage(reason: String, timeoutMinutes: Int) {
+        if (reason.isEmpty()) return
+        viewModelScope.launch {
+            val message = when (reason) {
+                SessionEndReason.IDLE -> getString(Res.string.feature_auth_session_idle, timeoutMinutes)
+                else -> getString(Res.string.feature_auth_session_ended)
+            }
+            userPreferencesRepositoryImpl.clearSessionEndedReason()
+            val title = getString(Res.string.feature_auth_signed_out_title)
+            updateState { it.copy(dialogState = LoginState.DialogState.Notice(title, message)) }
         }
     }
 
@@ -185,6 +204,7 @@ class LoginViewModel(
                         )
                         viewModelScope.launch {
                             userPreferencesRepositoryImpl.setTenantName(user.tenantName.orEmpty())
+                            user.sessionTimeoutMinutes?.let { userPreferencesRepositoryImpl.setSessionTimeoutMinutes(it) }
                             userPreferencesRepositoryImpl.updateUser(userData)
                             userPreferencesRepositoryImpl.setIsAuthenticated(true)
                         }
@@ -235,6 +255,7 @@ data class LoginState(
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
+        data class Notice(val title: String, val message: String) : DialogState
     }
 
     val isLoginButtonEnabled: Boolean

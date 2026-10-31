@@ -26,11 +26,6 @@ import kotlinx.coroutines.delay
 import kotlin.time.Clock
 
 /**
- * How long the user may be idle before a signed-in session is logged out.
- */
-const val IDLE_TIMEOUT_MILLIS: Long = 2 * 60 * 1000L
-
-/**
  * Tracks user interaction and invokes [onTimeout] once the user has been idle for
  * [timeoutMillis] while [enabled] is true.
  *
@@ -43,10 +38,12 @@ const val IDLE_TIMEOUT_MILLIS: Long = 2 * 60 * 1000L
 @Composable
 fun rememberIdleTimeoutModifier(
     enabled: Boolean,
-    timeoutMillis: Long = IDLE_TIMEOUT_MILLIS,
+    timeoutMillis: Long,
     onTimeout: () -> Unit,
 ): Modifier {
     val currentOnTimeout by rememberUpdatedState(onTimeout)
+    // The server can change the timeout while the app is running, so always read the latest value.
+    val currentTimeoutMillis by rememberUpdatedState(timeoutMillis)
     val tracker = remember { IdleTracker() }
 
     // Start counting from "now" every time the session becomes active.
@@ -54,12 +51,13 @@ fun rememberIdleTimeoutModifier(
         if (!enabled) return@LaunchedEffect
         tracker.reset()
         while (true) {
-            val remaining = timeoutMillis - tracker.idleMillis()
+            val remaining = currentTimeoutMillis - tracker.idleMillis()
             if (remaining <= 0) {
                 currentOnTimeout()
                 break
             }
-            delay(remaining)
+            // Wake up regularly so a shorter timeout from the server takes effect promptly.
+            delay(minOf(remaining, MAX_WAIT_MILLIS))
         }
     }
 
@@ -67,7 +65,7 @@ fun rememberIdleTimeoutModifier(
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner, enabled) {
         val observer = LifecycleEventObserver { _, event ->
-            if (enabled && event == Lifecycle.Event.ON_RESUME && tracker.idleMillis() >= timeoutMillis) {
+            if (enabled && event == Lifecycle.Event.ON_RESUME && tracker.idleMillis() >= currentTimeoutMillis) {
                 currentOnTimeout()
             }
         }
@@ -101,3 +99,5 @@ private class IdleTracker {
 
     private fun now(): Long = Clock.System.now().toEpochMilliseconds()
 }
+
+private const val MAX_WAIT_MILLIS = 30_000L
