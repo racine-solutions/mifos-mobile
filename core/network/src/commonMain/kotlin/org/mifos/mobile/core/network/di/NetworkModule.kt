@@ -21,12 +21,12 @@ import org.mifos.mobile.core.network.DataManager
 import org.mifos.mobile.core.network.KtorfitClient
 import org.mifos.mobile.core.network.ktorHttpClient
 import org.mifos.mobile.core.network.utils.BaseURL
+import org.mifos.mobile.core.network.utils.KtorInterceptor
 import org.mifos.mobile.core.network.utils.SessionImpact
 import org.mifos.mobile.core.network.utils.isAuthenticationEndpoint
 import org.mifos.mobile.core.network.utils.sessionImpact
 import org.mifos.mobile.core.network.utils.sessionTimeoutMinutes
 import org.mifos.mobile.core.network.utils.toApiError
-import org.mifos.mobile.core.network.utils.KtorInterceptor
 
 val NetworkModule = module {
 
@@ -58,10 +58,16 @@ val NetworkModule = module {
                     if (!wasAuthenticated || isAuthenticationEndpoint(request.url.encodedPath)) {
                         return@handleResponseExceptionWithRequest
                     }
-                    if (response.toApiError().sessionImpact() == SessionImpact.SESSION_ENDED &&
-                        preferencesRepository.settingsInfo.value.isAuthenticated
-                    ) {
-                        preferencesRepository.endSession(SessionEndReason.ENDED)
+                    val apiError = response.toApiError()
+                    val signedIn = preferencesRepository.settingsInfo.value.isAuthenticated
+                    when (apiError.sessionImpact()) {
+                        SessionImpact.SESSION_ENDED ->
+                            if (signedIn) preferencesRepository.endSession(SessionEndReason.ENDED)
+                        SessionImpact.SERVICE_DISABLED ->
+                            if (signedIn) preferencesRepository.endSession(SessionEndReason.DISABLED)
+                        SessionImpact.VIEW_ONLY ->
+                            preferencesRepository.setAccessInfo(isViewOnly = true, reason = apiError.message.orEmpty())
+                        SessionImpact.NONE -> Unit
                     }
                 }
             }

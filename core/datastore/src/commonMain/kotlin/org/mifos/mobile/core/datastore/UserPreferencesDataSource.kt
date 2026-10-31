@@ -166,6 +166,8 @@ class UserPreferencesDataSource(
             val cleared = settings.getSettingsPreference().copy(
                 isAuthenticated = false,
                 isUnlocked = false,
+                isViewOnly = false,
+                viewOnlyReason = "",
             )
             settings.putSettingsPreference(cleared)
             _settingsInfo.value = cleared
@@ -180,10 +182,26 @@ class UserPreferencesDataSource(
             val cleared = settings.getSettingsPreference().copy(
                 isAuthenticated = false,
                 isUnlocked = false,
+                isViewOnly = false,
+                viewOnlyReason = "",
                 sessionEndedReason = reason,
             )
             settings.putSettingsPreference(cleared)
             _settingsInfo.value = cleared
+        }
+    }
+
+    /** Records the access level from login; [phones] null keeps the stored numbers. */
+    suspend fun setAccessInfo(isViewOnly: Boolean, reason: String, phones: List<String>?) {
+        withContext(dispatcher) {
+            val current = settings.getSettingsPreference()
+            val updated = current.copy(
+                isViewOnly = isViewOnly,
+                viewOnlyReason = reason,
+                supportPhoneNumbers = phones ?: current.supportPhoneNumbers,
+            )
+            settings.putSettingsPreference(updated)
+            _settingsInfo.value = updated
         }
     }
 

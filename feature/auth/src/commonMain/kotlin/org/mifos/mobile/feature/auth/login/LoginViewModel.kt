@@ -20,9 +20,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mifos_mobile.core.ui.generated.resources.internal_server_error
 import mifos_mobile.feature.auth.generated.resources.Res
+import mifos_mobile.feature.auth.generated.resources.feature_auth_login_incorrect
+import mifos_mobile.feature.auth.generated.resources.feature_auth_password_reset_required
+import mifos_mobile.feature.auth.generated.resources.feature_auth_service_disabled
 import mifos_mobile.feature.auth.generated.resources.feature_auth_session_ended
-import mifos_mobile.feature.auth.generated.resources.feature_auth_signed_out_title
 import mifos_mobile.feature.auth.generated.resources.feature_auth_session_idle
+import mifos_mobile.feature.auth.generated.resources.feature_auth_signed_out_title
 import mifos_mobile.feature.auth.generated.resources.feature_sign_in_password_error
 import mifos_mobile.feature.auth.generated.resources.feature_sign_in_username_error
 import mifos_mobile.feature.auth.generated.resources.no_client_assigned
@@ -33,6 +36,9 @@ import org.mifos.mobile.core.data.repository.UserAuthRepository
 import org.mifos.mobile.core.datastore.UserPreferencesRepository
 import org.mifos.mobile.core.datastore.model.SessionEndReason
 import org.mifos.mobile.core.datastore.model.UserData
+import org.mifos.mobile.core.model.ApiError
+import org.mifos.mobile.core.model.ApiErrorCodes
+import org.mifos.mobile.core.model.ApiException
 import org.mifos.mobile.core.model.entity.User
 import org.mifos.mobile.core.ui.utils.BaseViewModel
 import org.mifos.mobile.core.ui.utils.ScreenUiState
@@ -79,6 +85,7 @@ class LoginViewModel(
         viewModelScope.launch {
             val message = when (reason) {
                 SessionEndReason.IDLE -> getString(Res.string.feature_auth_session_idle, timeoutMinutes)
+                SessionEndReason.DISABLED -> getString(Res.string.feature_auth_service_disabled)
                 else -> getString(Res.string.feature_auth_session_ended)
             }
             userPreferencesRepositoryImpl.clearSessionEndedReason()
@@ -142,7 +149,15 @@ class LoginViewModel(
             is LoginAction.NavigateToForgotPassword -> sendEvent(LoginEvent.NavigateToForgotPassword)
 
             is LoginAction.ErrorDialogDismiss -> {
+                val dialog = state.dialogState
                 updateState { it.copy(dialogState = null) }
+                if (dialog is LoginState.DialogState.Refused) {
+                    when (dialog.next) {
+                        LoginState.NextStep.CONFIRM_CODE -> sendEvent(LoginEvent.NavigateToConfirmCode)
+                        LoginState.NextStep.SET_PASSWORD -> sendEvent(LoginEvent.NavigateToSetPassword)
+                        LoginState.NextStep.NONE -> Unit
+                    }
+                }
             }
         }
     }
@@ -151,8 +166,12 @@ class LoginViewModel(
         viewModelScope.launch {
             when (action.loginResult) {
                 is DataState.Error -> {
+                    val apiError = (action.loginResult.exception as? ApiException)?.error
+                    if (apiError != null && handleRefusedLogin(apiError)) return@launch
                     val errorMsg =
-                        if (action.loginResult.exception.cause is ServerResponseException) {
+                        if (apiError?.code == ApiErrorCodes.NOT_AUTHENTICATED) {
+                            getString(Res.string.feature_auth_login_incorrect)
+                        } else if (action.loginResult.exception.cause is ServerResponseException) {
                             getString(
                                 UiRes.string.internal_server_error,
                             )
@@ -206,6 +225,11 @@ class LoginViewModel(
                             userPreferencesRepositoryImpl.setTenantName(user.tenantName.orEmpty())
                             user.sessionTimeoutMinutes?.let { userPreferencesRepositoryImpl.setSessionTimeoutMinutes(it) }
                             userPreferencesRepositoryImpl.updateUser(userData)
+                            userPreferencesRepositoryImpl.setAccessInfo(
+                                isViewOnly = user.accessStatus == ACCESS_VIEW_ONLY,
+                                reason = user.accessReason.orEmpty(),
+                                phones = user.supportPhoneNumbers,
+                            )
                             userPreferencesRepositoryImpl.setIsAuthenticated(true)
                         }
                         sendEvent(LoginEvent.NavigateToPasscode)
@@ -213,6 +237,44 @@ class LoginViewModel(
                 }
             }
         }
+    }
+
+    /**
+     * Shows the server's explanation for a login the bank refused (suspended, closed, locked,
+     * disabled, pending or password reset required). Returns false for ordinary failures.
+     */
+    private suspend fun handleRefusedLogin(error: ApiError): Boolean {
+        val next = when (error.code) {
+            ApiErrorCodes.USER_SUSPENDED,
+            ApiErrorCodes.USER_CLOSED,
+            ApiErrorCodes.USER_LOCKED,
+            ApiErrorCodes.USER_DISABLED,
+            -> LoginState.NextStep.NONE
+            ApiErrorCodes.USER_PENDING -> LoginState.NextStep.CONFIRM_CODE
+            ApiErrorCodes.PASSWORD_RESET_REQUIRED -> LoginState.NextStep.SET_PASSWORD
+            else -> return false
+        }
+        if (next == LoginState.NextStep.SET_PASSWORD) {
+            // The server sends a temporary token that is only good for changing the password.
+            error.authenticationKey?.let { key ->
+                userPreferencesRepositoryImpl.updateUser(
+                    UserData.DEFAULT.copy(userName = error.username.orEmpty(), base64EncodedAuthenticationKey = key),
+                )
+            }
+        }
+        val message = if (next == LoginState.NextStep.SET_PASSWORD) {
+            getString(Res.string.feature_auth_password_reset_required)
+        } else {
+            error.userMessage
+        }
+        updateState {
+            it.copy(
+                showOverlay = false,
+                uiState = ScreenUiState.Success,
+                dialogState = LoginState.DialogState.Refused(message, error.supportPhoneNumbers, next),
+            )
+        }
+        return true
     }
 
     private fun loginUser(
@@ -253,9 +315,17 @@ data class LoginState(
     val uiState: ScreenUiState?,
     val showOverlay: Boolean = false,
 ) {
+    /** Where to go after the user reads a refusal message. */
+    enum class NextStep { NONE, CONFIRM_CODE, SET_PASSWORD }
+
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
         data class Notice(val title: String, val message: String) : DialogState
+        data class Refused(
+            val message: String,
+            val phoneNumbers: List<String>,
+            val next: NextStep,
+        ) : DialogState
     }
 
     val isLoginButtonEnabled: Boolean
@@ -266,6 +336,8 @@ sealed interface LoginEvent {
     data object NavigateToSignup : LoginEvent
     data object NavigateToPasscode : LoginEvent
     data object NavigateToForgotPassword : LoginEvent
+    data object NavigateToConfirmCode : LoginEvent
+    data object NavigateToSetPassword : LoginEvent
     data class ShowToast(val message: String) : LoginEvent
 }
 
@@ -286,3 +358,5 @@ sealed interface LoginAction {
         ) : Internal()
     }
 }
+
+private const val ACCESS_VIEW_ONLY = "VIEW_ONLY"

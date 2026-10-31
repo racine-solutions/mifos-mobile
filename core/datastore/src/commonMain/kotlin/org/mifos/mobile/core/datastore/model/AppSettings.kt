@@ -19,6 +19,11 @@ data class AppSettings(
     val tenant: String,
     val tenantName: String = "",
     val sessionEndedReason: String = "",
+    /** The bank restricted this user to read-only access (banner plus no changes). */
+    val isViewOnly: Boolean = false,
+    val viewOnlyReason: String = "",
+    /** Support numbers from the last login, for the view-only banner. */
+    val supportPhoneNumbers: List<String> = emptyList(),
     /** Idle timeout sent by the server; [DEFAULT_SESSION_TIMEOUT_MINUTES] until the first value arrives. */
     val sessionTimeoutMinutes: Int = DEFAULT_SESSION_TIMEOUT_MINUTES,
     val baseUrl: String,

@@ -13,24 +13,18 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-
-/** Fineract error codes the app reacts to. */
-object ApiErrorCodes {
-    const val VIEW_ONLY = "error.msg.selfservice.user.view.only"
-    const val TRANSFER_LIMIT_PER_TRANSFER = "error.msg.selfservice.transfer.limit.per.transfer.exceeded"
-    const val TRANSFER_LIMIT_DAILY = "error.msg.selfservice.transfer.limit.daily.exceeded"
-    const val SAVINGS_ACCOUNT_INVALID = "error.msg.saving.account.id.invalid"
-    const val LOAN_INVALID = "error.msg.loan.id.invalid"
-}
-
-/** Generic message for unexpected server errors; never shown together with a logout. */
-const val GENERIC_SERVER_ERROR_MESSAGE = "Something went wrong. Please try again."
+import org.mifos.mobile.core.model.ApiError
+import org.mifos.mobile.core.model.ApiErrorCodes
 
 @Serializable
 private data class ApiErrorBody(
     val userMessageGlobalisationCode: String? = null,
     val defaultUserMessage: String? = null,
     val errors: List<ApiErrorItem> = emptyList(),
+    val supportPhoneNumbers: List<String> = emptyList(),
+    val shouldRenewPassword: Boolean? = null,
+    val base64EncodedAuthenticationKey: String? = null,
+    val username: String? = null,
 )
 
 @Serializable
@@ -38,26 +32,6 @@ private data class ApiErrorItem(
     val userMessageGlobalisationCode: String? = null,
     val defaultUserMessage: String? = null,
 )
-
-/**
- * A server error with its HTTP status and, when the body is a Fineract error, its code and message.
- * Plain (non-Fineract) bodies, for example the Spring 403 for an ended session, have a null [code].
- */
-data class ApiError(
-    val status: Int,
-    val code: String?,
-    val message: String?,
-) {
-    val isServerError: Boolean get() = status >= HTTP_SERVER_ERROR
-
-    /** What to show the user. 5xx and unparseable bodies get the generic message. */
-    val userMessage: String
-        get() = if (isServerError) GENERIC_SERVER_ERROR_MESSAGE else message ?: GENERIC_SERVER_ERROR_MESSAGE
-
-    private companion object {
-        const val HTTP_SERVER_ERROR = 500
-    }
-}
 
 private val errorJson = Json { ignoreUnknownKeys = true }
 
@@ -69,6 +43,10 @@ suspend fun HttpResponse.toApiError(): ApiError {
         status = status.value,
         code = body?.userMessageGlobalisationCode ?: first?.userMessageGlobalisationCode,
         message = first?.defaultUserMessage ?: body?.defaultUserMessage,
+        supportPhoneNumbers = body?.supportPhoneNumbers.orEmpty(),
+        shouldRenewPassword = body?.shouldRenewPassword == true,
+        authenticationKey = body?.base64EncodedAuthenticationKey,
+        username = body?.username,
     )
 }
 
@@ -79,7 +57,7 @@ fun HttpResponse.sessionTimeoutMinutes(): Int? =
     headers[SESSION_TIMEOUT_HEADER]?.trim()?.toIntOrNull()?.takeIf { it > 0 }
 
 /** How an error on an authenticated call should affect the session. */
-enum class SessionImpact { NONE, SESSION_ENDED, VIEW_ONLY }
+enum class SessionImpact { NONE, SESSION_ENDED, VIEW_ONLY, SERVICE_DISABLED }
 
 /**
  * 401 always means the session ended. A 403 with the view-only code is view-only mode. A 403 with
@@ -87,6 +65,7 @@ enum class SessionImpact { NONE, SESSION_ENDED, VIEW_ONLY }
  * without any Fineract code is the plain Spring response for an expired or revoked token.
  */
 fun ApiError.sessionImpact(): SessionImpact = when {
+    status == HTTP_SERVICE_UNAVAILABLE && code == ApiErrorCodes.SERVICE_DISABLED -> SessionImpact.SERVICE_DISABLED
     status == HTTP_UNAUTHORIZED -> SessionImpact.SESSION_ENDED
     status == HTTP_FORBIDDEN && code == ApiErrorCodes.VIEW_ONLY -> SessionImpact.VIEW_ONLY
     status == HTTP_FORBIDDEN && code == null -> SessionImpact.SESSION_ENDED
@@ -94,6 +73,7 @@ fun ApiError.sessionImpact(): SessionImpact = when {
 }
 
 private const val HTTP_UNAUTHORIZED = 401
+private const val HTTP_SERVICE_UNAVAILABLE = 503
 private const val HTTP_FORBIDDEN = 403
 
 /** Login, refresh and logout answer 401/403 for reasons that are not an ended session. */

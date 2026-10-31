@@ -214,6 +214,10 @@ class UserPreferencesRepositoryImpl(
         if (minutes > 0) preferenceManager.setSessionTimeoutMinutes(minutes)
     }
 
+    override suspend fun setAccessInfo(isViewOnly: Boolean, reason: String, phones: List<String>?) {
+        preferenceManager.setAccessInfo(isViewOnly, reason, phones)
+    }
+
     override suspend fun clearSessionEndedReason() {
         preferenceManager.clearSessionEndedReason()
     }

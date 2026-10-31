@@ -66,6 +66,13 @@
     <string name="feature_sign_in_sub_title">Enter your email and password to log in</string>
     <string name="feature_auth_signing_in_to">Signing in to</string>
     <string name="feature_auth_change_tenant">Not your Sacco/MFI? Change</string>
+    <string name="feature_auth_login_incorrect">Username or password is incorrect.</string>
+    <string name="feature_auth_service_disabled">The mobile app is currently unavailable. Please try again later or contact your branch.</string>
+    <string name="feature_auth_password_reset_required">Please set a new password to continue.</string>
+    <string name="feature_auth_password_cannot_change">Your password cannot be changed. Contact your branch.</string>
+    <string name="feature_auth_ok">OK</string>
+    <string name="feature_auth_call_number">Call %1$s</string>
+    <string name="feature_auth_enter_code">Enter code</string>
     <string name="feature_auth_signed_out_title">Signed out</string>
     <string name="feature_auth_session_idle">For your security you were logged out after %1$d minutes of inactivity.</string>
     <string name="feature_auth_session_ended">Your session has ended. Please log in again.</string>

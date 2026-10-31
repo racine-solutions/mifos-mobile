@@ -37,9 +37,9 @@ import kotlinx.collections.immutable.ImmutableList
 import mifos_mobile.feature.settings.generated.resources.Res
 import mifos_mobile.feature.settings.generated.resources.feature_settings_branch
 import mifos_mobile.feature.settings.generated.resources.feature_settings_customer_account_no
-import mifos_mobile.feature.settings.generated.resources.feature_settings_organisation
 import mifos_mobile.feature.settings.generated.resources.feature_settings_logout_action
 import mifos_mobile.feature.settings.generated.resources.feature_settings_logout_message
+import mifos_mobile.feature.settings.generated.resources.feature_settings_organisation
 import mifos_mobile.feature.settings.generated.resources.feature_settings_top_bar_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel

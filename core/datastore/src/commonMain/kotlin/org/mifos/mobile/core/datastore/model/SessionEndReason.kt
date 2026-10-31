@@ -14,6 +14,9 @@ object SessionEndReason {
     /** The user was idle for longer than the allowed time. */
     const val IDLE = "idle"
 
+    /** The bank switched the self-service app off. */
+    const val DISABLED = "disabled"
+
     /** The server ended or revoked the session (expired, signed out elsewhere, replaced). */
     const val ENDED = "ended"
 }

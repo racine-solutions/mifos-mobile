@@ -55,10 +55,8 @@ import mifos_mobile.feature.home.generated.resources.feature_home_greet
 import mifos_mobile.feature.home.generated.resources.feature_home_no_active_accounts
 import mifos_mobile.feature.home.generated.resources.feature_home_no_services_hint
 import mifos_mobile.feature.home.generated.resources.feature_home_selected
-import mifos_mobile.feature.home.generated.resources.feature_home_shares_count
 import mifos_mobile.feature.home.generated.resources.feature_home_services
-import mifos_mobile.feature.home.generated.resources.feature_home_total_available_loan
-import mifos_mobile.feature.home.generated.resources.feature_home_total_available_savings
+import mifos_mobile.feature.home.generated.resources.feature_home_shares_count
 import mifos_mobile.feature.home.generated.resources.feature_server_error
 import mifos_mobile.feature.home.generated.resources.notifications
 import org.jetbrains.compose.resources.StringResource
@@ -66,7 +64,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.mifos.mobile.core.common.Constants
-import org.mifos.mobile.core.common.CurrencyFormatter
 import org.mifos.mobile.core.designsystem.component.MifosElevatedScaffold
 import org.mifos.mobile.core.designsystem.icon.MifosIcons
 import org.mifos.mobile.core.designsystem.theme.DesignToken
@@ -74,7 +71,6 @@ import org.mifos.mobile.core.designsystem.theme.MifosMobileTheme
 import org.mifos.mobile.core.designsystem.theme.MifosTypography
 import org.mifos.mobile.core.designsystem.utils.clippedClickable
 import org.mifos.mobile.core.ui.component.MifosAccountApplyDashboard
-import org.mifos.mobile.core.ui.component.MifosDashboardCard
 import org.mifos.mobile.core.ui.component.MifosErrorComponent
 import org.mifos.mobile.core.ui.component.MifosProgressIndicator
 import org.mifos.mobile.core.ui.component.TenantTopBarTitle
