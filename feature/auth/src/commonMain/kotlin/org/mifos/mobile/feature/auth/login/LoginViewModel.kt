@@ -11,14 +11,12 @@ package org.mifos.mobile.feature.auth.login
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import mifos_mobile.core.ui.generated.resources.internal_server_error
 import mifos_mobile.feature.auth.generated.resources.Res
 import mifos_mobile.feature.auth.generated.resources.feature_auth_login_incorrect
 import mifos_mobile.feature.auth.generated.resources.feature_auth_password_reset_required
@@ -42,7 +40,6 @@ import org.mifos.mobile.core.model.ApiException
 import org.mifos.mobile.core.model.entity.User
 import org.mifos.mobile.core.ui.utils.BaseViewModel
 import org.mifos.mobile.core.ui.utils.ScreenUiState
-import mifos_mobile.core.ui.generated.resources.Res as UiRes
 
 class LoginViewModel(
     private val userAuthRepositoryImpl: UserAuthRepository,
@@ -168,16 +165,14 @@ class LoginViewModel(
                 is DataState.Error -> {
                     val apiError = (action.loginResult.exception as? ApiException)?.error
                     if (apiError != null && handleRefusedLogin(apiError)) return@launch
-                    val errorMsg =
-                        if (apiError?.code == ApiErrorCodes.NOT_AUTHENTICATED) {
-                            getString(Res.string.feature_auth_login_incorrect)
-                        } else if (action.loginResult.exception.cause is ServerResponseException) {
-                            getString(
-                                UiRes.string.internal_server_error,
-                            )
-                        } else {
-                            action.loginResult.message
-                        }
+                    // Only a genuine credentials failure marks the fields as wrong; outages and
+                    // network problems say nothing about what the user typed.
+                    val badCredentials = apiError?.code == ApiErrorCodes.NOT_AUTHENTICATED
+                    val errorMsg = if (badCredentials) {
+                        getString(Res.string.feature_auth_login_incorrect)
+                    } else {
+                        action.loginResult.message
+                    }
 
                     updateState {
                         it.copy(
@@ -185,8 +180,8 @@ class LoginViewModel(
                             uiState = ScreenUiState.Success,
                             showOverlay = false,
                             dialogState = LoginState.DialogState.Error(errorMsg),
-                            userNameError = Res.string.feature_sign_in_username_error,
-                            passwordError = Res.string.feature_sign_in_password_error,
+                            userNameError = if (badCredentials) Res.string.feature_sign_in_username_error else null,
+                            passwordError = if (badCredentials) Res.string.feature_sign_in_password_error else null,
                         )
                     }
                 }
