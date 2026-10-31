@@ -109,6 +109,7 @@
     <string name="feature_signup_error_last_name_empty">Last name cannot be empty</string>
     <string name="feature_signup_error_invalid_email">Invalid email address</string>
     <string name="feature_signup_error_invalid_mobile_number">Invalid mobile number</string>
+    <string name="feature_signup_error_tenant_code_empty">Sacco/MFI code is required</string>
     <string name="feature_signup_error_customer_account_empty">Customer account is required</string>
     <string name="feature_signup_error_customer_account_not_valid">Provide valid Customer account</string>
     <string name="feature_signup_error_password_required_error">Password is Required</string>

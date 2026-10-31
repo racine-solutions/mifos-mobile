@@ -27,6 +27,7 @@ import mifos_mobile.feature.auth.generated.resources.feature_signup_error_last_n
 import mifos_mobile.feature.auth.generated.resources.feature_signup_error_password_mismatch
 import mifos_mobile.feature.auth.generated.resources.feature_signup_error_password_required_error
 import mifos_mobile.feature.auth.generated.resources.feature_signup_error_password_short
+import mifos_mobile.feature.auth.generated.resources.feature_signup_error_tenant_code_empty
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.mifos.mobile.core.common.DataState
@@ -56,7 +57,7 @@ class RegistrationViewModel(
     private val userAuthRepositoryImpl: UserAuthRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
 ) : BaseViewModel<SignUpState, SignUpEvent, SignUpAction>(
-    initialState = SignUpState(tenantCode = userPreferencesRepository.settingsInfo.value.tenant),
+    initialState = SignUpState(),
 ) {
 
     private var validationJob: Job? = null
@@ -75,7 +76,14 @@ class RegistrationViewModel(
     override fun handleAction(action: SignUpAction) {
         when (action) {
             is SignUpAction.OnTenantCodeChange -> {
-                updateState { it.copy(tenantCode = action.tenantCode.trim()) }
+                val tenantCode = action.tenantCode.trim()
+                updateState {
+                    it.copy(
+                        tenantCode = tenantCode,
+                        tenantCodeError = Res.string.feature_signup_error_tenant_code_empty
+                            .takeIf { tenantCode.isEmpty() },
+                    )
+                }
             }
 
             is SignUpAction.OnCustomerAccountChange -> {
@@ -459,9 +467,21 @@ class RegistrationViewModel(
     /**
      * Validates all form fields and triggers user registration if valid.
      */
+    /**
+     * The Sacco/MFI code identifies the organisation the member is joining, so it is mandatory.
+     */
+    private fun validateTenantCode(tenantCode: String): ValidationResult {
+        return if (tenantCode.isBlank()) {
+            ValidationResult.Error(Res.string.feature_signup_error_tenant_code_empty)
+        } else {
+            ValidationResult.Success
+        }
+    }
+
     private fun handleSubmit() {
         validationJob?.cancel()
 
+        val tenantCodeError = validateTenantCode(state.tenantCode)
         val firstNameError = validateName(state.firstName, "first")
         val lastNameError = validateName(state.lastName, "last")
         val emailError = validateEmail(state.email)
@@ -475,6 +495,7 @@ class RegistrationViewModel(
 
         mutableStateFlow.update {
             it.copy(
+                tenantCodeError = if (tenantCodeError is ValidationResult.Error) tenantCodeError.message else null,
                 firstNameError = if (firstNameError is ValidationResult.Error) firstNameError.message else null,
                 lastNameError = if (lastNameError is ValidationResult.Error) lastNameError.message else null,
                 emailError = if (emailError is ValidationResult.Error) emailError.message else null,
@@ -498,7 +519,8 @@ class RegistrationViewModel(
             )
         }
 
-        val errorFree = isSuccess(firstNameError) &&
+        val errorFree = isSuccess(tenantCodeError) &&
+            isSuccess(firstNameError) &&
             isSuccess(lastNameError) &&
             isSuccess(emailError) &&
             isSuccess(accountError) &&
@@ -601,6 +623,7 @@ class RegistrationViewModel(
  */
 data class SignUpState(
     val tenantCode: String = "",
+    val tenantCodeError: StringResource? = null,
     val customerAccount: String = "",
     val firstName: String = "",
     val middleName: String = "",
