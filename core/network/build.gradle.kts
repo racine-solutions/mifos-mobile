@@ -36,6 +36,7 @@ kotlin {
         commonMain.dependencies {
             api(projects.core.common)
             implementation(projects.core.datastore)
+            implementation(projects.core.model)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.json)

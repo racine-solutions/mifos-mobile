@@ -58,6 +58,7 @@ import org.mifos.mobile.core.ui.component.MifosPayFromDropdownUI
 import org.mifos.mobile.core.ui.component.MifosProgressIndicator
 import org.mifos.mobile.core.ui.component.TenantTopBarTitle
 import org.mifos.mobile.core.ui.utils.EventsEffect
+import org.mifos.mobile.core.ui.utils.LocalViewOnly
 import org.mifos.mobile.core.ui.utils.ScreenUiState
 import org.mifos.mobile.feature.third.party.transfer.navigation.TptNavigationDestination
 import org.mifos.mobile.feature.third.party.transfer.navigation.TptNavigator
@@ -225,6 +226,7 @@ internal fun TptForm(
     onAction: (TptAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val viewOnly = LocalViewOnly.current
     Column(
         modifier = modifier
             .padding(KptTheme.spacing.md)
@@ -293,15 +295,17 @@ internal fun TptForm(
                 color = KptTheme.colorScheme.secondary,
             )
 
-            Text(
-                modifier = Modifier
-                    .clickable {
-                        onAction(TptAction.OnAddBeneficiaryClicked)
-                    },
-                text = stringResource(Res.string.feature_tpt_tip_action),
-                style = KptTheme.typography.labelMedium,
-                color = KptTheme.colorScheme.primary,
-            )
+            if (!viewOnly) {
+                Text(
+                    modifier = Modifier
+                        .clickable {
+                            onAction(TptAction.OnAddBeneficiaryClicked)
+                        },
+                    text = stringResource(Res.string.feature_tpt_tip_action),
+                    style = KptTheme.typography.labelMedium,
+                    color = KptTheme.colorScheme.primary,
+                )
+            }
         }
 
         MifosOutlinedTextField(
@@ -364,7 +368,7 @@ internal fun TptForm(
             onClick = {
                 onAction(TptAction.OnMakeTransferClicked)
             },
-            enabled = state.isEnabled,
+            enabled = state.isEnabled && !viewOnly,
             shape = KptTheme.shapes.medium,
         ) {
             Text(

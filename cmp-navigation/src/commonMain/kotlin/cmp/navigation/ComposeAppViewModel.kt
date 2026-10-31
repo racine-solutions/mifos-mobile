@@ -57,6 +57,17 @@ class ComposeAppViewModel(
             initialValue = false,
         )
 
+    /** Whether the bank restricted this user to read-only access, and who to call about it. */
+    val accessState = userPreferencesRepository.settingsInfo
+        .map { AccessState(it.isViewOnly, it.supportPhoneNumbers) }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = userPreferencesRepository.settingsInfo.value.let {
+                AccessState(it.isViewOnly, it.supportPhoneNumbers)
+            },
+        )
+
     /** Idle timeout in minutes, as last sent by the server (with a fallback until the first value). */
     val sessionTimeoutMinutes = userPreferencesRepository.settingsInfo
         .map { it.sessionTimeoutMinutes }
@@ -292,3 +303,8 @@ sealed interface AppAction {
         ) : Internal()
     }
 }
+
+data class AccessState(
+    val isViewOnly: Boolean = false,
+    val supportPhoneNumbers: List<String> = emptyList(),
+)
