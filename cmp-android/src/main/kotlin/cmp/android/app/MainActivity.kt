@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
 import org.mifos.mobile.core.datastore.UserPreferencesRepository
+import org.mifos.mobile.core.ui.utils.ShareUtils as CoreShareUtils
 import template.core.base.ui.ShareUtils
 import java.util.Locale
 import kotlin.getValue
@@ -59,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setupEdgeToEdge(darkThemeConfigFlow)
         ShareUtils.setActivityProvider { return@setActivityProvider this }
+        CoreShareUtils.setActivityProvider { return@setActivityProvider this }
         FileKit.init(this)
         /**
          * Set the content view of the activity.
