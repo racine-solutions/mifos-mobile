@@ -28,8 +28,8 @@ import cmp.navigation.utils.rememberIdleTimeoutModifier
 import org.koin.compose.viewmodel.koinViewModel
 import org.mifos.mobile.core.designsystem.theme.MifosMobileTheme
 import org.mifos.mobile.core.model.MifosThemeConfig
-import org.mifos.mobile.core.ui.utils.EventsEffect
 import org.mifos.mobile.core.ui.component.ViewOnlyBanner
+import org.mifos.mobile.core.ui.utils.EventsEffect
 import org.mifos.mobile.core.ui.utils.LocalViewOnly
 import org.mifos.mobile.core.ui.utils.NetworkBanner
 

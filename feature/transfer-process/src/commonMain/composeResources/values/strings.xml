@@ -24,6 +24,7 @@
     <string name="error_description">Amount Should not contain Invalid Characters</string>
 
     <string name="transfer_failed">Transfer Failed</string>
+    <string name="transfer_account_unavailable">This account is not available for transfers.</string>
     <string name="transfer_successful">Transfer Successful</string>
     <string name="back_to_accounts">Back to Home Screen</string>
     <string name="transfer_id_prefix">Transfer Id:</string>

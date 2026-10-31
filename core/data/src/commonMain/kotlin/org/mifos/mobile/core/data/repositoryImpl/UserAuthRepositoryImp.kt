@@ -118,12 +118,11 @@ class UserAuthRepositoryImp(
                 val response = dataManager.userDetailsApi.updateAccountPassword(payload)
                 DataState.Success(response.bodyAsText())
             } catch (e: ClientRequestException) {
-                val errorMessage = extractErrorMessage(e.response)
-                DataState.Error(Exception(errorMessage), null)
+                DataState.Error(ApiException(e.response.toApiError()), null)
             } catch (e: IOException) {
                 DataState.Error(Exception("Network error", e), null)
             } catch (e: ServerResponseException) {
-                DataState.Error(Exception("Server error", e), null)
+                DataState.Error(ApiException(e.response.toApiError()), null)
             }
         }
     }
