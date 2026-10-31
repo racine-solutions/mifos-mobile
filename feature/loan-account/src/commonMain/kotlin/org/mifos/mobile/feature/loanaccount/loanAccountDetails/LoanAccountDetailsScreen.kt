@@ -52,6 +52,7 @@ import org.mifos.mobile.core.ui.component.MifosLabelValueCard
 import org.mifos.mobile.core.ui.component.MifosPoweredCard
 import org.mifos.mobile.core.ui.component.MifosProgressIndicator
 import org.mifos.mobile.core.ui.utils.EventsEffect
+import org.mifos.mobile.core.ui.utils.LocalViewOnly
 import org.mifos.mobile.core.ui.utils.ScreenUiState
 import org.mifos.mobile.feature.loanaccount.component.LoanActionItems
 import org.mifos.mobile.feature.loanaccount.component.loanAccountActions
@@ -200,7 +201,10 @@ internal fun LoanAccountDetailsContent(
                         )
                     }
 
-                    val visibleActions = state.accountStatus?.allowedActions ?: emptySet()
+                    val viewOnly = LocalViewOnly.current
+                    val visibleActions = (state.accountStatus?.allowedActions ?: emptySet())
+                        .filterNot { viewOnly && it.route == Constants.MAKE_PAYMENT }
+                        .toSet()
 
                     SavingsAccountActions(
                         visibleActions = visibleActions,

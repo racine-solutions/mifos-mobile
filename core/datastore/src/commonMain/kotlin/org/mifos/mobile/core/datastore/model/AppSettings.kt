@@ -18,6 +18,14 @@ data class AppSettings(
     val userId: String,
     val tenant: String,
     val tenantName: String = "",
+    val sessionEndedReason: String = "",
+    /** The bank restricted this user to read-only access (banner plus no changes). */
+    val isViewOnly: Boolean = false,
+    val viewOnlyReason: String = "",
+    /** Support numbers from the last login, for the view-only banner. */
+    val supportPhoneNumbers: List<String> = emptyList(),
+    /** Idle timeout sent by the server; [DEFAULT_SESSION_TIMEOUT_MINUTES] until the first value arrives. */
+    val sessionTimeoutMinutes: Int = DEFAULT_SESSION_TIMEOUT_MINUTES,
     val baseUrl: String,
     val passcode: String,
     val appTheme: MifosThemeConfig,
@@ -33,11 +41,13 @@ data class AppSettings(
     val selectedServices: Set<String> = emptySet(),
 ) {
     companion object {
+        const val DEFAULT_SESSION_TIMEOUT_MINUTES = 15
+
         val DEFAULT = AppSettings(
             userId = "",
             tenant = "",
-            baseUrl = "https://lms-backenddev.racinesolutions.com/",
-//            baseUrl = "https://localhost:8443/",
+//            baseUrl = "https://lms-backenddev.racinesolutions.com/",
+            baseUrl = "https://localhost:8443/",
             appTheme = MifosThemeConfig.FOLLOW_SYSTEM,
             sentTokenToServer = false,
             gcmToken = null,

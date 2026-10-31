@@ -34,12 +34,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import mifos_mobile.feature.settings.generated.resources.Res
 import mifos_mobile.feature.settings.generated.resources.feature_settings_branch
 import mifos_mobile.feature.settings.generated.resources.feature_settings_customer_account_no
-import mifos_mobile.feature.settings.generated.resources.feature_settings_organisation
 import mifos_mobile.feature.settings.generated.resources.feature_settings_logout_action
 import mifos_mobile.feature.settings.generated.resources.feature_settings_logout_message
+import mifos_mobile.feature.settings.generated.resources.feature_settings_organisation
 import mifos_mobile.feature.settings.generated.resources.feature_settings_top_bar_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -52,6 +53,7 @@ import org.mifos.mobile.core.ui.component.MifosErrorComponent
 import org.mifos.mobile.core.ui.component.MifosProgressIndicator
 import org.mifos.mobile.core.ui.component.MifosUserImage
 import org.mifos.mobile.core.ui.utils.EventsEffect
+import org.mifos.mobile.core.ui.utils.LocalViewOnly
 import org.mifos.mobile.core.ui.utils.ScreenUiState
 import org.mifos.mobile.feature.settings.componenets.LogoutDialogState
 import org.mifos.mobile.feature.settings.componenets.MifosLogoutDialog
@@ -191,7 +193,13 @@ internal fun SettingsScreenContent(
                                 .fillMaxWidth()
                                 .height(DesignToken.strokes.thin),
                         )
-                        SettingsActions(state.settingsItems) {
+                        SettingsActions(
+                            if (LocalViewOnly.current) {
+                                state.settingsItems.filterNot { it.route == Constants.PASSWORD }.toImmutableList()
+                            } else {
+                                state.settingsItems
+                            },
+                        ) {
                             when (it.route) {
                                 Constants.LOGOUT -> onAction(SettingsAction.LogoutDialog)
                                 Constants.RATE_US -> onAction(SettingsAction.RateApp)

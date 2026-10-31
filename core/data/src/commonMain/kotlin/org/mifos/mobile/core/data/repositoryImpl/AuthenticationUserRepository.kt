@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import org.mifos.mobile.core.common.DataState
 import org.mifos.mobile.core.common.Dispatcher
 import org.mifos.mobile.core.common.MifosDispatchers
@@ -28,9 +29,11 @@ import org.mifos.mobile.core.datastore.UserPreferencesRepository
 import org.mifos.mobile.core.datastore.model.AppSettings
 import org.mifos.mobile.core.model.AuthState
 import org.mifos.mobile.core.model.UserData
+import org.mifos.mobile.core.network.DataManager
 
 class AuthenticationUserRepository(
     private val preferencesHelper: UserPreferencesRepository,
+    private val dataManager: DataManager,
     private val ioDispatcher: CoroutineDispatcher,
     @Dispatcher(MifosDispatchers.Unconfined)
     private val unconfinedDispatcher: CoroutineDispatcher,
@@ -58,6 +61,10 @@ class AuthenticationUserRepository(
     override suspend fun logOut(): DataState<String> {
         return try {
             withContext(ioDispatcher) {
+                // Best effort: end the server session too, but never block or fail the local logout.
+                withTimeoutOrNull(LOGOUT_TIMEOUT_MILLIS) {
+                    runCatching { dataManager.authenticationApi.logout() }
+                }
                 preferencesHelper.logOut()
             }
             DataState.Success("User logged out Successfully")
@@ -86,3 +93,5 @@ class AuthenticationUserRepository(
     override val settingsState: StateFlow<AppSettings>
         get() = preferencesHelper.settingsInfo
 }
+
+private const val LOGOUT_TIMEOUT_MILLIS = 3_000L

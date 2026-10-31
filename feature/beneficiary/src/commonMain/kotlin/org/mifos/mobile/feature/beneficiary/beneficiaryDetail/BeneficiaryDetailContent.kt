@@ -43,6 +43,7 @@ import org.mifos.mobile.core.designsystem.theme.DesignToken
 import org.mifos.mobile.core.designsystem.theme.MifosMobileTheme
 import org.mifos.mobile.core.designsystem.theme.MifosTypography
 import org.mifos.mobile.core.ui.component.MifosBeneficiaryTopCard
+import org.mifos.mobile.core.ui.utils.LocalViewOnly
 import template.core.base.designsystem.theme.KptTheme
 
 /**
@@ -136,6 +137,9 @@ internal fun ActionBar(
     onAction: (BeneficiaryDetailAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // View-only users cannot edit or delete beneficiaries.
+    if (LocalViewOnly.current) return
+
     Row(
         modifier = modifier
             .fillMaxWidth()
