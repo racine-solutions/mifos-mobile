@@ -187,6 +187,10 @@ class UserPreferencesRepositoryImpl(
         preferenceManager.setTenant(tenant)
     }
 
+    override suspend fun setSignupRegistrationId(registrationId: String) {
+        preferenceManager.setSignupRegistrationId(registrationId)
+    }
+
     override suspend fun setTenantName(tenantName: String) {
         preferenceManager.setTenantName(tenantName)
     }

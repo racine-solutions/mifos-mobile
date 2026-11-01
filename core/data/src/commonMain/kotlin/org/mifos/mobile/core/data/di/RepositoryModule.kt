@@ -27,6 +27,7 @@ import org.mifos.mobile.core.data.repository.SavingsAccountRepository
 import org.mifos.mobile.core.data.repository.ShareAccountRepository
 import org.mifos.mobile.core.data.repository.ThirdPartyTransferRepository
 import org.mifos.mobile.core.data.repository.TransferRepository
+import org.mifos.mobile.core.data.repository.SelfServiceAccessRepository
 import org.mifos.mobile.core.data.repository.UserAuthRepository
 import org.mifos.mobile.core.data.repository.UserDataRepository
 import org.mifos.mobile.core.data.repository.UserDetailRepository
@@ -45,6 +46,7 @@ import org.mifos.mobile.core.data.repositoryImpl.SavingsAccountRepositoryImp
 import org.mifos.mobile.core.data.repositoryImpl.ShareAccountRepositoryImp
 import org.mifos.mobile.core.data.repositoryImpl.ThirdPartyTransferRepositoryImp
 import org.mifos.mobile.core.data.repositoryImpl.TransferRepositoryImp
+import org.mifos.mobile.core.data.repositoryImpl.SelfServiceAccessRepositoryImp
 import org.mifos.mobile.core.data.repositoryImpl.UserAuthRepositoryImp
 import org.mifos.mobile.core.data.repositoryImpl.UserDetailRepositoryImp
 import org.mifos.mobile.core.data.util.NetworkMonitor
@@ -57,6 +59,7 @@ val RepositoryModule = module {
     single<Json> { Json { ignoreUnknownKeys = true } }
 
     single<AccountsRepository> { AccountsRepositoryImp(get(), get(ioDispatcher)) }
+    single<SelfServiceAccessRepository> { SelfServiceAccessRepositoryImp(get(), get(ioDispatcher)) }
     single<UserDataRepository> { AuthenticationUserRepository(get(), get(), get(ioDispatcher), get(unconfinedDispatcher)) }
     single<BeneficiaryRepository> { BeneficiaryRepositoryImp(get(), get(ioDispatcher)) }
     single<ClientChargeRepository> { ClientChargeRepositoryImp(get(), get(ioDispatcher)) } // TODO

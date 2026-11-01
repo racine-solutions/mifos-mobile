@@ -26,6 +26,8 @@ data class AppSettings(
     val supportPhoneNumbers: List<String> = emptyList(),
     /** Idle timeout sent by the server; [DEFAULT_SESSION_TIMEOUT_MINUTES] until the first value arrives. */
     val sessionTimeoutMinutes: Int = DEFAULT_SESSION_TIMEOUT_MINUTES,
+    /** Reference of a sign-up that is waiting for its code, so the member can resume it later. */
+    val signupRegistrationId: String = "",
     val baseUrl: String,
     val passcode: String,
     val appTheme: MifosThemeConfig,

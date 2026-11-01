@@ -31,6 +31,8 @@ class DataManager(
 
     val registrationApi by lazy { ktorfitClient.registrationApi }
 
+    val selfServiceAccessApi by lazy { ktorfitClient.selfServiceAccessApi }
+
     val notificationApi by lazy { ktorfitClient.notificationApi }
 
     val userDetailsApi by lazy { ktorfitClient.userDetailsApi }

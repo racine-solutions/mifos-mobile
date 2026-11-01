@@ -28,7 +28,6 @@ class KtorInterceptor(
         private const val HEADER_TENANT = "Fineract-Platform-TenantId"
         private const val HEADER_AUTH = "Authorization"
         private const val CONTENT_TYPE = "Content-Type"
-        private const val LOGIN_PATH = "/authentication"
         override val key: AttributeKey<KtorInterceptor> = AttributeKey("KtorInterceptor")
 
         override fun install(plugin: KtorInterceptor, scope: HttpClient) {
@@ -40,9 +39,9 @@ class KtorInterceptor(
                     context.header(HEADER_TENANT, tenant)
                 }
 
-                // Logging in must never carry a token: a stale key left over from an abandoned
-                // session (for example a forced password change) would make the server reject it.
-                if (!context.url.build().encodedPath.endsWith(LOGIN_PATH)) {
+                // Public calls (login, sign-up, password reset) must never carry a token: a stale
+                // key left over from an abandoned session would make the server reject them.
+                if (!isPublicEndpoint(context.url.build().encodedPath)) {
                     plugin.getToken()?.let { token ->
                         if (token.isNotEmpty()) {
                             context.headers[HEADER_AUTH] = "Basic $token"
@@ -121,3 +120,9 @@ class KtorInterceptorRe(
 class ConfigRe {
     lateinit var repository: UserPreferencesRepository
 }
+
+private val PUBLIC_PATH_MARKERS = listOf("/signup/", "/password-reset/")
+
+/** Login, sign-up and password reset are public; every other call is made as the signed-in member. */
+internal fun isPublicEndpoint(path: String): Boolean =
+    path.endsWith("/authentication") || PUBLIC_PATH_MARKERS.any { path.contains(it) }

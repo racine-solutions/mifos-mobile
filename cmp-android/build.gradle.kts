@@ -153,6 +153,8 @@ dependencies {
     implementation(libs.filekit.compose)
     implementation(libs.filekit.dialog.compose)
     implementation(libs.google.oss.licenses)
+    // SMS Retriever: reads the sign-up / reset code without any SMS permission.
+    implementation(libs.google.play.services.auth.api.phone)
 
     testImplementation(kotlin("test"))
     testImplementation(libs.koin.test)

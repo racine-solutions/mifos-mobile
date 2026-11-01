@@ -23,6 +23,8 @@ object ApiEndPoints {
     const val ACCOUNT_TRANSFER = "accounttransfers"
     const val BENEFICIARIES = "beneficiaries"
     const val REGISTRATION = "registration"
+    const val SIGNUP = "signup"
+    const val PASSWORD_RESET = "password-reset"
     const val DEVICE = "device"
     const val USER = "user"
     const val PRODUCTS = "products"

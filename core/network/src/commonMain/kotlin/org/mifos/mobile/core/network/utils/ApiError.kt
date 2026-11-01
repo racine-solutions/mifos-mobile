@@ -25,6 +25,9 @@ private data class ApiErrorBody(
     val shouldRenewPassword: Boolean? = null,
     val base64EncodedAuthenticationKey: String? = null,
     val username: String? = null,
+    val attemptsLeft: Int? = null,
+    val retryAfterSeconds: Int? = null,
+    val registrationId: String? = null,
 )
 
 @Serializable
@@ -47,6 +50,9 @@ suspend fun HttpResponse.toApiError(): ApiError {
         shouldRenewPassword = body?.shouldRenewPassword == true,
         authenticationKey = body?.base64EncodedAuthenticationKey,
         username = body?.username,
+        attemptsLeft = body?.attemptsLeft,
+        retryAfterSeconds = body?.retryAfterSeconds,
+        registrationId = body?.registrationId,
     )
 }
 

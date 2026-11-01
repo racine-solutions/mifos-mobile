@@ -287,8 +287,15 @@ class UserPreferencesDataSource(
             val newPreference = if (current.tenant == tenant) {
                 current
             } else {
-                current.copy(tenant = tenant, tenantName = "")
+                current.copy(tenant = tenant, tenantName = "", signupRegistrationId = "")
             }
+            settings.putSettingsPreference(newPreference)
+            _settingsInfo.value = newPreference
+        }
+
+    suspend fun setSignupRegistrationId(registrationId: String) =
+        withContext(dispatcher) {
+            val newPreference = settings.getSettingsPreference().copy(signupRegistrationId = registrationId)
             settings.putSettingsPreference(newPreference)
             _settingsInfo.value = newPreference
         }
