@@ -159,13 +159,13 @@ class LoginViewModel(
 
             is LoginAction.SignupClicked -> sendEvent(LoginEvent.NavigateToSignup)
 
-            is LoginAction.NavigateToForgotPassword -> sendEvent(LoginEvent.NavigateToForgotPassword)
+            is LoginAction.NavigateToForgotPassword -> openForgotPassword()
 
             is LoginAction.ResetPasswordFromLocked -> {
                 // The forgot-password form opens with what the member typed already filled in.
                 authHandoff.resetIdentifier = state.username
                 updateState { it.copy(dialogState = null) }
-                sendEvent(LoginEvent.NavigateToForgotPassword)
+                openForgotPassword()
             }
 
             is LoginAction.ErrorDialogDismiss -> {
@@ -298,6 +298,19 @@ class LoginViewModel(
             )
         }
         return true
+    }
+
+    /**
+     * Opens forgot password. The Sacco/MFI code typed here is saved first, because the reset
+     * request is made before any login and its tenant header is read from the datastore.
+     */
+    private fun openForgotPassword() {
+        viewModelScope.launch {
+            if (state.showTenantField && state.tenantCode.isNotBlank()) {
+                userPreferencesRepositoryImpl.setTenant(state.tenantCode)
+            }
+            sendEvent(LoginEvent.NavigateToForgotPassword)
+        }
     }
 
     private fun loginUser(
