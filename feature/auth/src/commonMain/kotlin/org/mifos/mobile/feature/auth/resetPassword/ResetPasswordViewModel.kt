@@ -26,6 +26,8 @@ import org.mifos.mobile.core.model.ApiException
 import org.mifos.mobile.core.model.access.CODE_LENGTH
 import org.mifos.mobile.core.model.access.PasswordResetStarted
 import org.mifos.mobile.core.ui.utils.BaseViewModel
+import org.mifos.mobile.feature.auth.components.ContactBlock
+import org.mifos.mobile.feature.auth.components.asContactBlock
 import org.mifos.mobile.feature.auth.session.AuthHandoff
 
 /**
@@ -71,6 +73,8 @@ internal class ResetPasswordViewModel(
             ResetPasswordAction.Resend -> resend()
 
             ResetPasswordAction.Back -> sendEvent(ResetPasswordEvent.NavigateBack)
+
+            ResetPasswordAction.DismissBlocked -> update { it.copy(blocked = null) }
         }
     }
 
@@ -129,6 +133,10 @@ internal class ResetPasswordViewModel(
     private fun onError(result: DataState.Error<*>) {
         val error = apiError(result)
         when (error?.code) {
+            ApiErrorCodes.CONTACT_CONFLICT -> update {
+                it.copy(isLoading = false, code = "", blocked = error.asContactBlock())
+            }
+
             // No attempts counter by design: the code is simply wrong or too old.
             ApiErrorCodes.CODE_INVALID -> update {
                 it.copy(isLoading = false, code = "", error = ResetError.CodeWrongOrExpired)
@@ -195,6 +203,7 @@ internal data class ResetPasswordState(
     val passwordError: ResetError? = null,
     val repeatError: ResetError? = null,
     val isLoading: Boolean = false,
+    val blocked: ContactBlock? = null,
     val sendCount: Int = 0,
 ) {
     val canSubmit: Boolean
@@ -222,4 +231,5 @@ internal sealed interface ResetPasswordAction {
     data object Submit : ResetPasswordAction
     data object Resend : ResetPasswordAction
     data object Back : ResetPasswordAction
+    data object DismissBlocked : ResetPasswordAction
 }

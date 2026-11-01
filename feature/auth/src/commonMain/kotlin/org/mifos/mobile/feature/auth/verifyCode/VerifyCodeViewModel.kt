@@ -28,6 +28,8 @@ import org.mifos.mobile.core.model.access.CodeChannel
 import org.mifos.mobile.core.model.access.CodeDelivery
 import org.mifos.mobile.core.model.access.SignupResume
 import org.mifos.mobile.core.ui.utils.BaseViewModel
+import org.mifos.mobile.feature.auth.components.ContactBlock
+import org.mifos.mobile.feature.auth.components.asContactBlock
 import org.mifos.mobile.feature.auth.session.AuthHandoff
 
 /**
@@ -63,6 +65,8 @@ internal class VerifyCodeViewModel(
             is VerifyCodeAction.Resend -> resend(action.channel)
 
             VerifyCodeAction.Back -> sendEvent(VerifyCodeEvent.NavigateBack)
+
+            VerifyCodeAction.DismissBlocked -> updateState { it.copy(blocked = null) }
         }
     }
 
@@ -175,6 +179,10 @@ internal class VerifyCodeViewModel(
     private suspend fun onVerifyError(result: DataState.Error<*>) {
         val error = apiError(result)
         when (error?.code) {
+            ApiErrorCodes.CONTACT_CONFLICT -> updateState {
+                it.copy(isLoading = false, code = "", blocked = error.asContactBlock())
+            }
+
             ApiErrorCodes.CODE_INVALID -> updateState {
                 it.copy(isLoading = false, code = "", attemptsLeft = error.attemptsLeft, error = CodeError.Wrong(error.attemptsLeft))
             }
@@ -298,6 +306,8 @@ internal data class VerifyCodeState(
     val error: CodeError? = null,
     val supportPhoneNumbers: List<String> = emptyList(),
     val isLoading: Boolean = false,
+    /** Set when the server blocks the app because the phone or email is shared with another member. */
+    val blocked: ContactBlock? = null,
     /** Increases each time a code is sent, so the SMS reader restarts for the new message. */
     val sendCount: Int = 0,
 ) {
@@ -328,4 +338,5 @@ internal sealed interface VerifyCodeAction {
     data object Verify : VerifyCodeAction
     data class Resend(val channel: String) : VerifyCodeAction
     data object Back : VerifyCodeAction
+    data object DismissBlocked : VerifyCodeAction
 }

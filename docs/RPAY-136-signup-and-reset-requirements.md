@@ -153,11 +153,29 @@ Notes:
 - New refusal: 401 `error.msg.login.identifier.ambiguous` ("This phone number is linked to more than one account. Log in with your username instead."). Show it as a normal login error.
 - On the **locked** refusal (401 `error.msg.selfservice.user.locked`), add a **Reset my password** button next to the call buttons. It opens Forgot password with the typed identifier prefilled.
 
-## 5. Old endpoints
+## 5. Shared phone or email: blocked with a reference
+
+If a member's phone number (any format) or email is also on another client's record, or used by another app user, the app is **blocked** for that member until SACCO staff correct the records. This prevents codes or data reaching the wrong member.
+
+- **Where it applies:** signup start, signup verify, login, token refresh, forgot-password verify, and every request made with an open session. For an open session, the server ends the session and further calls get 401; the clear message appears on the next login.
+- **Response:** HTTP **409**, `userMessageGlobalisationCode` = **`error.msg.selfservice.contact.conflict`**, with extra fields:
+  ```json
+  {"defaultUserMessage":"Your phone number or email is also on another member's record, so the mobile app is blocked to protect your account. Please contact your SACCO and give them reference DUP-000000005. Call +256 774 067 967.",
+   "reference":"DUP-000000005","supportPhoneNumbers":["+256 774 067 967"]}
+  ```
+- **App behaviour:** show a dedicated dialog or screen, not a toast:
+  - Title "Mobile app blocked for your safety".
+  - The `defaultUserMessage`.
+  - The **reference** in large, selectable text, with a **Copy reference** button.
+  - Call buttons for `supportPhoneNumbers` (reuse the call-button component).
+  - No retry button. Do not log the member in, and clear any stored tokens.
+- **Forgot password:** start/resend stay neutral (no code is sent to a blocked member). If verify returns this 409, show the same blocked screen.
+
+## 6. Old endpoints
 
 `/self/registration`, `/self/registration/user` and `/self/password/request|renew` still work for older app versions. The new app should use only the endpoints above.
 
-## 6. Testing
+## 7. Testing
 
 - Local backend: `https://localhost:8443` (emulator: `adb reverse tcp:8443 tcp:8443`).
 - Test account: `kony.test@example.invalid` (client 5, phone 0785154434). Ask the backend session for the password.

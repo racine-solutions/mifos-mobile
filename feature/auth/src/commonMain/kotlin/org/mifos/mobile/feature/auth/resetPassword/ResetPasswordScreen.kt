@@ -52,6 +52,7 @@ import org.mifos.mobile.core.ui.component.MifosProgressIndicatorOverlay
 import org.mifos.mobile.core.ui.utils.EventsEffect
 import org.mifos.mobile.core.ui.utils.SmsCodeAutoRead
 import org.mifos.mobile.feature.auth.components.CodeBoxes
+import org.mifos.mobile.feature.auth.components.ContactConflictDialog
 import org.mifos.mobile.feature.auth.verifyCode.formatMinutes
 import template.core.base.designsystem.theme.KptTheme
 
@@ -197,6 +198,10 @@ private fun ResetPasswordContent(
         }
 
         if (state.isLoading) MifosProgressIndicatorOverlay()
+
+        state.blocked?.let { block ->
+            ContactConflictDialog(block = block, onDismissRequest = { onAction(ResetPasswordAction.DismissBlocked) })
+        }
     }
 }
 

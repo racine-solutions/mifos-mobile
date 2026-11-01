@@ -39,6 +39,9 @@ object ApiErrorCodes {
     const val CODE_SEND_LIMIT = "error.msg.code.send.limit"
     const val CODE_DELIVERY_FAILED = "error.msg.code.delivery.failed"
     const val PASSWORD_RESET_NOT_ALLOWED = "error.msg.password.reset.not.allowed"
+
+    /** The member's phone or email is also on another record, so the app is blocked until staff fix it. */
+    const val CONTACT_CONFLICT = "error.msg.selfservice.contact.conflict"
 }
 
 /** Generic message for unexpected server errors; never shown together with a logout. */
@@ -63,6 +66,8 @@ data class ApiError(
     val retryAfterSeconds: Int? = null,
     /** A failed code delivery still created the sign-up, so the app must keep this reference. */
     val registrationId: String? = null,
+    /** Quote this to the SACCO when the app is blocked because of a shared phone or email. */
+    val reference: String? = null,
 ) {
     val isServerError: Boolean get() = status >= HTTP_SERVER_ERROR
 

@@ -28,6 +28,7 @@ private data class ApiErrorBody(
     val attemptsLeft: Int? = null,
     val retryAfterSeconds: Int? = null,
     val registrationId: String? = null,
+    val reference: String? = null,
 )
 
 @Serializable
@@ -53,6 +54,7 @@ suspend fun HttpResponse.toApiError(): ApiError {
         attemptsLeft = body?.attemptsLeft,
         retryAfterSeconds = body?.retryAfterSeconds,
         registrationId = body?.registrationId,
+        reference = body?.reference,
     )
 }
 

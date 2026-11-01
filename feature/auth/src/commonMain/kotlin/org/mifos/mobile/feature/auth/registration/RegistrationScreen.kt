@@ -87,6 +87,7 @@ import org.mifos.mobile.core.ui.component.MifosPoweredCard
 import org.mifos.mobile.core.ui.component.MifosProgressIndicatorOverlay
 import org.mifos.mobile.core.ui.utils.EventsEffect
 import org.mifos.mobile.core.ui.utils.ScreenUiState
+import org.mifos.mobile.feature.auth.components.ContactConflictDialog
 import org.mifos.mobile.feature.auth.components.DialogAction
 import org.mifos.mobile.feature.auth.components.SupportDialog
 import template.core.base.designsystem.theme.KptTheme
@@ -155,6 +156,11 @@ private fun SignUpDialog(
             phoneNumbers = dialogState.supportPhoneNumbers,
             confirmLabel = stringResource(Res.string.feature_auth_ok),
             onConfirm = onDismissRequest,
+            onDismissRequest = onDismissRequest,
+        )
+
+        is SignUpState.SignUpDialog.Blocked -> ContactConflictDialog(
+            block = dialogState.block,
             onDismissRequest = onDismissRequest,
         )
 

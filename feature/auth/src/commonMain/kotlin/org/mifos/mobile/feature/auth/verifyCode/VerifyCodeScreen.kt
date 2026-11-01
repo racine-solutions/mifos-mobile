@@ -62,6 +62,7 @@ import org.mifos.mobile.core.ui.utils.RacineContact
 import org.mifos.mobile.core.ui.utils.ShareUtils
 import org.mifos.mobile.core.ui.utils.SmsCodeAutoRead
 import org.mifos.mobile.feature.auth.components.CodeBoxes
+import org.mifos.mobile.feature.auth.components.ContactConflictDialog
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
 
@@ -180,6 +181,10 @@ private fun VerifyCodeContent(
         }
 
         if (state.isLoading) MifosProgressIndicatorOverlay()
+
+        state.blocked?.let { block ->
+            ContactConflictDialog(block = block, onDismissRequest = { onAction(VerifyCodeAction.DismissBlocked) })
+        }
     }
 }
 

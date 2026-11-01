@@ -67,6 +67,7 @@ import org.mifos.mobile.core.designsystem.theme.MifosTypography
 import org.mifos.mobile.core.ui.component.MifosPoweredCard
 import org.mifos.mobile.core.ui.component.MifosProgressIndicatorOverlay
 import org.mifos.mobile.core.ui.utils.EventsEffect
+import org.mifos.mobile.feature.auth.components.ContactConflictDialog
 import org.mifos.mobile.feature.auth.components.DialogAction
 import org.mifos.mobile.feature.auth.components.SupportDialog
 import org.mifos.mobile.core.ui.utils.ScreenUiState
@@ -178,6 +179,11 @@ private fun LoginDialogs(
                 message = dialogState.message,
                 title = dialogState.title,
             ),
+            onDismissRequest = onDismissRequest,
+        )
+
+        is LoginState.DialogState.Blocked -> ContactConflictDialog(
+            block = dialogState.block,
             onDismissRequest = onDismissRequest,
         )
 

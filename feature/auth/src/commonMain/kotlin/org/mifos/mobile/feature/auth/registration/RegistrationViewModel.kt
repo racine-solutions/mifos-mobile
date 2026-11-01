@@ -44,6 +44,8 @@ import org.mifos.mobile.core.ui.utils.PasswordStrength
 import org.mifos.mobile.core.ui.utils.PasswordStrengthResult
 import org.mifos.mobile.core.ui.utils.ScreenUiState
 import org.mifos.mobile.core.ui.utils.ValidationHelper
+import org.mifos.mobile.feature.auth.components.ContactBlock
+import org.mifos.mobile.feature.auth.components.asContactBlock
 import org.mifos.mobile.feature.auth.session.AuthHandoff
 
 /**
@@ -607,6 +609,10 @@ class RegistrationViewModel(
         val error = (result.exception as? ApiException)?.error
         val message = error?.userMessage ?: result.message
         when (error?.code) {
+            ApiErrorCodes.CONTACT_CONFLICT -> updateState {
+                it.copy(showOverlay = false, dialogState = error.asContactBlock()?.let { block -> SignUpState.SignUpDialog.Blocked(block) })
+            }
+
             ApiErrorCodes.SIGNUP_ALREADY_REGISTERED -> updateState {
                 it.copy(showOverlay = false, dialogState = SignUpState.SignUpDialog.AlreadyRegistered(message))
             }
@@ -700,6 +706,9 @@ data class SignUpState(
 
         /** The member already has an app account, so offer to log in or reset the password. */
         data class AlreadyRegistered(val message: String) : SignUpDialog
+
+        /** The phone or email is shared with another member, so the app is blocked for them. */
+        data class Blocked(val block: ContactBlock) : SignUpDialog
     }
 
     /**

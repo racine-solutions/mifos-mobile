@@ -41,6 +41,8 @@ import org.mifos.mobile.core.model.ApiException
 import org.mifos.mobile.core.model.entity.User
 import org.mifos.mobile.core.ui.utils.BaseViewModel
 import org.mifos.mobile.core.ui.utils.ScreenUiState
+import org.mifos.mobile.feature.auth.components.ContactBlock
+import org.mifos.mobile.feature.auth.components.asContactBlock
 import org.mifos.mobile.feature.auth.session.AuthHandoff
 
 class LoginViewModel(
@@ -188,6 +190,16 @@ class LoginViewModel(
                 is DataState.Error -> {
                     val apiError = (action.loginResult.exception as? ApiException)?.error
                     if (apiError != null && handleRefusedLogin(apiError)) return@launch
+                    apiError.asContactBlock()?.let { block ->
+                        updateState {
+                            it.copy(
+                                showOverlay = false,
+                                uiState = ScreenUiState.Success,
+                                dialogState = LoginState.DialogState.Blocked(block),
+                            )
+                        }
+                        return@launch
+                    }
                     // Only a genuine credentials failure marks the fields as wrong; outages and
                     // network problems say nothing about what the user typed.
                     val badCredentials = apiError?.code == ApiErrorCodes.NOT_AUTHENTICATED
@@ -357,6 +369,7 @@ data class LoginState(
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
         data class Notice(val title: String, val message: String) : DialogState
+        data class Blocked(val block: ContactBlock) : DialogState
         data class Refused(
             val message: String,
             val phoneNumbers: List<String>,

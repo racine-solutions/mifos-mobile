@@ -236,4 +236,6 @@
     <string name="feature_reset_submit">Reset password</string>
     <string name="feature_reset_code_wrong">That code is wrong or has expired. Request a new one.</string>
     <string name="feature_reset_password_changed">Password changed. You can log in now.</string>
+    <string name="feature_blocked_title">Mobile app blocked for your safety</string>
+    <string name="feature_blocked_copy_reference">Copy reference</string>
 </resources>
