@@ -38,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
@@ -49,7 +50,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import mifos_mobile.feature.auth.generated.resources.Res
 import mifos_mobile.feature.auth.generated.resources.feature_auth_tenant_code_label
+import mifos_mobile.feature.auth.generated.resources.feature_auth_forgot_password_short
+import mifos_mobile.feature.auth.generated.resources.feature_auth_ok
 import mifos_mobile.feature.auth.generated.resources.feature_signup_already_have_an_account
+import mifos_mobile.feature.auth.generated.resources.feature_signup_have_code
 import mifos_mobile.feature.auth.generated.resources.feature_signup_cell_phone_label
 import mifos_mobile.feature.auth.generated.resources.feature_signup_confirm_password_label
 import mifos_mobile.feature.auth.generated.resources.feature_signup_customer_account_label
@@ -83,12 +87,15 @@ import org.mifos.mobile.core.ui.component.MifosPoweredCard
 import org.mifos.mobile.core.ui.component.MifosProgressIndicatorOverlay
 import org.mifos.mobile.core.ui.utils.EventsEffect
 import org.mifos.mobile.core.ui.utils.ScreenUiState
+import org.mifos.mobile.feature.auth.components.DialogAction
+import org.mifos.mobile.feature.auth.components.SupportDialog
 import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun RegistrationScreen(
-    navigateToUploadIdScreen: () -> Unit,
+    navigateToVerifyCodeScreen: () -> Unit,
     navigateToLoginScreen: () -> Unit,
+    navigateToForgotPasswordScreen: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RegistrationViewModel = koinViewModel(),
 ) {
@@ -105,9 +112,11 @@ internal fun RegistrationScreen(
                 }
             }
 
-            is SignUpEvent.NavigateToUploadDocuments -> navigateToUploadIdScreen.invoke()
+            is SignUpEvent.NavigateToVerifyCode -> navigateToVerifyCodeScreen.invoke()
 
             is SignUpEvent.NavigateToLogin -> navigateToLoginScreen.invoke()
+
+            is SignUpEvent.NavigateToForgotPassword -> navigateToForgotPasswordScreen.invoke()
         }
     }
 
@@ -115,6 +124,12 @@ internal fun RegistrationScreen(
         dialogState = state.dialogState,
         onDismissRequest = remember(viewModel) {
             { viewModel.trySendAction(SignUpAction.ErrorDialogDismiss) }
+        },
+        onLogin = remember(viewModel) {
+            { viewModel.trySendAction(SignUpAction.OnNavigateToLogin) }
+        },
+        onForgotPassword = remember(viewModel) {
+            { viewModel.trySendAction(SignUpAction.OnForgotPassword) }
         },
     )
 
@@ -131,13 +146,25 @@ internal fun RegistrationScreen(
 private fun SignUpDialog(
     dialogState: SignUpState.SignUpDialog?,
     onDismissRequest: () -> Unit,
+    onLogin: () -> Unit,
+    onForgotPassword: () -> Unit,
 ) {
     when (dialogState) {
-        is SignUpState.SignUpDialog.Error -> MifosBasicDialog(
-            visibilityState = BasicDialogState.Shown(
-                message = dialogState.message,
-            ),
+        is SignUpState.SignUpDialog.Error -> SupportDialog(
+            message = dialogState.message,
+            phoneNumbers = dialogState.supportPhoneNumbers,
+            confirmLabel = stringResource(Res.string.feature_auth_ok),
+            onConfirm = onDismissRequest,
             onDismissRequest = onDismissRequest,
+        )
+
+        is SignUpState.SignUpDialog.AlreadyRegistered -> SupportDialog(
+            message = dialogState.message,
+            phoneNumbers = emptyList(),
+            confirmLabel = stringResource(Res.string.feature_signup_log_in),
+            onConfirm = onLogin,
+            onDismissRequest = onDismissRequest,
+            extraAction = DialogAction(stringResource(Res.string.feature_auth_forgot_password_short), onForgotPassword),
         )
 
         null -> Unit
@@ -267,6 +294,19 @@ private fun RegistrationScreenContent(
                     color = KptTheme.colorScheme.primary,
                 )
             }
+        }
+
+        item {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onAction(SignUpAction.OnHaveCode) }
+                    .padding(vertical = KptTheme.spacing.sm),
+                text = stringResource(Res.string.feature_signup_have_code),
+                style = MifosTypography.labelMedium,
+                color = KptTheme.colorScheme.primary,
+                textAlign = TextAlign.Center,
+            )
         }
     }
 }

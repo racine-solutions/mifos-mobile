@@ -10,162 +10,66 @@
 package org.mifos.mobile.feature.auth.recoverPassword
 
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.InternalSerializationApi
-import kotlinx.serialization.serializer
-import mifos_mobile.feature.auth.generated.resources.Res
-import mifos_mobile.feature.auth.generated.resources.feature_recover_now_email_format_error
-import mifos_mobile.feature.auth.generated.resources.feature_recover_now_email_required
-import mifos_mobile.feature.auth.generated.resources.feature_recover_now_invalid_phone_number_error
-import mifos_mobile.feature.auth.generated.resources.feature_recover_now_phone_number_error
-import mifos_mobile.feature.auth.generated.resources.feature_recover_now_phone_number_required
-import org.jetbrains.compose.resources.StringResource
+import org.mifos.mobile.core.common.DataState
+import org.mifos.mobile.core.data.repository.SelfServiceAccessRepository
 import org.mifos.mobile.core.ui.utils.BaseViewModel
 import org.mifos.mobile.core.ui.utils.ScreenUiState
-import org.mifos.mobile.core.ui.utils.ValidationHelper
-import org.mifos.mobile.feature.auth.setNewPassword.SetPasswordRoute
+import org.mifos.mobile.feature.auth.session.AuthHandoff
 
+/** Longest phone number accepted by the legacy upload-ID form. */
 const val PHONE_NUMBER_LENGTH = 10
 
-internal class RecoverPasswordViewModel :
-    BaseViewModel<RecoverPasswordState, RecoverPasswordEvent, RecoverPasswordAction>(
-        initialState = RecoverPasswordState(),
-    ) {
-
-    private var validationJob: Job? = null
+/**
+ * First step of "forgot password": one field (email, username or phone) and a code sent to the
+ * phone or email the SACCO holds. The answer is always neutral, so this screen never reveals
+ * whether an account exists.
+ */
+internal class RecoverPasswordViewModel(
+    private val repository: SelfServiceAccessRepository,
+    private val authHandoff: AuthHandoff,
+) : BaseViewModel<RecoverPasswordState, RecoverPasswordEvent, RecoverPasswordAction>(
+    initialState = RecoverPasswordState(identifier = authHandoff.resetIdentifier),
+) {
 
     override fun handleAction(action: RecoverPasswordAction) {
         when (action) {
-            RecoverPasswordAction.OnDismissDialog -> dismissDialog()
+            RecoverPasswordAction.OnDismissDialog -> mutableStateFlow.update { it.copy(dialogState = null) }
 
-            is RecoverPasswordAction.OnEmailChange -> handleEmailChange(action.email)
+            is RecoverPasswordAction.OnIdentifierChange -> mutableStateFlow.update { it.copy(identifier = action.identifier) }
 
-            is RecoverPasswordAction.OnPhoneNumberChange -> handlePhoneNumberChange(action.phone)
+            RecoverPasswordAction.OnLogin -> sendEvent(RecoverPasswordEvent.NavigateToLogin)
 
-            is RecoverPasswordAction.OnLogin -> sendEvent(RecoverPasswordEvent.NavigateToLogin)
-
-            is RecoverPasswordAction.OnRecoverClicked -> verifyEmailAndPassword()
+            RecoverPasswordAction.OnSendCode -> sendCode()
         }
     }
 
-    private fun dismissDialog() {
-        mutableStateFlow.update {
-            it.copy(dialogState = null)
-        }
-    }
-
-    private fun handleEmailChange(email: String) {
-        mutableStateFlow.update {
-            it.copy(
-                email = email,
-                emailError = null,
-            )
-        }
-
-        debounceValidation {
-            val result = getEmailValidationError(email)
-            mutableStateFlow.update {
-                it.copy(
-                    emailError = result,
-                )
-            }
-        }
-    }
-
-    private fun handlePhoneNumberChange(phone: String) {
-        mutableStateFlow.update {
-            it.copy(
-                phoneNumber = phone,
-                phoneNumberError = null,
-            )
-        }
-
-        debounceValidation {
-            val result = getPhoneValidationError(phone)
-            mutableStateFlow.update {
-                it.copy(
-                    phoneNumberError = result,
-                )
-            }
-        }
-    }
-
-    private fun verifyEmailAndPassword() {
-        val emailError = getEmailValidationError(state.email)
-        val phoneError = getPhoneValidationError(state.phoneNumber)
-
-        mutableStateFlow.update {
-            it.copy(
-                emailError = emailError,
-                phoneNumberError = phoneError,
-            )
-        }
-
-        if (emailError == null && phoneError == null) {
-            requestRecoveryCode()
-        }
-    }
-
-    private fun getEmailValidationError(email: String): StringResource? {
-        return when {
-            email.isEmpty() -> Res.string.feature_recover_now_email_required
-            !ValidationHelper.isValidEmail(email) -> Res.string.feature_recover_now_email_format_error
-            else -> null
-        }
-    }
-
-    private fun getPhoneValidationError(phone: String): StringResource? {
-        return when {
-            phone.isEmpty() -> Res.string.feature_recover_now_phone_number_required
-
-            phone.any { it.isLetter() || !it.isDigit() } ->
-                Res.string.feature_recover_now_invalid_phone_number_error
-
-            phone.length <= PHONE_NUMBER_LENGTH ->
-                Res.string.feature_recover_now_phone_number_error
-
-            !ValidationHelper.isValidPhoneNumber(phone) ->
-                Res.string
-                    .feature_recover_now_phone_number_error
-
-            else -> null
-        }
-    }
-
-    @OptIn(InternalSerializationApi::class, ExperimentalSerializationApi::class)
-    private fun requestRecoveryCode() {
+    private fun sendCode() {
+        val identifier = state.identifier.trim()
+        if (identifier.isEmpty() || state.showOverlay) return
+        mutableStateFlow.update { it.copy(showOverlay = true) }
         viewModelScope.launch {
-            mutableStateFlow.update { it.copy(showOverlay = true) }
-            delay(3000)
-            mutableStateFlow.update { it.copy(showOverlay = false) }
-            sendEvent(
-                RecoverPasswordEvent.NavigateToOtpAuth(
-                    nextRoute = SetPasswordRoute::class.serializer().descriptor.serialName,
-                ),
-            )
-        }
-    }
+            when (val result = repository.passwordResetStart(identifier)) {
+                is DataState.Success -> {
+                    authHandoff.resetIdentifier = identifier
+                    authHandoff.resetStarted = result.data
+                    mutableStateFlow.update { it.copy(showOverlay = false) }
+                    sendEvent(RecoverPasswordEvent.NavigateToResetPassword)
+                }
 
-    private fun debounceValidation(validation: suspend () -> Unit) {
-        validationJob?.cancel()
-        validationJob = viewModelScope.launch {
-            delay(300)
-            validation()
+                is DataState.Error -> mutableStateFlow.update {
+                    it.copy(showOverlay = false, dialogState = RecoverPasswordState.DialogState.Error(result.message))
+                }
+
+                DataState.Loading -> Unit
+            }
         }
     }
 }
 
-data class RecoverPasswordState(
-    var phoneNumber: String = "",
-    var email: String = "",
-
-    var phoneNumberError: StringResource? = null,
-    var emailError: StringResource? = null,
-
+internal data class RecoverPasswordState(
+    val identifier: String = "",
     val dialogState: DialogState? = null,
     val uiState: ScreenUiState? = ScreenUiState.Success,
     val showOverlay: Boolean = false,
@@ -174,21 +78,18 @@ data class RecoverPasswordState(
         data class Error(val message: String) : DialogState
     }
 
-    val isRecoverButtonEnabled: Boolean
-        get() = phoneNumber.isNotBlank() && email.isNotBlank()
+    val isSendEnabled: Boolean
+        get() = identifier.isNotBlank() && !showOverlay
 }
 
 internal sealed interface RecoverPasswordEvent {
-    data class NavigateToOtpAuth(
-        val nextRoute: String,
-    ) : RecoverPasswordEvent
+    data object NavigateToResetPassword : RecoverPasswordEvent
     data object NavigateToLogin : RecoverPasswordEvent
 }
 
-sealed interface RecoverPasswordAction {
-    data class OnPhoneNumberChange(val phone: String) : RecoverPasswordAction
-    data class OnEmailChange(val email: String) : RecoverPasswordAction
+internal sealed interface RecoverPasswordAction {
+    data class OnIdentifierChange(val identifier: String) : RecoverPasswordAction
     data object OnLogin : RecoverPasswordAction
-    data object OnRecoverClicked : RecoverPasswordAction
+    data object OnSendCode : RecoverPasswordAction
     data object OnDismissDialog : RecoverPasswordAction
 }

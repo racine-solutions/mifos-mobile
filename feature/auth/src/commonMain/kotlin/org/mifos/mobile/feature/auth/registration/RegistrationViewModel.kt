@@ -10,12 +10,10 @@
 package org.mifos.mobile.feature.auth.registration
 
 import androidx.lifecycle.viewModelScope
-import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import mifos_mobile.core.ui.generated.resources.internal_server_error
 import mifos_mobile.feature.auth.generated.resources.Res
 import mifos_mobile.feature.auth.generated.resources.feature_recover_now_phone_number_error
 import mifos_mobile.feature.auth.generated.resources.feature_signup_error_customer_account_empty
@@ -28,12 +26,17 @@ import mifos_mobile.feature.auth.generated.resources.feature_signup_error_passwo
 import mifos_mobile.feature.auth.generated.resources.feature_signup_error_password_required_error
 import mifos_mobile.feature.auth.generated.resources.feature_signup_error_password_short
 import mifos_mobile.feature.auth.generated.resources.feature_signup_error_tenant_code_empty
+import mifos_mobile.feature.auth.generated.resources.feature_signup_error_username_taken
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.mifos.mobile.core.common.DataState
-import org.mifos.mobile.core.data.repository.UserAuthRepository
+import org.mifos.mobile.core.data.repository.SelfServiceAccessRepository
 import org.mifos.mobile.core.datastore.UserPreferencesRepository
-import org.mifos.mobile.core.model.entity.register.RegisterPayload
+import org.mifos.mobile.core.model.ApiErrorCodes
+import org.mifos.mobile.core.model.ApiException
+import org.mifos.mobile.core.model.access.CodeChannel
+import org.mifos.mobile.core.model.access.CodeDelivery
+import org.mifos.mobile.core.model.access.SignupStartRequest
 import org.mifos.mobile.core.ui.PasswordStrengthState
 import org.mifos.mobile.core.ui.utils.BaseViewModel
 import org.mifos.mobile.core.ui.utils.PasswordChecker
@@ -41,27 +44,37 @@ import org.mifos.mobile.core.ui.utils.PasswordStrength
 import org.mifos.mobile.core.ui.utils.PasswordStrengthResult
 import org.mifos.mobile.core.ui.utils.ScreenUiState
 import org.mifos.mobile.core.ui.utils.ValidationHelper
-import mifos_mobile.core.ui.generated.resources.Res as UiRes
+import org.mifos.mobile.feature.auth.session.AuthHandoff
 
 /**
  * ViewModel responsible for handling user registration logic.
  *
  * It manages the state of the sign-up form, handles user input actions,
- * performs validation, and communicates with the [UserAuthRepository] for API calls.
+ * performs validation, and communicates with the [SelfServiceAccessRepository] for API calls.
  *
- * @property userAuthRepositoryImpl Repository to handle registration logic.
+ * @property selfServiceAccessRepository Starts the sign-up and sends its 6-digit code.
  * @property userPreferencesRepository Stores the Sacco/MFI code (tenant) used by every API call.
  */
 @Suppress("TooManyFunctions")
 class RegistrationViewModel(
-    private val userAuthRepositoryImpl: UserAuthRepository,
+    private val selfServiceAccessRepository: SelfServiceAccessRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
+    private val authHandoff: AuthHandoff,
 ) : BaseViewModel<SignUpState, SignUpEvent, SignUpAction>(
-    initialState = SignUpState(),
+    initialState = SignUpState(
+        hasPendingSignup = userPreferencesRepository.settingsInfo.value.signupRegistrationId.isNotBlank(),
+    ),
 ) {
 
     private var validationJob: Job? = null
     private var passwordStrengthJob: Job = Job()
+
+    init {
+        // Sent back here because the sign-up expired or was replaced: tell the member why.
+        authHandoff.takeSignupNotice()?.let { notice ->
+            mutableStateFlow.update { it.copy(dialogState = SignUpState.SignUpDialog.Error(notice)) }
+        }
+    }
 
     /**
      * Updates the current UI state using a state reducer lambda.
@@ -133,6 +146,13 @@ class RegistrationViewModel(
             is SignUpAction.SubmitClick -> handleSubmit()
 
             is SignUpAction.OnNavigateToLogin -> sendEvent(SignUpEvent.NavigateToLogin)
+
+            is SignUpAction.OnHaveCode -> sendEvent(SignUpEvent.NavigateToVerifyCode)
+
+            is SignUpAction.OnForgotPassword -> {
+                updateState { it.copy(dialogState = null) }
+                sendEvent(SignUpEvent.NavigateToForgotPassword)
+            }
 
             SignUpAction.ErrorDialogDismiss -> updateState { it.copy(dialogState = null) }
         }
@@ -533,74 +553,88 @@ class RegistrationViewModel(
     }
 
     /**
-     * Calls the repository to register the user with provided form data.
+     * Starts the sign-up: the server checks the member against the SACCO's records and sends a
+     * 6-digit code to the phone or email it already holds.
      */
     private fun registerUser() {
-        // TODO uncomment when we get api for upload id until then make api call for registration
-//        viewModelScope.launch {
-//            updateState { it.copy(dialogState = SignUpState.SignUpDialog.Loading) }
-//
-//            delay(3000)
-//
-//            sendEvent(SignUpEvent.NavigateToUploadDocuments)
-//        }
         updateState { it.copy(showOverlay = true) }
         viewModelScope.launch {
             // The tenant header of every API call is read from the datastore, so persist the
             // Sacco/MFI code before hitting the backend.
             userPreferencesRepository.setTenant(state.tenantCode)
 
-            val response = userAuthRepositoryImpl.registerUser(
-                registerPayload = RegisterPayload(
+            val response = selfServiceAccessRepository.signupStart(
+                SignupStartRequest(
                     accountNumber = state.customerAccount,
-                    authenticationMode = "email",
-                    email = state.email,
                     firstName = state.firstName,
-                    middleName = if (state.middleName.isNotEmpty()) state.middleName else null,
                     lastName = state.lastName,
                     mobileNumber = state.mobileNumber,
+                    email = state.email,
                     password = state.password,
-                    username = state.email,
+                    repeatPassword = state.confirmPassword,
+                    channel = CodeChannel.SMS,
                 ),
             )
-            sendAction(
-                SignUpAction.Internal.ReceiveRegisterResult(
-                    response,
-                ),
-            )
+            sendAction(SignUpAction.Internal.ReceiveRegisterResult(response))
         }
     }
 
     /**
-     * Handles the result of the user registration API call and updates UI state.
+     * Handles the result of sign-up start: remember the reference, then show the code screen.
+     * Each server error code has its own reaction (see the RPAY-136 requirements).
      */
     private fun handleRegisterResult(action: SignUpAction.Internal.ReceiveRegisterResult) {
         viewModelScope.launch {
             when (val result = action.registerResult) {
                 is DataState.Success -> {
-                    updateState { it.copy(dialogState = null, showOverlay = false) }
-                    sendEvent(
-                        SignUpEvent.NavigateToUploadDocuments,
-                    )
+                    // The reference is what lets the member resume if they leave the code screen.
+                    userPreferencesRepository.setSignupRegistrationId(result.data.registrationId)
+                    authHandoff.signupDelivery = result.data
+                    authHandoff.signupUsername = state.email
+                    authHandoff.signupPassword = state.password
+                    updateState { it.copy(dialogState = null, showOverlay = false, hasPendingSignup = true) }
+                    sendEvent(SignUpEvent.NavigateToVerifyCode)
                 }
 
-                is DataState.Error -> {
-                    val errorMsg =
-                        if (result.exception.cause is ServerResponseException) {
-                            getString(UiRes.string.internal_server_error)
-                        } else {
-                            result.message
-                        }
-
-                    updateState {
-                        it.copy(
-                            showOverlay = false,
-                            dialogState = SignUpState.SignUpDialog.Error(errorMsg),
-                        )
-                    }
-                }
+                is DataState.Error -> handleRegisterError(result)
 
                 DataState.Loading -> updateState { it.copy(showOverlay = true) }
+            }
+        }
+    }
+
+    private suspend fun handleRegisterError(result: DataState.Error<CodeDelivery>) {
+        val error = (result.exception as? ApiException)?.error
+        val message = error?.userMessage ?: result.message
+        when (error?.code) {
+            ApiErrorCodes.SIGNUP_ALREADY_REGISTERED -> updateState {
+                it.copy(showOverlay = false, dialogState = SignUpState.SignUpDialog.AlreadyRegistered(message))
+            }
+
+            ApiErrorCodes.SIGNUP_USERNAME_TAKEN -> updateState {
+                it.copy(
+                    showOverlay = false,
+                    emailError = Res.string.feature_signup_error_username_taken,
+                )
+            }
+
+            ApiErrorCodes.CODE_DELIVERY_FAILED -> {
+                // The sign-up exists even though delivery failed, so keep its reference to resume.
+                error.registrationId?.let { userPreferencesRepository.setSignupRegistrationId(it) }
+                updateState {
+                    it.copy(
+                        showOverlay = false,
+                        hasPendingSignup = error.registrationId != null || it.hasPendingSignup,
+                        dialogState = SignUpState.SignUpDialog.Error(message, error.supportPhoneNumbers),
+                    )
+                }
+            }
+
+            else -> updateState {
+                it.copy(
+                    showOverlay = false,
+                    dialogState = SignUpState.SignUpDialog.Error(message, error?.supportPhoneNumbers.orEmpty()),
+                )
             }
         }
     }
@@ -640,6 +674,8 @@ data class SignUpState(
     val isPasswordChanged: Boolean = false,
     val isPasswordVisible: Boolean = false,
     val isConfirmPasswordVisible: Boolean = false,
+    /** A sign-up is waiting for its code, so "I already have a code" can take the member back to it. */
+    val hasPendingSignup: Boolean = false,
     val passwordFeedback: List<StringResource> = emptyList(),
     val passwordStrengthState: PasswordStrengthState = PasswordStrengthState.NONE,
 
@@ -657,7 +693,13 @@ data class SignUpState(
      * Dialogs to show loading or error states during sign-up.
      */
     sealed interface SignUpDialog {
-        data class Error(val message: String) : SignUpDialog
+        data class Error(
+            val message: String,
+            val supportPhoneNumbers: List<String> = emptyList(),
+        ) : SignUpDialog
+
+        /** The member already has an app account, so offer to log in or reset the password. */
+        data class AlreadyRegistered(val message: String) : SignUpDialog
     }
 
     /**
@@ -678,8 +720,9 @@ data class SignUpState(
  */
 sealed interface SignUpEvent {
     data class ShowToast(val message: String) : SignUpEvent
-    data object NavigateToUploadDocuments : SignUpEvent
+    data object NavigateToVerifyCode : SignUpEvent
     data object NavigateToLogin : SignUpEvent
+    data object NavigateToForgotPassword : SignUpEvent
 }
 
 /**
@@ -709,6 +752,8 @@ sealed interface SignUpAction {
     data object ConfirmTogglePasswordVisibility : SignUpAction
     data object SubmitClick : SignUpAction
     data object OnNavigateToLogin : SignUpAction
+    data object OnHaveCode : SignUpAction
+    data object OnForgotPassword : SignUpAction
     data object ErrorDialogDismiss : SignUpAction
 
     /**
@@ -716,7 +761,7 @@ sealed interface SignUpAction {
      */
     sealed class Internal : SignUpAction {
         data class ReceiveRegisterResult(
-            val registerResult: DataState<String>,
+            val registerResult: DataState<CodeDelivery>,
         ) : Internal()
 
         data class ReceivePasswordStrengthResult(

@@ -23,12 +23,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -40,9 +38,9 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import mifos_mobile.feature.auth.generated.resources.Res
-import mifos_mobile.feature.auth.generated.resources.feature_auth_call_number
 import mifos_mobile.feature.auth.generated.resources.feature_auth_enter_code
 import mifos_mobile.feature.auth.generated.resources.feature_auth_ok
+import mifos_mobile.feature.auth.generated.resources.feature_auth_reset_my_password
 import mifos_mobile.feature.auth.generated.resources.feature_auth_tenant_code_label
 import mifos_mobile.feature.auth.generated.resources.feature_sign_in_Sign_in
 import mifos_mobile.feature.auth.generated.resources.feature_sign_in_dont_have_an_account
@@ -69,8 +67,9 @@ import org.mifos.mobile.core.designsystem.theme.MifosTypography
 import org.mifos.mobile.core.ui.component.MifosPoweredCard
 import org.mifos.mobile.core.ui.component.MifosProgressIndicatorOverlay
 import org.mifos.mobile.core.ui.utils.EventsEffect
+import org.mifos.mobile.feature.auth.components.DialogAction
+import org.mifos.mobile.feature.auth.components.SupportDialog
 import org.mifos.mobile.core.ui.utils.ScreenUiState
-import org.mifos.mobile.core.ui.utils.ShareUtils
 import template.core.base.designsystem.theme.KptTheme
 
 @Composable
@@ -112,6 +111,9 @@ internal fun LoginScreen(
         dialogState = state.dialogState,
         onDismissRequest = remember(viewModel) {
             { viewModel.trySendAction(LoginAction.ErrorDialogDismiss) }
+        },
+        onResetPassword = remember(viewModel) {
+            { viewModel.trySendAction(LoginAction.ResetPasswordFromLocked) }
         },
     )
 
@@ -161,6 +163,7 @@ private fun LoginScreen(
 private fun LoginDialogs(
     dialogState: LoginState.DialogState?,
     onDismissRequest: () -> Unit,
+    onResetPassword: () -> Unit,
 ) {
     when (dialogState) {
         is LoginState.DialogState.Error -> MifosBasicDialog(
@@ -181,6 +184,7 @@ private fun LoginDialogs(
         is LoginState.DialogState.Refused -> RefusedLoginDialog(
             dialogState = dialogState,
             onDismissRequest = onDismissRequest,
+            onResetPassword = onResetPassword,
         )
 
         null -> Unit
@@ -192,32 +196,21 @@ private fun LoginDialogs(
 private fun RefusedLoginDialog(
     dialogState: LoginState.DialogState.Refused,
     onDismissRequest: () -> Unit,
+    onResetPassword: () -> Unit,
 ) {
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm)) {
-                Text(
-                    text = dialogState.message,
-                    style = MifosTypography.bodyMedium,
-                    color = KptTheme.colorScheme.onSurface,
-                )
-                dialogState.phoneNumbers.forEach { number ->
-                    TextButton(onClick = { ShareUtils.openUrl("tel:${number.filter { it.isDigit() || it == '+' }}") }) {
-                        Text(text = stringResource(Res.string.feature_auth_call_number, number))
-                    }
-                }
-            }
+    SupportDialog(
+        message = dialogState.message,
+        phoneNumbers = dialogState.phoneNumbers,
+        confirmLabel = when (dialogState.next) {
+            LoginState.NextStep.CONFIRM_CODE -> stringResource(Res.string.feature_auth_enter_code)
+            else -> stringResource(Res.string.feature_auth_ok)
         },
-        confirmButton = {
-            TextButton(onClick = onDismissRequest) {
-                Text(
-                    text = when (dialogState.next) {
-                        LoginState.NextStep.CONFIRM_CODE -> stringResource(Res.string.feature_auth_enter_code)
-                        else -> stringResource(Res.string.feature_auth_ok)
-                    },
-                )
-            }
+        onConfirm = onDismissRequest,
+        onDismissRequest = onDismissRequest,
+        extraAction = if (dialogState.canResetPassword) {
+            DialogAction(stringResource(Res.string.feature_auth_reset_my_password), onResetPassword)
+        } else {
+            null
         },
     )
 }

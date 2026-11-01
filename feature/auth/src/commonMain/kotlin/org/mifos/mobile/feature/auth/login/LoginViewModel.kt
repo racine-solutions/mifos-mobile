@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mifos_mobile.feature.auth.generated.resources.Res
+import mifos_mobile.feature.auth.generated.resources.feature_auth_done_title
 import mifos_mobile.feature.auth.generated.resources.feature_auth_login_incorrect
 import mifos_mobile.feature.auth.generated.resources.feature_auth_password_reset_required
 import mifos_mobile.feature.auth.generated.resources.feature_auth_service_disabled
@@ -40,10 +41,12 @@ import org.mifos.mobile.core.model.ApiException
 import org.mifos.mobile.core.model.entity.User
 import org.mifos.mobile.core.ui.utils.BaseViewModel
 import org.mifos.mobile.core.ui.utils.ScreenUiState
+import org.mifos.mobile.feature.auth.session.AuthHandoff
 
 class LoginViewModel(
     private val userAuthRepositoryImpl: UserAuthRepository,
     private val userPreferencesRepositoryImpl: UserPreferencesRepository,
+    private val authHandoff: AuthHandoff,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<LoginState, LoginEvent, LoginAction>(
     initialState = LoginState(
@@ -73,6 +76,19 @@ class LoginViewModel(
 
         savedStateHandle.get<String>("username")?.let {
             trySendAction(LoginAction.UsernameChanged(it))
+        }
+
+        // Screens before login (sign-up, password reset) hand over a username, a message or a login.
+        authHandoff.takeLoginUsername()?.let { trySendAction(LoginAction.UsernameChanged(it)) }
+        authHandoff.takeLoginNotice()?.let { notice ->
+            viewModelScope.launch {
+                val title = getString(Res.string.feature_auth_done_title)
+                updateState { it.copy(dialogState = LoginState.DialogState.Notice(title = title, message = notice)) }
+            }
+        }
+        authHandoff.takeAutoLogin()?.let { (username, password) ->
+            updateState { it.copy(username = username, password = password) }
+            loginUser(username, password)
         }
     }
 
@@ -144,6 +160,13 @@ class LoginViewModel(
             is LoginAction.SignupClicked -> sendEvent(LoginEvent.NavigateToSignup)
 
             is LoginAction.NavigateToForgotPassword -> sendEvent(LoginEvent.NavigateToForgotPassword)
+
+            is LoginAction.ResetPasswordFromLocked -> {
+                // The forgot-password form opens with what the member typed already filled in.
+                authHandoff.resetIdentifier = state.username
+                updateState { it.copy(dialogState = null) }
+                sendEvent(LoginEvent.NavigateToForgotPassword)
+            }
 
             is LoginAction.ErrorDialogDismiss -> {
                 val dialog = state.dialogState
@@ -266,7 +289,12 @@ class LoginViewModel(
             it.copy(
                 showOverlay = false,
                 uiState = ScreenUiState.Success,
-                dialogState = LoginState.DialogState.Refused(message, error.supportPhoneNumbers, next),
+                dialogState = LoginState.DialogState.Refused(
+                    message = message,
+                    phoneNumbers = error.supportPhoneNumbers,
+                    next = next,
+                    canResetPassword = error.code == ApiErrorCodes.USER_LOCKED,
+                ),
             )
         }
         return true
@@ -320,6 +348,8 @@ data class LoginState(
             val message: String,
             val phoneNumbers: List<String>,
             val next: NextStep,
+            /** A locked account is unlocked by resetting the password, so offer that right here. */
+            val canResetPassword: Boolean = false,
         ) : DialogState
     }
 
@@ -346,6 +376,7 @@ sealed interface LoginAction {
     data object LoginClicked : LoginAction
     data object SignupClicked : LoginAction
     data object NavigateToForgotPassword : LoginAction
+    data object ResetPasswordFromLocked : LoginAction
 
     sealed class Internal : LoginAction {
         data class ReceiveLoginResult(

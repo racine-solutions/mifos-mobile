@@ -77,7 +77,7 @@
     <string name="feature_auth_session_idle">For your security you were logged out after %1$d minutes of inactivity.</string>
     <string name="feature_auth_session_ended">Your session has ended. Please log in again.</string>
     <string name="feature_auth_tenant_code_label">Sacco/MFI Code</string>
-    <string name="feature_sign_in_username_label">Username or Email</string>
+    <string name="feature_sign_in_username_label">Email or phone</string>
     <string name="feature_sign_in_password_label">Password</string>
     <string name="feature_sign_in_forgot_password">Forgot Password ?</string>
     <string name="feature_sign_in_Sign_in">Sign in</string>
@@ -184,7 +184,7 @@
 
     <!--Recover Password-->
     <string name="feature_recover_now_title">Recover Now</string>
-    <string name="feature_recover_now_message">Forgot your password, don’t worry!, we got you covered. Reset your password now!</string>
+    <string name="feature_recover_now_message">Enter your email, username or phone number. We will send a 6-digit code to the phone or email your SACCO holds for you.</string>
     <string name="feature_recover_now_phone_number_label">Phone Number</string>
     <string name="feature_recover_now_email_label">Email</string>
     <string name="feature_recover_now_verifying">Verifying</string>
@@ -202,4 +202,38 @@
     <string name="feature_recover_now_recovered_failed">Password Recovery Failed</string>
     <string name="feature_recover_now_registered_failed_tip">There is an error to recover the password of the user. Please try again.</string>
 
+
+    <!-- Sign-up and password reset by 6-digit code (RPAY-136) -->
+    <string name="feature_signup_error_username_taken">This email is already used by another account. Use a different email or log in.</string>
+    <string name="feature_signup_have_code">I already have a code</string>
+    <string name="feature_auth_forgot_password_short">Forgot password</string>
+    <string name="feature_auth_reset_my_password">Reset my password</string>
+    <string name="feature_auth_done_title">Done</string>
+    <string name="feature_recover_identifier_label">Email, username or phone</string>
+    <string name="feature_recover_send_code">Send code</string>
+
+    <string name="feature_verify_title_sms">Verify your phone</string>
+    <string name="feature_verify_title_email">Check your email</string>
+    <string name="feature_verify_sent_sms">We sent a 6-digit code by SMS to %1$s</string>
+    <string name="feature_verify_sent_email">We emailed a 6-digit code to %1$s</string>
+    <string name="feature_verify_sent_email_fallback">We couldn\'t send an SMS, so we emailed your code to %1$s</string>
+    <string name="feature_verify_from_sms">Code read from SMS</string>
+    <string name="feature_verify_button">Verify</string>
+    <string name="feature_verify_resend_in">Resend code in %1$s</string>
+    <string name="feature_verify_resend">Resend code</string>
+    <string name="feature_verify_send_email">Send by email instead</string>
+    <string name="feature_verify_try_sms">Try SMS again</string>
+    <string name="feature_verify_valid_for">Code valid for %1$s</string>
+    <string name="feature_verify_wrong_number">Wrong number? Call %1$s</string>
+    <string name="feature_verify_wrong_code">That code is wrong.</string>
+    <string name="feature_verify_wrong_code_tries">That code is wrong. %1$d tries left.</string>
+    <string name="feature_verify_expired">This code has expired.</string>
+    <string name="feature_verify_new_code">Send a new code</string>
+    <string name="feature_verify_account_ready">Your account is ready. Log in with the password you chose.</string>
+
+    <string name="feature_reset_title">Reset your password</string>
+    <string name="feature_reset_enter_details">Enter the 6-digit code and choose a new password.</string>
+    <string name="feature_reset_submit">Reset password</string>
+    <string name="feature_reset_code_wrong">That code is wrong or has expired. Request a new one.</string>
+    <string name="feature_reset_password_changed">Password changed. You can log in now.</string>
 </resources>

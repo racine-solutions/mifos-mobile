@@ -25,12 +25,12 @@ fun NavController.navigateToRecoverPasswordScreen(navOptions: NavOptions? = null
 }
 
 fun NavGraphBuilder.recoverPasswordDestination(
-    navigateToOtpAuthenticationScreen: (String) -> Unit,
+    navigateToResetPasswordScreen: () -> Unit,
     navigateToLoginScreen: () -> Unit,
 ) {
     composableWithSlideTransitions<RecoverPasswordRoute> {
         RecoverPasswordScreen(
-            navigateToOtpAuthenticationScreen = navigateToOtpAuthenticationScreen,
+            navigateToResetPasswordScreen = navigateToResetPasswordScreen,
             navigateToLoginScreen = navigateToLoginScreen,
         )
     }
