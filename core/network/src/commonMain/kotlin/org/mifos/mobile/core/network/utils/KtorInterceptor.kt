@@ -28,6 +28,7 @@ class KtorInterceptor(
         private const val HEADER_TENANT = "Fineract-Platform-TenantId"
         private const val HEADER_AUTH = "Authorization"
         private const val CONTENT_TYPE = "Content-Type"
+        private const val LOGIN_PATH = "/authentication"
         override val key: AttributeKey<KtorInterceptor> = AttributeKey("KtorInterceptor")
 
         override fun install(plugin: KtorInterceptor, scope: HttpClient) {
@@ -39,9 +40,13 @@ class KtorInterceptor(
                     context.header(HEADER_TENANT, tenant)
                 }
 
-                plugin.getToken()?.let { token ->
-                    if (token.isNotEmpty()) {
-                        context.headers[HEADER_AUTH] = "Basic $token"
+                // Logging in must never carry a token: a stale key left over from an abandoned
+                // session (for example a forced password change) would make the server reject it.
+                if (!context.url.build().encodedPath.endsWith(LOGIN_PATH)) {
+                    plugin.getToken()?.let { token ->
+                        if (token.isNotEmpty()) {
+                            context.headers[HEADER_AUTH] = "Basic $token"
+                        }
                     }
                 }
             }
