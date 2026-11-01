@@ -85,4 +85,15 @@ interface UserPreferencesRepository {
     fun saveSelectedServices(services: Set<String>?)
 
     suspend fun logOut(): Unit
+
+    /** Ends the session and records [reason] (see SessionEndReason) for the login screen. */
+    suspend fun endSession(reason: String)
+
+    suspend fun clearSessionEndedReason()
+
+    /** Records whether the user is view-only (from login or a refused change) and the support numbers. */
+    suspend fun setAccessInfo(isViewOnly: Boolean, reason: String = "", phones: List<String>? = null)
+
+    /** Stores the idle timeout the server asked for; ignored when not positive. */
+    suspend fun setSessionTimeoutMinutes(minutes: Int)
 }

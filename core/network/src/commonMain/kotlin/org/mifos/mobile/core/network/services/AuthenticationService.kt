@@ -11,6 +11,7 @@ package org.mifos.mobile.core.network.services
 
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.POST
+import io.ktor.client.statement.HttpResponse
 import org.mifos.mobile.core.network.dto.auth.UserDto
 import org.mifos.mobile.core.network.dto.payloads.LoginPayloadDto
 import org.mifos.mobile.core.network.utils.ApiEndPoints
@@ -19,4 +20,7 @@ interface AuthenticationService {
 
     @POST(ApiEndPoints.AUTHENTICATION)
     suspend fun authenticate(@Body loginPayload: LoginPayloadDto): UserDto
+
+    @POST(ApiEndPoints.LOGOUT)
+    suspend fun logout(): HttpResponse
 }

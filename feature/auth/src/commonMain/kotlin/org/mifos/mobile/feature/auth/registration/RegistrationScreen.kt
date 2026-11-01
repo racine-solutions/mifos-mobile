@@ -432,7 +432,7 @@ fun getInputConfigs(
         InputFieldConfig(
             value = state.tenantCode,
             state = state,
-            errorText = null,
+            errorText = state.tenantCodeError,
             labelRes = Res.string.feature_auth_tenant_code_label,
             onValueChange = { onAction(SignUpAction.OnTenantCodeChange(it)) },
         ),

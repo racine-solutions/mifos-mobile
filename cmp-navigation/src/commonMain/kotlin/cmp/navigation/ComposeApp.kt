@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -27,7 +28,9 @@ import cmp.navigation.utils.rememberIdleTimeoutModifier
 import org.koin.compose.viewmodel.koinViewModel
 import org.mifos.mobile.core.designsystem.theme.MifosMobileTheme
 import org.mifos.mobile.core.model.MifosThemeConfig
+import org.mifos.mobile.core.ui.component.ViewOnlyBanner
 import org.mifos.mobile.core.ui.utils.EventsEffect
+import org.mifos.mobile.core.ui.utils.LocalViewOnly
 import org.mifos.mobile.core.ui.utils.NetworkBanner
 
 @Composable
@@ -49,8 +52,11 @@ fun ComposeApp(
     }
     val isSystemInDarkTheme = isSystemInDarkTheme()
     val isSessionActive by viewModel.isSessionActive.collectAsStateWithLifecycle()
+    val accessState by viewModel.accessState.collectAsStateWithLifecycle()
+    val sessionTimeoutMinutes by viewModel.sessionTimeoutMinutes.collectAsStateWithLifecycle()
     val idleTimeoutModifier = rememberIdleTimeoutModifier(
         enabled = isSessionActive,
+        timeoutMillis = sessionTimeoutMinutes * MILLIS_PER_MINUTE,
         onTimeout = viewModel::logoutIdleSession,
     )
 
@@ -81,11 +87,20 @@ fun ComposeApp(
                     modifier = Modifier.fillMaxWidth(),
                 )
 
-                RootNavScreen(
-                    modifier = Modifier,
-                    onSplashScreenRemoved = onSplashScreenRemoved,
-                )
+                val viewOnly = accessState.isViewOnly && isSessionActive
+                if (viewOnly) {
+                    ViewOnlyBanner(phoneNumbers = accessState.supportPhoneNumbers)
+                }
+
+                CompositionLocalProvider(LocalViewOnly provides viewOnly) {
+                    RootNavScreen(
+                        modifier = Modifier,
+                        onSplashScreenRemoved = onSplashScreenRemoved,
+                    )
+                }
             }
         }
     }
 }
+
+private const val MILLIS_PER_MINUTE = 60_000L

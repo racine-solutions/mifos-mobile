@@ -22,6 +22,7 @@ class KtorInterceptor(
     private val getToken: () -> String?,
     private val getTenant: () -> String,
     private val onUnauthorized: (suspend () -> Unit)?,
+    private val onSessionTimeoutMinutes: (suspend (Int) -> Unit)? = null,
 ) {
     companion object Plugin : HttpClientPlugin<Config, KtorInterceptor> {
         private const val HEADER_TENANT = "Fineract-Platform-TenantId"
@@ -45,6 +46,9 @@ class KtorInterceptor(
                 }
             }
             scope.responsePipeline.intercept(HttpResponsePipeline.After) {
+                context.response.sessionTimeoutMinutes()?.let { minutes ->
+                    runCatching { plugin.onSessionTimeoutMinutes?.invoke(minutes) }
+                }
                 if (context.response.status == HttpStatusCode.Unauthorized) {
                     runCatching {
                         plugin.onUnauthorized?.invoke()
@@ -62,6 +66,7 @@ class KtorInterceptor(
                 getToken = config.getToken,
                 getTenant = config.getTenant,
                 onUnauthorized = config.onUnauthorized,
+                onSessionTimeoutMinutes = config.onSessionTimeoutMinutes,
             )
         }
     }
@@ -71,6 +76,7 @@ class Config {
     lateinit var getToken: () -> String?
     var getTenant: () -> String = { "" }
     var onUnauthorized: (suspend () -> Unit)? = null
+    var onSessionTimeoutMinutes: (suspend (Int) -> Unit)? = null
 }
 
 class KtorInterceptorRe(

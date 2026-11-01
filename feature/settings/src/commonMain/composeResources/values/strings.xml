@@ -176,6 +176,7 @@
 
     <string name="password_update_success">Password updated successfully</string>
     <string name="password_update_success_message">You need to login again to use the services of the app.</string>
+    <string name="password_cannot_change">Your password cannot be changed. Contact your branch.</string>
     <string name="password_update_failed">Failed to update password.Try Again</string>
     <string name="password_update_dialog_button">Login Now</string>
 

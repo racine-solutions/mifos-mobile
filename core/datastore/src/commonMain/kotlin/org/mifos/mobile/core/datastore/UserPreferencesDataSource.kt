@@ -166,9 +166,58 @@ class UserPreferencesDataSource(
             val cleared = settings.getSettingsPreference().copy(
                 isAuthenticated = false,
                 isUnlocked = false,
+                isViewOnly = false,
+                viewOnlyReason = "",
             )
             settings.putSettingsPreference(cleared)
             _settingsInfo.value = cleared
+        }
+    }
+
+    /** Ends the session like [clearInfo] and remembers [reason] so the login screen can explain it. */
+    suspend fun endSession(reason: String) {
+        withContext(dispatcher) {
+            settings.putUserPreference(UserData.DEFAULT)
+            _userInfo.value = UserData.DEFAULT
+            val cleared = settings.getSettingsPreference().copy(
+                isAuthenticated = false,
+                isUnlocked = false,
+                isViewOnly = false,
+                viewOnlyReason = "",
+                sessionEndedReason = reason,
+            )
+            settings.putSettingsPreference(cleared)
+            _settingsInfo.value = cleared
+        }
+    }
+
+    /** Records the access level from login; [phones] null keeps the stored numbers. */
+    suspend fun setAccessInfo(isViewOnly: Boolean, reason: String, phones: List<String>?) {
+        withContext(dispatcher) {
+            val current = settings.getSettingsPreference()
+            val updated = current.copy(
+                isViewOnly = isViewOnly,
+                viewOnlyReason = reason,
+                supportPhoneNumbers = phones ?: current.supportPhoneNumbers,
+            )
+            settings.putSettingsPreference(updated)
+            _settingsInfo.value = updated
+        }
+    }
+
+    suspend fun setSessionTimeoutMinutes(minutes: Int) {
+        withContext(dispatcher) {
+            val updated = settings.getSettingsPreference().copy(sessionTimeoutMinutes = minutes)
+            settings.putSettingsPreference(updated)
+            _settingsInfo.value = updated
+        }
+    }
+
+    suspend fun clearSessionEndedReason() {
+        withContext(dispatcher) {
+            val updated = settings.getSettingsPreference().copy(sessionEndedReason = "")
+            settings.putSettingsPreference(updated)
+            _settingsInfo.value = updated
         }
     }
 

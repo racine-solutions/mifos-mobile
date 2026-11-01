@@ -72,6 +72,7 @@ import org.mifos.mobile.core.ui.component.MifosErrorComponent
 import org.mifos.mobile.core.ui.component.MifosPoweredCard
 import org.mifos.mobile.core.ui.component.MifosProgressIndicator
 import org.mifos.mobile.core.ui.utils.EventsEffect
+import org.mifos.mobile.core.ui.utils.LocalViewOnly
 import org.mifos.mobile.core.ui.utils.ScreenUiState
 import template.core.base.designsystem.theme.KptTheme
 
@@ -233,14 +234,16 @@ fun BeneficiaryListContent(
                             error = Res.string.no_beneficiary_found_please_add,
                         )
                         Spacer(Modifier.padding(KptTheme.spacing.md))
-                        MifosButton(
-                            modifier = Modifier.fillMaxWidth(),
-                            onClick = {
-                                onAction(BeneficiaryListAction.OnAddBeneficiaryClicked)
-                            },
-                            shape = KptTheme.shapes.medium,
-                        ) {
-                            Text(stringResource(Res.string.add_beneficiary))
+                        if (!LocalViewOnly.current) {
+                            MifosButton(
+                                modifier = Modifier.fillMaxWidth(),
+                                onClick = {
+                                    onAction(BeneficiaryListAction.OnAddBeneficiaryClicked)
+                                },
+                                shape = KptTheme.shapes.medium,
+                            ) {
+                                Text(stringResource(Res.string.add_beneficiary))
+                            }
                         }
                     }
                 }
@@ -294,6 +297,7 @@ internal fun ActionBar(
     onAction: (BeneficiaryListAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val viewOnly = LocalViewOnly.current
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -303,28 +307,30 @@ internal fun ActionBar(
             ),
         horizontalArrangement = Arrangement.End,
     ) {
-        Row(
-            modifier = Modifier.clickable {
-                onAction(BeneficiaryListAction.OnAddBeneficiaryClicked)
-            },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(KptTheme.spacing.xs),
-        ) {
-            Text(
-                text = stringResource(Res.string.add),
-                color = KptTheme.colorScheme.primary,
-                style = MifosTypography.bodySmallEmphasized,
-            )
+        if (!viewOnly) {
+            Row(
+                modifier = Modifier.clickable {
+                    onAction(BeneficiaryListAction.OnAddBeneficiaryClicked)
+                },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(KptTheme.spacing.xs),
+            ) {
+                Text(
+                    text = stringResource(Res.string.add),
+                    color = KptTheme.colorScheme.primary,
+                    style = MifosTypography.bodySmallEmphasized,
+                )
 
-            Icon(
-                modifier = Modifier.size(DesignToken.sizes.iconSmall),
-                imageVector = MifosIcons.Add,
-                contentDescription = null,
-                tint = KptTheme.colorScheme.primary,
-            )
+                Icon(
+                    modifier = Modifier.size(DesignToken.sizes.iconSmall),
+                    imageVector = MifosIcons.Add,
+                    contentDescription = null,
+                    tint = KptTheme.colorScheme.primary,
+                )
+            }
+
+            Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
         }
-
-        Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
 
         Row(
             modifier = Modifier.clickable {

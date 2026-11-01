@@ -20,12 +20,14 @@ import org.mifos.mobile.core.data.mapper.auth.toModel
 import org.mifos.mobile.core.data.mapper.payloads.toDto
 import org.mifos.mobile.core.data.repository.UserAuthRepository
 import org.mifos.mobile.core.data.util.extractErrorMessage
+import org.mifos.mobile.core.model.ApiException
 import org.mifos.mobile.core.model.entity.UpdatePasswordPayload
 import org.mifos.mobile.core.model.entity.User
 import org.mifos.mobile.core.model.entity.payload.LoginPayload
 import org.mifos.mobile.core.model.entity.register.RegisterPayload
 import org.mifos.mobile.core.model.entity.register.UserVerify
 import org.mifos.mobile.core.network.DataManager
+import org.mifos.mobile.core.network.utils.toApiError
 
 class UserAuthRepositoryImp(
     private val dataManager: DataManager,
@@ -69,12 +71,12 @@ class UserAuthRepositoryImp(
                 }
             }
         } catch (e: ClientRequestException) {
-            val errorMessage = extractErrorMessage(e.response)
-            DataState.Error(Exception(errorMessage), null)
+            DataState.Error(ApiException(e.response.toApiError()), null)
         } catch (e: IOException) {
             DataState.Error(Exception("Network error", e), null)
         } catch (e: ServerResponseException) {
-            DataState.Error(Exception("Server error", e), null)
+            // A 503 can mean the bank switched the app off; keep its message.
+            DataState.Error(ApiException(e.response.toApiError()), null)
         }
     }
 
@@ -116,12 +118,11 @@ class UserAuthRepositoryImp(
                 val response = dataManager.userDetailsApi.updateAccountPassword(payload)
                 DataState.Success(response.bodyAsText())
             } catch (e: ClientRequestException) {
-                val errorMessage = extractErrorMessage(e.response)
-                DataState.Error(Exception(errorMessage), null)
+                DataState.Error(ApiException(e.response.toApiError()), null)
             } catch (e: IOException) {
                 DataState.Error(Exception("Network error", e), null)
             } catch (e: ServerResponseException) {
-                DataState.Error(Exception("Server error", e), null)
+                DataState.Error(ApiException(e.response.toApiError()), null)
             }
         }
     }

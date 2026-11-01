@@ -12,7 +12,6 @@ package org.mifos.mobile.feature.transfer.process.transferProcess
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -20,6 +19,7 @@ import kotlinx.datetime.number
 import mifos_mobile.core.ui.generated.resources.internal_server_error
 import mifos_mobile.feature.transfer_process.generated.resources.Res
 import mifos_mobile.feature.transfer_process.generated.resources.back_to_accounts
+import mifos_mobile.feature.transfer_process.generated.resources.transfer_account_unavailable
 import mifos_mobile.feature.transfer_process.generated.resources.transfer_failed
 import mifos_mobile.feature.transfer_process.generated.resources.transfer_successful
 import org.jetbrains.compose.resources.getString
@@ -28,6 +28,8 @@ import org.mifos.mobile.core.common.DateHelper
 import org.mifos.mobile.core.common.DateHelper.currentDate
 import org.mifos.mobile.core.data.repository.TransferRepository
 import org.mifos.mobile.core.data.util.NetworkMonitor
+import org.mifos.mobile.core.model.ApiErrorCodes
+import org.mifos.mobile.core.model.ApiException
 import org.mifos.mobile.core.model.EventType
 import org.mifos.mobile.core.model.StatusNavigationDestination
 import org.mifos.mobile.core.model.entity.payload.TransferPayload
@@ -236,15 +238,20 @@ internal class TransferProcessViewModel(
                     )
                 }
 
-                val errorMsg = if (response.exception.cause is ServerResponseException) {
-                    getString(UiRes.string.internal_server_error)
-                } else {
-                    response.message
+                val apiError = (response.exception as? ApiException)?.error
+                val isServerFailure = apiError?.isServerError == true &&
+                    apiError.code != ApiErrorCodes.SERVICE_DISABLED
+                val errorMsg = when {
+                    apiError?.code == ApiErrorCodes.SAVINGS_ACCOUNT_INVALID ||
+                        apiError?.code == ApiErrorCodes.LOAN_INVALID ->
+                        getString(Res.string.transfer_account_unavailable)
+                    isServerFailure -> getString(UiRes.string.internal_server_error)
+                    else -> response.message
                 }
 
                 sendEvent(
                     TransferProcessEvent.NavigateToStatus(
-                        eventType = if (response.exception.cause is ServerResponseException) {
+                        eventType = if (isServerFailure) {
                             EventType.SERVER_EXCEPTION.name
                         } else {
                             EventType.FAILURE.name

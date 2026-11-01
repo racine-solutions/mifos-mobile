@@ -10,7 +10,6 @@
 package org.mifos.mobile.feature.settings.password
 
 import androidx.lifecycle.viewModelScope
-import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
@@ -27,12 +26,14 @@ import mifos_mobile.feature.settings.generated.resources.password_empty_error_re
 import mifos_mobile.feature.settings.generated.resources.password_length_error
 import mifos_mobile.feature.settings.generated.resources.password_same_as_current_error
 import mifos_mobile.feature.settings.generated.resources.password_too_many_attempts
+import mifos_mobile.feature.settings.generated.resources.password_cannot_change
 import mifos_mobile.feature.settings.generated.resources.password_update_failed
 import mifos_mobile.feature.settings.generated.resources.password_update_success
 import org.jetbrains.compose.resources.StringResource
 import org.mifos.mobile.core.common.DataState
 import org.mifos.mobile.core.data.repository.UserAuthRepository
 import org.mifos.mobile.core.data.repository.UserDataRepository
+import org.mifos.mobile.core.model.ApiException
 import org.mifos.mobile.core.ui.PasswordStrengthState
 import org.mifos.mobile.core.ui.utils.BaseViewModel
 import org.mifos.mobile.core.ui.utils.PasswordChecker
@@ -367,12 +368,12 @@ internal class ChangePasswordViewModel(
         viewModelScope.launch {
             when (action.result) {
                 is DataState.Error -> {
-                    val errorMsg =
-                        if (action.result.exception.cause is ServerResponseException) {
-                            UiRes.string.internal_server_error
-                        } else {
-                            Res.string.password_update_failed
-                        }
+                    val apiError = (action.result.exception as? ApiException)?.error
+                    val errorMsg = when {
+                        apiError?.isServerError == true -> UiRes.string.internal_server_error
+                        apiError?.status == HTTP_BAD_REQUEST -> Res.string.password_cannot_change
+                        else -> Res.string.password_update_failed
+                    }
 
                     mutableStateFlow.update {
                         it.copy(
@@ -407,11 +408,6 @@ internal class ChangePasswordViewModel(
                     }
                 }
             }
-        }
-
-        viewModelScope.launch {
-            delay(2500)
-            userDataRepository.logOut()
         }
     }
 
@@ -644,3 +640,5 @@ sealed class ValidationResult {
     /** Represents a failed validation with an associated error message. */
     data class Error(val message: StringResource) : ValidationResult()
 }
+
+private const val HTTP_BAD_REQUEST = 400

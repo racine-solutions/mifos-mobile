@@ -138,4 +138,6 @@
     <string name="feature_dashboard_totals">Total Available Loan %2$s%1$s, Savings %4$s%3$s</string>
     <string name="feature_dashboard_toggle_visibility">Toggle Visibility</string>
 
+    <string name="feature_view_only_banner">Your app access is view only. You can see your accounts but cannot make transfers or changes. Contact your branch.</string>
+    <string name="feature_view_only_call">Call %1$s</string>
 </resources>

@@ -48,6 +48,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import mifos_mobile.core.ui.generated.resources.ic_icon_logo_1
 import mifos_mobile.feature.home.generated.resources.Res
 import mifos_mobile.feature.home.generated.resources.feature_home_edit_services
@@ -55,10 +56,8 @@ import mifos_mobile.feature.home.generated.resources.feature_home_greet
 import mifos_mobile.feature.home.generated.resources.feature_home_no_active_accounts
 import mifos_mobile.feature.home.generated.resources.feature_home_no_services_hint
 import mifos_mobile.feature.home.generated.resources.feature_home_selected
-import mifos_mobile.feature.home.generated.resources.feature_home_shares_count
 import mifos_mobile.feature.home.generated.resources.feature_home_services
-import mifos_mobile.feature.home.generated.resources.feature_home_total_available_loan
-import mifos_mobile.feature.home.generated.resources.feature_home_total_available_savings
+import mifos_mobile.feature.home.generated.resources.feature_home_shares_count
 import mifos_mobile.feature.home.generated.resources.feature_server_error
 import mifos_mobile.feature.home.generated.resources.notifications
 import org.jetbrains.compose.resources.StringResource
@@ -66,7 +65,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.mifos.mobile.core.common.Constants
-import org.mifos.mobile.core.common.CurrencyFormatter
 import org.mifos.mobile.core.designsystem.component.MifosElevatedScaffold
 import org.mifos.mobile.core.designsystem.icon.MifosIcons
 import org.mifos.mobile.core.designsystem.theme.DesignToken
@@ -74,11 +72,11 @@ import org.mifos.mobile.core.designsystem.theme.MifosMobileTheme
 import org.mifos.mobile.core.designsystem.theme.MifosTypography
 import org.mifos.mobile.core.designsystem.utils.clippedClickable
 import org.mifos.mobile.core.ui.component.MifosAccountApplyDashboard
-import org.mifos.mobile.core.ui.component.MifosDashboardCard
 import org.mifos.mobile.core.ui.component.MifosErrorComponent
 import org.mifos.mobile.core.ui.component.MifosProgressIndicator
 import org.mifos.mobile.core.ui.component.TenantTopBarTitle
 import org.mifos.mobile.core.ui.utils.EventsEffect
+import org.mifos.mobile.core.ui.utils.LocalViewOnly
 import org.mifos.mobile.feature.home.components.AccountWallet
 import org.mifos.mobile.feature.home.components.BottomSheetContent
 import org.mifos.mobile.feature.home.components.WalletEntity
@@ -143,6 +141,7 @@ internal fun HomeContent(
     onAction: (HomeAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val viewOnly = LocalViewOnly.current
     MifosElevatedScaffold(
         modifier = modifier,
         brandIcon = mifos_mobile.core.ui.generated.resources.Res.drawable.ic_icon_logo_1,
@@ -233,7 +232,7 @@ internal fun HomeContent(
                             )
                             Spacer(modifier = Modifier.height(KptTheme.spacing.md))
                             MifosAccountApplyDashboard(
-                                onOpenAccountClick = { onAction(HomeAction.BottomBarPicker) },
+                                onOpenAccountClick = { if (!viewOnly) onAction(HomeAction.BottomBarPicker) },
                             )
                         }
                     }
@@ -262,7 +261,12 @@ internal fun HomeContent(
                     Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
                     ServiceBox(
-                        visibleItems = state.visibleItems,
+                        visibleItems = if (viewOnly) {
+                            // Applications create data, so view-only users do not see them.
+                            state.visibleItems.filterNot { it.route in applyRoutes }.toImmutableList()
+                        } else {
+                            state.visibleItems
+                        },
                         isEditMode = state.isEditMode,
                         selectedServices = state.selectedServices,
                         onServiceClick = { route ->
@@ -524,3 +528,5 @@ private fun walletEntities(state: HomeState): List<WalletEntity> {
         }
     }
 }
+
+private val applyRoutes = setOf(Constants.APPLY_LOAN, Constants.APPLY_SAVINGS, Constants.APPLY_SHARE)

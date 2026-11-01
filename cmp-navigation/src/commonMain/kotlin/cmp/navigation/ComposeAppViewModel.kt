@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import org.mifos.mobile.core.common.DateHelper
 import org.mifos.mobile.core.data.util.NetworkMonitor
 import org.mifos.mobile.core.datastore.UserPreferencesRepository
+import org.mifos.mobile.core.datastore.model.SessionEndReason
 import org.mifos.mobile.core.datastore.model.TimeBasedTheme
 import org.mifos.mobile.core.model.LanguageConfig
 import org.mifos.mobile.core.model.MifosThemeConfig
@@ -56,13 +57,32 @@ class ComposeAppViewModel(
             initialValue = false,
         )
 
+    /** Whether the bank restricted this user to read-only access, and who to call about it. */
+    val accessState = userPreferencesRepository.settingsInfo
+        .map { AccessState(it.isViewOnly, it.supportPhoneNumbers) }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = userPreferencesRepository.settingsInfo.value.let {
+                AccessState(it.isViewOnly, it.supportPhoneNumbers)
+            },
+        )
+
+    /** Idle timeout in minutes, as last sent by the server (with a fallback until the first value). */
+    val sessionTimeoutMinutes = userPreferencesRepository.settingsInfo
+        .map { it.sessionTimeoutMinutes }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = userPreferencesRepository.settingsInfo.value.sessionTimeoutMinutes,
+        )
+
     /**
      * Logs the user out (back to the login screen) after the user has been idle.
      */
     fun logoutIdleSession() {
         viewModelScope.launch {
-            userPreferencesRepository.setIsUnlocked(false)
-            userPreferencesRepository.logOut()
+            userPreferencesRepository.endSession(SessionEndReason.IDLE)
         }
     }
 
@@ -283,3 +303,8 @@ sealed interface AppAction {
         ) : Internal()
     }
 }
+
+data class AccessState(
+    val isViewOnly: Boolean = false,
+    val supportPhoneNumbers: List<String> = emptyList(),
+)

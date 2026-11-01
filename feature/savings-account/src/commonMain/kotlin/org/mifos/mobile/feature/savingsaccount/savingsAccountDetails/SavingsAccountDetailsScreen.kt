@@ -54,6 +54,7 @@ import org.mifos.mobile.core.ui.component.MifosLabelValueCard
 import org.mifos.mobile.core.ui.component.MifosPoweredCard
 import org.mifos.mobile.core.ui.component.MifosProgressIndicator
 import org.mifos.mobile.core.ui.utils.EventsEffect
+import org.mifos.mobile.core.ui.utils.LocalViewOnly
 import org.mifos.mobile.core.ui.utils.ScreenUiState
 import org.mifos.mobile.feature.savingsaccount.components.SavingsActionItems
 import org.mifos.mobile.feature.savingsaccount.components.savingsAccountActions
@@ -186,7 +187,7 @@ internal fun SavingsAccountDetailsContent(
                     verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
                 ) {
                     ActionBar(
-                        isUpdatable = state.isUpdatable,
+                        isUpdatable = state.isUpdatable && !LocalViewOnly.current,
                         onAction = onAction,
                     )
 
@@ -201,7 +202,10 @@ internal fun SavingsAccountDetailsContent(
                         )
                     }
 
-                    val visibleActions = state.savingStatus?.allowedActions ?: emptySet()
+                    val viewOnly = LocalViewOnly.current
+                    val visibleActions = (state.savingStatus?.allowedActions ?: emptySet())
+                        .filterNot { viewOnly && it.route == Constants.TRANSFER }
+                        .toSet()
 
                     SavingsAccountActions(
                         visibleActions = visibleActions,

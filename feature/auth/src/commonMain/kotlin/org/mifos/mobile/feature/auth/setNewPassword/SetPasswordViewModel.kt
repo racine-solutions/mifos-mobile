@@ -18,6 +18,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.serializer
 import mifos_mobile.feature.auth.generated.resources.Res
+import mifos_mobile.feature.auth.generated.resources.feature_auth_password_cannot_change
 import mifos_mobile.feature.auth.generated.resources.feature_common_next
 import mifos_mobile.feature.auth.generated.resources.feature_recover_now_recovered_successfully
 import mifos_mobile.feature.auth.generated.resources.feature_recover_now_recovered_successfully_tip
@@ -25,6 +26,10 @@ import mifos_mobile.feature.auth.generated.resources.feature_signup_error_passwo
 import mifos_mobile.feature.auth.generated.resources.feature_signup_error_password_required_error
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
+import org.mifos.mobile.core.common.DataState
+import org.mifos.mobile.core.data.repository.UserAuthRepository
+import org.mifos.mobile.core.datastore.UserPreferencesRepository
+import org.mifos.mobile.core.model.ApiException
 import org.mifos.mobile.core.model.EventType
 import org.mifos.mobile.core.ui.PasswordStrengthState
 import org.mifos.mobile.core.ui.utils.BaseViewModel
@@ -34,7 +39,10 @@ import org.mifos.mobile.core.ui.utils.PasswordStrengthResult
 import org.mifos.mobile.core.ui.utils.ScreenUiState
 import org.mifos.mobile.feature.auth.login.LoginRoute
 
-internal class SetPasswordViewModel : BaseViewModel<SetPasswordState, SetPasswordEvent, SetPasswordAction>(
+internal class SetPasswordViewModel(
+    private val userAuthRepository: UserAuthRepository,
+    private val userPreferencesRepository: UserPreferencesRepository,
+) : BaseViewModel<SetPasswordState, SetPasswordEvent, SetPasswordAction>(
     initialState = SetPasswordState(dialogState = null),
 ) {
 
@@ -183,8 +191,21 @@ internal class SetPasswordViewModel : BaseViewModel<SetPasswordState, SetPasswor
     private fun handleSubmit() {
         viewModelScope.launch {
             mutableStateFlow.update { it.copy(showOverlay = true) }
-            delay(3000)
+            val result = userAuthRepository.updateAccountPassword(state.password, state.confirmPassword)
             mutableStateFlow.update { it.copy(showOverlay = false) }
+            if (result is DataState.Error) {
+                // Success is shown only when the server accepted the change.
+                val error = (result.exception as? ApiException)?.error
+                val message = if (error?.status == HTTP_BAD_REQUEST) {
+                    getString(Res.string.feature_auth_password_cannot_change)
+                } else {
+                    result.message
+                }
+                mutableStateFlow.update { it.copy(dialogState = SetPasswordState.DialogState.Error(message)) }
+                return@launch
+            }
+            // The temporary token only allowed the change; the user logs in again with the new password.
+            userPreferencesRepository.logOut()
             sendEvent(
                 SetPasswordEvent.NavigateToStatus(
                     eventType = EventType.SUCCESS.name,
@@ -276,3 +297,5 @@ internal sealed interface SetPasswordAction {
         ) : Internal()
     }
 }
+
+private const val HTTP_BAD_REQUEST = 400
