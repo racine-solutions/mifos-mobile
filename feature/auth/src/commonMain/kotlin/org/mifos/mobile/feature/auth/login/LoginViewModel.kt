@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mifos_mobile.feature.auth.generated.resources.Res
+import mifos_mobile.feature.auth.generated.resources.feature_auth_done_title
 import mifos_mobile.feature.auth.generated.resources.feature_auth_login_incorrect
 import mifos_mobile.feature.auth.generated.resources.feature_auth_password_reset_required
 import mifos_mobile.feature.auth.generated.resources.feature_auth_service_disabled
@@ -40,10 +41,14 @@ import org.mifos.mobile.core.model.ApiException
 import org.mifos.mobile.core.model.entity.User
 import org.mifos.mobile.core.ui.utils.BaseViewModel
 import org.mifos.mobile.core.ui.utils.ScreenUiState
+import org.mifos.mobile.feature.auth.components.ContactBlock
+import org.mifos.mobile.feature.auth.components.asContactBlock
+import org.mifos.mobile.feature.auth.session.AuthHandoff
 
 class LoginViewModel(
     private val userAuthRepositoryImpl: UserAuthRepository,
     private val userPreferencesRepositoryImpl: UserPreferencesRepository,
+    private val authHandoff: AuthHandoff,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<LoginState, LoginEvent, LoginAction>(
     initialState = LoginState(
@@ -73,6 +78,19 @@ class LoginViewModel(
 
         savedStateHandle.get<String>("username")?.let {
             trySendAction(LoginAction.UsernameChanged(it))
+        }
+
+        // Screens before login (sign-up, password reset) hand over a username, a message or a login.
+        authHandoff.takeLoginUsername()?.let { trySendAction(LoginAction.UsernameChanged(it)) }
+        authHandoff.takeLoginNotice()?.let { notice ->
+            viewModelScope.launch {
+                val title = getString(Res.string.feature_auth_done_title)
+                updateState { it.copy(dialogState = LoginState.DialogState.Notice(title = title, message = notice)) }
+            }
+        }
+        authHandoff.takeAutoLogin()?.let { (username, password) ->
+            updateState { it.copy(username = username, password = password) }
+            loginUser(username, password)
         }
     }
 
@@ -143,7 +161,14 @@ class LoginViewModel(
 
             is LoginAction.SignupClicked -> sendEvent(LoginEvent.NavigateToSignup)
 
-            is LoginAction.NavigateToForgotPassword -> sendEvent(LoginEvent.NavigateToForgotPassword)
+            is LoginAction.NavigateToForgotPassword -> openForgotPassword()
+
+            is LoginAction.ResetPasswordFromLocked -> {
+                // The forgot-password form opens with what the member typed already filled in.
+                authHandoff.resetIdentifier = state.username
+                updateState { it.copy(dialogState = null) }
+                openForgotPassword()
+            }
 
             is LoginAction.ErrorDialogDismiss -> {
                 val dialog = state.dialogState
@@ -165,6 +190,16 @@ class LoginViewModel(
                 is DataState.Error -> {
                     val apiError = (action.loginResult.exception as? ApiException)?.error
                     if (apiError != null && handleRefusedLogin(apiError)) return@launch
+                    apiError.asContactBlock()?.let { block ->
+                        updateState {
+                            it.copy(
+                                showOverlay = false,
+                                uiState = ScreenUiState.Success,
+                                dialogState = LoginState.DialogState.Blocked(block),
+                            )
+                        }
+                        return@launch
+                    }
                     // Only a genuine credentials failure marks the fields as wrong; outages and
                     // network problems say nothing about what the user typed.
                     val badCredentials = apiError?.code == ApiErrorCodes.NOT_AUTHENTICATED
@@ -266,10 +301,28 @@ class LoginViewModel(
             it.copy(
                 showOverlay = false,
                 uiState = ScreenUiState.Success,
-                dialogState = LoginState.DialogState.Refused(message, error.supportPhoneNumbers, next),
+                dialogState = LoginState.DialogState.Refused(
+                    message = message,
+                    phoneNumbers = error.supportPhoneNumbers,
+                    next = next,
+                    canResetPassword = error.code == ApiErrorCodes.USER_LOCKED,
+                ),
             )
         }
         return true
+    }
+
+    /**
+     * Opens forgot password. The Sacco/MFI code typed here is saved first, because the reset
+     * request is made before any login and its tenant header is read from the datastore.
+     */
+    private fun openForgotPassword() {
+        viewModelScope.launch {
+            if (state.showTenantField && state.tenantCode.isNotBlank()) {
+                userPreferencesRepositoryImpl.setTenant(state.tenantCode)
+            }
+            sendEvent(LoginEvent.NavigateToForgotPassword)
+        }
     }
 
     private fun loginUser(
@@ -316,10 +369,13 @@ data class LoginState(
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
         data class Notice(val title: String, val message: String) : DialogState
+        data class Blocked(val block: ContactBlock) : DialogState
         data class Refused(
             val message: String,
             val phoneNumbers: List<String>,
             val next: NextStep,
+            /** A locked account is unlocked by resetting the password, so offer that right here. */
+            val canResetPassword: Boolean = false,
         ) : DialogState
     }
 
@@ -346,6 +402,7 @@ sealed interface LoginAction {
     data object LoginClicked : LoginAction
     data object SignupClicked : LoginAction
     data object NavigateToForgotPassword : LoginAction
+    data object ResetPasswordFromLocked : LoginAction
 
     sealed class Internal : LoginAction {
         data class ReceiveLoginResult(

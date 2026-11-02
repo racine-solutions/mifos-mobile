@@ -9,20 +9,27 @@
  */
 package org.mifos.mobile.feature.auth.di
 
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 import org.mifos.mobile.feature.auth.login.LoginViewModel
 import org.mifos.mobile.feature.auth.otpAuthentication.OtpAuthenticationViewModel
 import org.mifos.mobile.feature.auth.recoverPassword.RecoverPasswordViewModel
 import org.mifos.mobile.feature.auth.registration.RegistrationViewModel
+import org.mifos.mobile.feature.auth.resetPassword.ResetPasswordViewModel
+import org.mifos.mobile.feature.auth.session.AuthHandoff
 import org.mifos.mobile.feature.auth.setNewPassword.SetPasswordViewModel
 import org.mifos.mobile.feature.auth.uploadId.UploadIdViewModel
+import org.mifos.mobile.feature.auth.verifyCode.VerifyCodeViewModel
 
 val AuthModule = module {
+    singleOf(::AuthHandoff)
     viewModelOf(::LoginViewModel)
     viewModelOf(::RegistrationViewModel)
     viewModelOf(::UploadIdViewModel)
     viewModelOf(::OtpAuthenticationViewModel)
     viewModelOf(::SetPasswordViewModel)
     viewModelOf(::RecoverPasswordViewModel)
+    viewModelOf(::VerifyCodeViewModel)
+    viewModelOf(::ResetPasswordViewModel)
 }

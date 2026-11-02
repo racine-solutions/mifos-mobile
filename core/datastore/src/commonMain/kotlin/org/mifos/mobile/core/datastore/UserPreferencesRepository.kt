@@ -71,6 +71,9 @@ interface UserPreferencesRepository {
 
     suspend fun setTenantName(tenantName: String)
 
+    /** Remembers a sign-up waiting for its code; an empty value forgets it. */
+    suspend fun setSignupRegistrationId(registrationId: String)
+
     suspend fun setPasscode(passcode: String)
 
     suspend fun setShowOnboarding(showOnboarding: Boolean)

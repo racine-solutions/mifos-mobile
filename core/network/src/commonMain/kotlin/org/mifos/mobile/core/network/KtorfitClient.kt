@@ -21,6 +21,7 @@ import org.mifos.mobile.core.network.services.createNotificationService
 import org.mifos.mobile.core.network.services.createPocketService
 import org.mifos.mobile.core.network.services.createRecentTransactionsService
 import org.mifos.mobile.core.network.services.createRegistrationService
+import org.mifos.mobile.core.network.services.createSelfServiceAccessService
 import org.mifos.mobile.core.network.services.createSavingAccountsListService
 import org.mifos.mobile.core.network.services.createShareAccountService
 import org.mifos.mobile.core.network.services.createThirdPartyTransferService
@@ -48,6 +49,8 @@ class KtorfitClient(
     internal val thirdPartyTransferApi by lazy { ktorfit.createThirdPartyTransferService() }
 
     internal val registrationApi by lazy { ktorfit.createRegistrationService() }
+
+    internal val selfServiceAccessApi by lazy { ktorfit.createSelfServiceAccessService() }
 
     internal val notificationApi by lazy { ktorfit.createNotificationService() }
 

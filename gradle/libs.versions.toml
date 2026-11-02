@@ -1,4 +1,5 @@
 [versions]
+googlePlayServicesAuthApiPhone = "18.1.0"
 accompanistVersion = "0.36.0"
 activityVersion = "1.9.3"
 androidDesugarJdkLibs = "2.1.5"
@@ -184,6 +185,7 @@ firebase-crashlytics-gradlePlugin = { group = "com.google.firebase", name = "fir
 firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
 firebase-performance-gradlePlugin = { group = "com.google.firebase", name = "perf-plugin", version.ref = "firebasePerfPlugin" }
 google-map-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "googleMaps" }
+google-play-services-auth-api-phone = { group = "com.google.android.gms", name = "play-services-auth-api-phone", version.ref = "googlePlayServicesAuthApiPhone" }
 google-oss-licenses = { group = "com.google.android.gms", name = "play-services-oss-licenses", version.ref = "googleOss" }
 google-oss-licenses-plugin = { group = "com.google.android.gms", name = "oss-licenses-plugin", version.ref = "googleOssPlugin" }
 junit = { group = "junit", name = "junit", version.ref = "junitVersion" }

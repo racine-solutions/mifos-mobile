@@ -25,6 +25,23 @@ object ApiErrorCodes {
     const val USER_PENDING = "error.msg.selfservice.user.pending"
     const val PASSWORD_RESET_REQUIRED = "error.msg.selfservice.password.reset.required"
     const val INVALID_REQUEST = "error.msg.invalid.request"
+    const val LOGIN_IDENTIFIER_AMBIGUOUS = "error.msg.login.identifier.ambiguous"
+
+    // Sign-up and password reset by code
+    const val SIGNUP_DETAILS_MISMATCH = "error.msg.signup.details.mismatch"
+    const val SIGNUP_CLIENT_NOT_ACTIVE = "error.msg.signup.client.not.active"
+    const val SIGNUP_ALREADY_REGISTERED = "error.msg.signup.already.registered"
+    const val SIGNUP_USERNAME_TAKEN = "error.msg.signup.username.taken"
+    const val SIGNUP_NOT_FOUND = "error.msg.signup.not.found"
+    const val CODE_INVALID = "error.msg.code.invalid"
+    const val CODE_EXPIRED = "error.msg.code.expired"
+    const val CODE_RESEND_TOO_SOON = "error.msg.code.resend.too.soon"
+    const val CODE_SEND_LIMIT = "error.msg.code.send.limit"
+    const val CODE_DELIVERY_FAILED = "error.msg.code.delivery.failed"
+    const val PASSWORD_RESET_NOT_ALLOWED = "error.msg.password.reset.not.allowed"
+
+    /** The member's phone or email is also on another record, so the app is blocked until staff fix it. */
+    const val CONTACT_CONFLICT = "error.msg.selfservice.contact.conflict"
 }
 
 /** Generic message for unexpected server errors; never shown together with a logout. */
@@ -43,6 +60,14 @@ data class ApiError(
     /** Temporary token sent with a forced password change (the session is not usable otherwise). */
     val authenticationKey: String? = null,
     val username: String? = null,
+    /** Wrong-code answers say how many tries are left. */
+    val attemptsLeft: Int? = null,
+    /** Rate-limit answers say how long to wait before asking for another code. */
+    val retryAfterSeconds: Int? = null,
+    /** A failed code delivery still created the sign-up, so the app must keep this reference. */
+    val registrationId: String? = null,
+    /** Quote this to the SACCO when the app is blocked because of a shared phone or email. */
+    val reference: String? = null,
 ) {
     val isServerError: Boolean get() = status >= HTTP_SERVER_ERROR
 

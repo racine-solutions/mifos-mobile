@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.core.view.WindowCompat
 import cmp.shared.SharedApp
 import io.github.vinceglb.filekit.FileKit
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
 import org.mifos.mobile.core.datastore.UserPreferencesRepository
+import org.mifos.mobile.core.ui.utils.LocalSmsCodeReader
 import org.mifos.mobile.core.ui.utils.ShareUtils as CoreShareUtils
 import template.core.base.ui.ShareUtils
 import java.util.Locale
@@ -62,11 +64,13 @@ class MainActivity : AppCompatActivity() {
         ShareUtils.setActivityProvider { return@setActivityProvider this }
         CoreShareUtils.setActivityProvider { return@setActivityProvider this }
         FileKit.init(this)
+        val smsCodeReader = AndroidSmsCodeReader(this)
         /**
          * Set the content view of the activity.
          * @see setContent
          */
         setContent {
+            CompositionLocalProvider(LocalSmsCodeReader provides smsCodeReader) {
             SharedApp(
                 handleThemeMode = {
                     AppCompatDelegate.setDefaultNightMode(it)
@@ -99,6 +103,7 @@ class MainActivity : AppCompatActivity() {
                     shouldShowSplashScreen = false
                 },
             )
+            }
         }
     }
 }

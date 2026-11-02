@@ -65,7 +65,7 @@
 
     <string name="feature_sign_in_title">Sign in</string>
     <string name="feature_sign_in_sub_title">Enter your email and password to log in</string>
-    <string name="feature_sign_in_username_label">Username or Email</string>
+    <string name="feature_sign_in_username_label">Email or phone</string>
     <string name="feature_sign_in_password_label">Password</string>
     <string name="feature_sign_in_forgot_password">Forgot Password ?</string>
     <string name="feature_sign_in_Sign_in">Sign in</string>
@@ -170,7 +170,7 @@
 
     <!--Recover Password-->
     <string name="feature_recover_now_title">Recover Now</string>
-    <string name="feature_recover_now_message">Forgot your password, don’t worry!, we got you covered. Reset your password now!</string>
+    <string name="feature_recover_now_message">Enter your email, username or phone number. We will send a 6-digit code to the phone or email your SACCO holds for you.</string>
     <string name="feature_recover_now_phone_number_label">Phone Number</string>
     <string name="feature_recover_now_email_label">Email</string>
     <string name="feature_recover_now_verifying">Verifying</string>

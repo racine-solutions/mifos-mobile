@@ -24,22 +24,22 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import mifos_mobile.feature.auth.generated.resources.Res
-import mifos_mobile.feature.auth.generated.resources.feature_recover_now_email_label
 import mifos_mobile.feature.auth.generated.resources.feature_recover_now_log_in
 import mifos_mobile.feature.auth.generated.resources.feature_recover_now_message
-import mifos_mobile.feature.auth.generated.resources.feature_recover_now_phone_number_label
 import mifos_mobile.feature.auth.generated.resources.feature_recover_now_remember_your_password
+import mifos_mobile.feature.auth.generated.resources.feature_recover_identifier_label
 import mifos_mobile.feature.auth.generated.resources.feature_recover_now_title
+import mifos_mobile.feature.auth.generated.resources.feature_recover_send_code
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -49,7 +49,6 @@ import org.mifos.mobile.core.designsystem.component.MifosButton
 import org.mifos.mobile.core.designsystem.component.MifosOutlinedTextField
 import org.mifos.mobile.core.designsystem.component.MifosScaffold
 import org.mifos.mobile.core.designsystem.component.MifosTextFieldConfig
-import org.mifos.mobile.core.designsystem.icon.MifosIcons
 import org.mifos.mobile.core.designsystem.theme.DesignToken
 import org.mifos.mobile.core.designsystem.theme.MifosTypography
 import org.mifos.mobile.core.ui.component.MifosPoweredCard
@@ -60,7 +59,7 @@ import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun RecoverPasswordScreen(
-    navigateToOtpAuthenticationScreen: (String) -> Unit,
+    navigateToResetPasswordScreen: () -> Unit,
     navigateToLoginScreen: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RecoverPasswordViewModel = koinViewModel(),
@@ -69,13 +68,9 @@ internal fun RecoverPasswordScreen(
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
-            is RecoverPasswordEvent.NavigateToLogin -> navigateToLoginScreen.invoke()
+            RecoverPasswordEvent.NavigateToLogin -> navigateToLoginScreen.invoke()
 
-            is RecoverPasswordEvent.NavigateToOtpAuth -> {
-                navigateToOtpAuthenticationScreen(
-                    event.nextRoute,
-                )
-            }
+            RecoverPasswordEvent.NavigateToResetPassword -> navigateToResetPasswordScreen.invoke()
         }
     }
 
@@ -164,68 +159,29 @@ internal fun ForgotPasswordInputBox(
         verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
     ) {
         MifosOutlinedTextField(
-            value = state.phoneNumber,
-            onValueChange = {
-                onAction(RecoverPasswordAction.OnPhoneNumberChange(it))
-            },
-            label = stringResource(Res.string.feature_recover_now_phone_number_label),
+            value = state.identifier,
+            onValueChange = { onAction(RecoverPasswordAction.OnIdentifierChange(it)) },
+            label = stringResource(Res.string.feature_recover_identifier_label),
             shape = KptTheme.shapes.medium,
             textStyle = MifosTypography.bodyLarge,
             config = MifosTextFieldConfig(
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Phone,
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Done,
                 ),
-                isError = state.phoneNumberError != null,
-                errorText = state.phoneNumberError?.let { stringResource(it) },
-                trailingIcon = if (state.phoneNumberError != null) {
-                    {
-                        Icon(
-                            imageVector = MifosIcons.ErrorCircle,
-                            contentDescription = "Error",
-                            tint = KptTheme.colorScheme.error,
-                        )
-                    }
-                } else {
-                    null
-                },
-            ),
-        )
-
-        MifosOutlinedTextField(
-            value = state.email,
-            onValueChange = {
-                onAction(RecoverPasswordAction.OnEmailChange(it))
-            },
-            label = stringResource(Res.string.feature_recover_now_email_label),
-            shape = KptTheme.shapes.medium,
-            textStyle = MifosTypography.bodyLarge,
-            config = MifosTextFieldConfig(
-                isError = state.emailError != null,
-                errorText = state.emailError?.let { stringResource(it) },
-                trailingIcon = if (state.emailError != null) {
-                    {
-                        Icon(
-                            imageVector = MifosIcons.ErrorCircle,
-                            contentDescription = "Error",
-                            tint = KptTheme.colorScheme.error,
-                        )
-                    }
-                } else {
-                    null
-                },
             ),
         )
 
         MifosButton(
             modifier = Modifier.fillMaxWidth().height(DesignToken.sizes.buttonHeight),
-            enabled = state.isRecoverButtonEnabled,
+            enabled = state.isSendEnabled,
             onClick = {
-                onAction(RecoverPasswordAction.OnRecoverClicked)
+                onAction(RecoverPasswordAction.OnSendCode)
             },
             shape = KptTheme.shapes.medium,
         ) {
             Text(
-                text = stringResource(Res.string.feature_recover_now_title),
+                text = stringResource(Res.string.feature_recover_send_code),
                 style = MifosTypography.titleMedium,
             )
         }

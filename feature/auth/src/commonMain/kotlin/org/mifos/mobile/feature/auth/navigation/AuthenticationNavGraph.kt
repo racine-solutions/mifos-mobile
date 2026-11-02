@@ -26,11 +26,15 @@ import org.mifos.mobile.feature.auth.otpAuthentication.otpAuthenticationDestinat
 import org.mifos.mobile.feature.auth.recoverPassword.navigateToRecoverPasswordScreen
 import org.mifos.mobile.feature.auth.recoverPassword.recoverPasswordDestination
 import org.mifos.mobile.feature.auth.registration.navigateToRegisterScreen
+import org.mifos.mobile.feature.auth.registration.RegistrationRoute
 import org.mifos.mobile.feature.auth.registration.registrationDestination
+import org.mifos.mobile.feature.auth.resetPassword.navigateToResetPasswordScreen
+import org.mifos.mobile.feature.auth.resetPassword.resetPasswordDestination
 import org.mifos.mobile.feature.auth.setNewPassword.navigateToSetPasswordScreen
 import org.mifos.mobile.feature.auth.setNewPassword.setPasswordDestination
-import org.mifos.mobile.feature.auth.uploadId.navigateToUploadIdScreen
 import org.mifos.mobile.feature.auth.uploadId.uploadIdDestination
+import org.mifos.mobile.feature.auth.verifyCode.navigateToVerifyCodeScreen
+import org.mifos.mobile.feature.auth.verifyCode.verifyCodeDestination
 
 @Serializable
 @SerialName("auth_graph")
@@ -58,9 +62,19 @@ fun NavGraphBuilder.authenticationNavGraph(
 
         registrationDestination(
             navigateToLoginScreen = navController::navigateToLoginScreen,
-//            navigateToUploadIdScreen = navController::navigateToUploadIdScreen,
-//            TODO Remove this and use above one after getting an api for upload id screen
-            navigateToUploadIdScreen = navController::navigateToOtpAuthScreen,
+            navigateToVerifyCodeScreen = navController::navigateToVerifyCodeScreen,
+            navigateToForgotPasswordScreen = navController::navigateToRecoverPasswordScreen,
+        )
+
+        verifyCodeDestination(
+            navigateToLogin = navController::navigateToLoginScreen,
+            navigateBackToSignup = { navController.popBackStack(RegistrationRoute, inclusive = false) },
+            navigateBack = navController::popBackStack,
+        )
+
+        resetPasswordDestination(
+            navigateToLogin = navController::navigateToLoginScreen,
+            navigateBack = navController::popBackStack,
         )
 
         uploadIdDestination(
@@ -76,7 +90,7 @@ fun NavGraphBuilder.authenticationNavGraph(
 
         recoverPasswordDestination(
             navigateToLoginScreen = navController::navigateToLoginScreen,
-            navigateToOtpAuthenticationScreen = navController::navigateToOtpAuthScreen,
+            navigateToResetPasswordScreen = navController::navigateToResetPasswordScreen,
         )
 
         setPasswordDestination(
